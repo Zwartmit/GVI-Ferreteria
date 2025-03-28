@@ -1,0 +1,227 @@
+{% load static %}
+<aside class="main-sidebar sidebar-collapse elevation-2">
+    <div class="sidebar">
+        <div class="logo-container text-center">
+            <img src="{% static 'img/logo.png' %}" alt="Logo Asuán" style="width: 150px; height: 150px;" class="logo-image img-fluid">
+        </div>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
+                <h1 style="font-size: 50px; font-style: oblique; color: white; text-align: center">ㅤ</h1>
+                <li class="nav-itemm">
+                    <a href="#submenu1" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-shopping-cart" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de ventas</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu1">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:venta_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-search" style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Consultar ventas</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:venta_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-cash-register" style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Ventas por caja</span>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:cuenta' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-file-invoice-dollar" style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Ventas por cuenta</span>
+                            </a>
+                        </li> -->
+                    </ul>
+                </li>
+                <li class="nav-itemm">
+                    <a href="#submenu2" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-dolly" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de productos</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu2">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:producto_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-list"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Lista de productos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:producto_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-plus"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Registrar producto</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:categoria_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-tag"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Categorias</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:marca_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-project-diagram"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Marcas</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:presentacion_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-shapes"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Presentaciones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-itemm">
+                    <a href="#submenu3" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-drumstick-bite" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de restaurante</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu3">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:plato_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-list"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Lista de platos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:plato_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-plus"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Registrar plato</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-itemm">
+                    <a href="#submenu4" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-user-friends" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de meseros</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu4">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:mesero_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-list"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Lista de meseros</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:mesero_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-plus"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Registrar mesero</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-itemm">
+                    <a href="#submenu5" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-users" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de clientes</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu5">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:cliente_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-list"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Lista de clientes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:cliente_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-plus"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Registrar cliente</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% if perms.app.view_usuario %}
+                <li class="nav-itemm">
+                    <a href="#submenu7" class="nav-link d-flex justify-content-between align-items-center"
+                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-user-cog" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Gestión de usuarios</p>
+                        </div>
+                    </a>
+                    <ul class="collapse list-unstyled pl-4" id="submenu7">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:administrador_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-user-shield"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Administradores</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:operador_lista' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-user-alt"
+                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Operadores</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li class="nav-itemm">
+                    <a href="{% url 'app:gestion_reportes' %}" class="nav-link d-flex justify-content-between align-items-center" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-file-pdf" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Reportes</p>
+                        </div>
+                    </a>                    
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+<script>
+    $(document).ready(function () {
+        $("#toggle-menu").click(function (e) {
+            e.preventDefault();
+            $(".logo-image").toggle();
+        });
+    });
+    function delayCollapse(id) {
+        setTimeout(function () {
+            $(id).collapse('hide');
+        }, 3000);
+    }    
+</script>

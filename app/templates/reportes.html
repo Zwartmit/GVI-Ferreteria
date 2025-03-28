@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+{% endblock %}
+{% block contenido %}
+<div class="containerReport">
+    <div class="containerTitle">
+        <h1>{{ titulo }}</h1>
+        <img class="img_rep" src="{% static 'img/reporte.png' %}" alt="Logo database" style="width: 100px; height: 100px">
+    </div>
+    <div class="report-section">
+        <div class="format-section">
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="tipo_reporte">Tipo de Reporte:</label>
+                    <select id="tipo_reporte" name="tipo_reporte" class="form-control">
+                        <option value="categoria">Categorías</option>
+                        <option value="marca">Marcas</option>
+                        <option value="presentacion">Presentaciones</option> 
+                        <option value="producto">Productos</option>
+                        <option value="plato">Platos</option>
+                        <option value="mesero">Meseros</option>
+                        <option value="cliente">Clientes</option>
+                        <option value="administrador">Administradores</option>
+                        <option value="operador">Operadores</option>
+                        <option value="venta">Ventas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="formato">Formato:</label>
+                    <select id="formato" name="formato" class="form-control">
+                        <option value="excel">Excel</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_inicio">Fecha de Inicio:</label>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="fecha_fin">Fecha de Fin:</label>
+                    <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
+                </div>
+                <button type="submit" class="btn_restore fas fa-download"></button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

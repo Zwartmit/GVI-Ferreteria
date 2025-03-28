@@ -1,0 +1,81 @@
+{% extends 'listar_no.html' %}
+
+{% block columnas %}
+<tr>
+    <th scope="col">ID</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">Tipo de documento</th>
+    <th scope="col">Número de documento</th>
+    <th scope="col">Email</th>
+    <th scope="col">Teléfono</th>
+    <th scope="col">Opciones</th>
+</tr>
+{% endblock %}
+
+{% block filas %}
+{% if not has_permission %}
+<tr>
+    <td colspan="7">
+        <div class="alert alert-danger" role="alert">
+            No tienes permiso para ver esta información.
+        </div>
+    </td>
+</tr>
+{% else %}
+{% for a in object_list %}
+<tr>
+    <td>{{ a.id }}</td>
+    <td>{{ a.nombre }}</td>
+    <td>{{ a.tipo_documento }}</td>
+    <td>{{ a.numero_documento }}</td>
+    <td>{{ a.user.email }}</td>
+    <td>{{ a.telefono }}</td>
+    <td>
+        <a href="{% url 'app:administrador_editar' a.id %}" class="btn btn-info btn-sm">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a href="{% url 'app:administrador_eliminar' a.id %}" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash"></i>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endblock %}
+{% block javascript %}
+<script type="application/javascript">
+    $(document).ready(function () {
+        $("#tabla").DataTable({
+            responsive: true,
+            initComplete: function () {
+                var api = this.api();
+                var columnNames = ['id', 'Nombre', 'Tipo de documento', 'Número de documento', 'Email', 'Teléfono', 'Opciones'];
+                var excludedColumnIndex = columnNames.indexOf('Opciones');
+                api.columns().every(function (index) {
+                    var column = this;
+                    var header = $(column.header());
+                    if (index !== excludedColumnIndex) {
+                        var filterContainer = $('<div class="filter-container"></div>').appendTo(header.empty());
+                        $('<label>' + columnNames[index] + '</label>').appendTo(filterContainer);
+                        var select = $('<select><option value="">Todos</option></select>')
+                            .appendTo(filterContainer)
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>');
+                        });
+                    } else {
+                        $('<label>' + columnNames[index] + '</label>').appendTo(header.empty());
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

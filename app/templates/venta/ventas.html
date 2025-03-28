@@ -1,0 +1,110 @@
+{% extends 'home.html' %}
+{% block body %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+    }
+    .container {
+        width: 50%;
+        max-width: 600px;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        text-align: center;
+    }
+    .button-container {
+        margin: 20px 0;
+    }
+    .button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+    }
+    .button.box {
+        background-color: #007BFF;
+    }
+    .button.account {
+        background-color: #28A745;
+    }
+    .content {
+        display: none;
+    }
+</style>
+    <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Header -->
+        {% include 'aside/header.html' %}
+        <!-- Sidebar -->
+        {% include 'aside/sidebar.html' %}
+        <!-- Content -->
+        <div class="content-wrapper" style="min-height: 700px;">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                
+                    <div class="container">
+                        <h1>Selecciona una Opción</h1>
+                        <div class="button-container">
+                            <button class="button box" onclick="showContent('box')">Venta de Caja</button>
+                            <button class="button account" onclick="showContent('account')">Ventas de Cuentas</button>
+                        </div>
+                        <div id="box" class="content">
+                            <h2>Venta de Caja</h2>
+                            <p>Contenido para la venta de caja.</p>
+                        </div>
+                        <div id="account" class="content">
+                            <h2>Ventas de Cuentas</h2>
+                            <p>Contenido para las ventas de cuentas.</p>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        function showContent(type) {
+                            document.getElementById('box').style.display = 'none';
+                            document.getElementById('account').style.display = 'none';
+                            document.getElementById(type).style.display = 'block';
+                        }
+                    </script>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    {% block contenido %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        {% include 'footer.html' %}
+    </div>
+    <!-- Block javascript -->
+    {% block javascript %}
+
+    {% endblock %}
+    </body>
+{% endblock %}
+
+
+<body>
+
+</body>

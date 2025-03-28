@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% block contenido %}
+{% load static %}
+<form method="post" action=".">
+    {% csrf_token %}
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-plus"></i>
+                {{titulo}}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="invoice-container">
+                <header>
+                    <div class="header-section">
+                        <img src="{% static 'img/logo_asuan2.png' %}" alt="Logo de la Empresa" class="company-logo">
+                        <div id="fechaHora"></div>
+                    </div>
+                    <div class="details-section">
+                        <div class="company-details">
+                            <label for="company-name">Nombre de la Empresa:</label>
+                            <input type="text" id="company-name" value="Asuan parque eco-turistico" readonly>
+        
+                            <label for="company-nit">NIT:</label>
+                            <input type="text" id="company-nit" value="900583340"readonly>
+        
+                            <label for="company-address">Dirección:</label>
+                            <input type="text" id="company-address" value="Vereda Bellavista, KM3 via Monterrey-Yopal"readonly>
+        
+                            <label for="company-email">Correo:</label>
+                            <input type="email" id="company-email" value="asuanparque@gmail.com" readonly>
+        
+                            <label for="company-phone">Teléfono:</label>
+                            <input type="tel" id="company-phone" value="+57 3209668241" readonly>
+                        </div>
+                        <main id="product-sale">
+                            <table class="product-sale-table">
+                                <thead>
+                                    <tr>
+                                        <th class="product-sale-column">Producto</th>
+                                        <th class="quantity-sale-column">Cantidad</th>
+                                        <th class="price-sale-column">Precio</th>
+                                        <th class="stock-sale-column">Stock</th>
+                                        <th class="delete-sale-column">Eliminar</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-sale-rows">
+                                    <!-- Tabla de productos-->
+                                </tbody>
+                            </table>
+                            <button onclick="addProductSaleRow()">Agregar Producto</button>
+                            <div class="totals">
+                                <p>Total: <span id="subtotal_sale" style="font-size: 35px; font-weight: bold;">$0</span></p>
+                                <div class="form-group">
+                                    <label for="money_received">Dinero Recibido:</label>
+                                    <input type="number" id="money_received_sale" name="money_received" class="form-control" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="change">Cambio:</label>
+                                    <input type="text" id="change_sale" name="change" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.metodo_pago.id_for_label }}">{{ form.metodo_pago.label }}:</label>
+                        {{ form.metodo_pago|add_class:'form-control'|attr:'autocomplete:off' }}
+                    </div>
+                </header>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="detalles_venta" name="detalles_venta">
+    <div class="card-footer">
+        <button class="btn btn-info btn-flat"><i class="fas fa-plus"></i> Guardar</button>
+        <a href="{{ listar_url }}" class="btn btn-danger btn-flat">
+            <i class="fas fa-times"></i> Cancelar
+        </a>
+    </div>
+    </div>
+</form> 
+<script>
+    {% if form.errors %}
+    var errors = '';
+    {% for field in form %}
+    {% for error in field.errors %}
+    errors += '{{ error }}';
+    {% endfor %}
+    {% endfor %}
+
+    Swal.fire({
+        title: 'Error!',
+        text: errors,
+        icon: 'error',
+    });
+    {% endif %}
+</script>
+<script>
+    function mostrarFechaHora() {
+      const fechaHoraDiv = document.getElementById('fechaHora');
+      const fechaActual = new Date();
+      const opciones = {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      };
+      
+      const fechaHoraFormateada = fechaActual.toLocaleDateString('es-ES', opciones).replace(',', '');
+      fechaHoraDiv.textContent = fechaHoraFormateada;
+    }
+
+    mostrarFechaHora();
+
+    setInterval(mostrarFechaHora, 1000);
+  </script>
+{% endblock %}

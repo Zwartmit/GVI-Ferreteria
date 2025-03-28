@@ -1,0 +1,251 @@
+{% extends 'listar.html' %}
+{%load static %}
+{% block columnas %}
+<tr>
+    <th scope="col">id</th>
+    <th scope="col">Fecha</th>
+    <th scope="col">Metodo de pago</th>
+    <th scope="col">Tipo de venta</th>
+    <th scope="col">Detalle de venta</th>
+</tr>
+{% endblock %}
+
+{% block filas %}
+{% for item in ventas_con_detalles %}
+<tr>
+    <td>{{ item.venta.id }}</td>
+    <td>{{ item.venta.fecha_venta|date:"Y-m-d" }} a las {{ item.venta.fecha_venta|date:"H:i" }}</td>
+    <td>{{ item.venta.metodo_pago }}</td>
+    <td>{{ item.venta.tipo_venta }}</td>
+    <td>
+        <button id="detalle-venta-{{ item.venta.id }}" type="button" data-toggle="modal"
+            data-target="#modal-{{ item.venta.id }}">
+            <i class="fas fa-search"></i>
+        </button>
+        <div class="modal fade" id="modal-{{ item.venta.id }}" tabindex="-1" role="dialog"
+            aria-labelledby="ventaModalLabel-{{ item.venta.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered custom-width-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ventaModalLabel-{{ item.venta.id }}">Factura de Venta <b>#{{item.venta.id }}</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="captura">
+                        <div class="header-section">
+                            <img src="{% static 'img/logo_asuan2.png' %}" alt="Logo de la Empresa"
+                                class="company-logo-invoice">
+                        </div>
+                        <div class="datos-factura">
+                            <h5><b>Asuan parque eco-turistico</b></h5>
+                            <p><b>NIT:</b><br> 900583340</p>
+                            <p><b>Dirección:</b><br> Vereda Bellavista, KM3 via Monterrey-Yopal</p>
+                            <p><b>Correo:</b><br> asuanparque@gmail.com</p>
+                            <p><b>Teléfono:</b><br> +57 3209668241</p>
+                        </div>
+                        <hr>
+                        <p><b>ID Venta:</b><br> {{ item.venta.id }}</p>
+                        <p><b>Fecha de Venta:</b><br> {{ item.venta.fecha_venta }}</p>
+                        <hr>
+                        {% if item.venta.tipo_venta != 'Caja' %}
+                        <p><b>Cliente:</b><br></p>
+                        {% for cuenta in item.cuentas %}
+                        <p>{{ cuenta.id_cliente }}</p>
+                        {% endfor %}
+                        <p><b>Mesero:</b><br></p>
+                        {% for cuenta in item.cuentas %}
+                        <p>{{ cuenta.id_mesero }}</p>
+                        {% endfor %}
+                        <hr>
+                        {% else %}
+                        {% endif %}
+                        {% if item.venta.tipo_venta != 'Caja' %}
+                        <h5><b>Platos:</b></h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Plato</th>
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cuenta in item.cuentas %}
+                                <tr>
+                                    <td>{{ cuenta.id_plato }}</td>
+                                    <td>{{ cuenta.cantidad_plato }}</td>
+                                    <td>{{ cuenta.subtotal_plato }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        {% endif %}
+                        <h5><b>Productos:</b></h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for detalle in item.detalles_venta %}
+                                <tr>
+                                    <td>{{ detalle.id_producto }}</td>
+                                    <td>{{ detalle.cantidad_producto }}</td>
+                                    <td>{{ detalle.subtotal_venta }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <br>
+                        <div class="totales_factura">
+                            <p><b>Total:</b><br><b> $</b>{{ item.venta.total_venta }}</p>
+                            <hr>
+                            <p><b>Dinero Ingresado: <br>$</b>{{ item.venta.dinero_recibido }}</p>
+                            <p><b>Cambio: <br>$</b>{{ item.venta.cambio }}</p>
+                        </div>
+                        <hr>
+                        <p><b>Método de Pago:</b><br> {{ item.venta.metodo_pago }}</p>
+                        <p><b>Tipo de Venta:</b><br> {{ item.venta.tipo_venta }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="generarPDF" onclick="imprimirFactura({{ item.venta.id }})">Imprimir PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+{% endfor %}
+{% endblock %}
+{% block javascript %}
+<script type="application/javascript">
+    function imprimirFactura(idVenta) {
+        const contenido = document.querySelector(`#modal-${idVenta} .modal-body`).innerHTML;
+
+        const nuevaVentana = window.open('', '_blank');
+
+        nuevaVentana.document.write(`
+            <html>
+            <head>
+                <title>Factura #${idVenta}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                    }
+                    .header-section {
+                        text-align: center;
+                    }
+                    .totales_factura {
+                        margin-top: 20px;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 20px 0;
+                    }
+                    th, td {
+                        padding: 10px 20px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                    .table-bordered th, .table-bordered td {
+                        border: 1px solid #ddd; 
+                    }
+                </style>
+            </head>
+            <body onload="window.print(); window.close();">
+                <div>${contenido}</div>
+            </body>
+            </html>
+        `);
+
+        nuevaVentana.document.close();
+    }
+</script>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        var columnNames = ['id', 'Fecha', 'Metodo de pago', 'Tipo de venta', 'Detalle de venta'];
+        var excludedColumnIndex = 4;
+
+        var table = $("#tabla").DataTable({
+            responsive: true,
+            columnDefs: [
+                { targets: '_all', visible: true }
+            ],
+            initComplete: function () {
+                var api = this.api();
+                api.columns().every(function (index) {
+                    var column = this;
+                    var header = $(column.header());
+
+                    if (index !== excludedColumnIndex) {
+                        var filterContainer = $('<div class="filter-container"></div>').appendTo(header.empty());
+                        $('<label>' + columnNames[index] + '</label>').appendTo(filterContainer);
+
+                        if (index === 1) {
+                            $('<label>Fecha inicial:</label>').appendTo(filterContainer);
+                            var startDateInput = $('<input type="date" placeholder="Desde">').appendTo(filterContainer);
+                            
+                            $('<label>Fecha final:</label>').appendTo(filterContainer);
+                            var endDateInput = $('<input type="date" placeholder="Hasta">').appendTo(filterContainer);
+
+                            // Filtrar por fecha
+                            startDateInput.add(endDateInput).on('change', function () {
+                                var startDate = startDateInput.val();
+                                var endDate = endDateInput.val();
+
+                                var start = startDate ? new Date(startDate + "T00:00:00") : null;
+                                var end = endDate ? new Date(endDate + "T23:59:59") : null; 
+
+                                // Limpiar filtros anteriores
+                                $.fn.dataTable.ext.search = [];
+                                
+                                // Añadir el nuevo filtro
+                                $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                                    var fechaVenta = data[1]; // Columna de fecha
+                                    var parts = fechaVenta.split(' a las ');
+                                    var fecha = parts[0];
+                                    var hora = parts[1];
+                                    var fechaCompleta = new Date(fecha + 'T' + hora + ':00');
+
+                                    if ((start && fechaCompleta < start) || (end && fechaCompleta > end)) {
+                                        return false;
+                                    }
+                                    return true;
+                                });
+
+                                // Redibujar la tabla
+                                table.draw();
+                            });
+                        } else {
+                            var select = $('<select><option value="">Todos</option></select>')
+                                .appendTo(filterContainer)
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                    column
+                                        .search(val ? '^' + val : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d) {
+                                select.append('<option value="' + d.trim() + '">' + d + '</option>');
+                            });
+                        }
+                    } else {
+                        $('<label>' + columnNames[index] + '</label>').appendTo(header.empty());
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

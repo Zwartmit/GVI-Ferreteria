@@ -1,0 +1,112 @@
+{% load static %}
+<nav class="main-header navbar navbar-expand navbar-dark navbar-green">
+    <ul class="navbar-nav">
+        <li class="nav-itemmm">
+            <a class="nav-link" id="toggle-menu" data-widget="pushmenu" href="#" role="button">
+                <i class="fas fa-bars" style="color: white; font-size: 30px; text-shadow: 3px 3px 2.5px black;"></i>
+            </a>
+        </li>
+        <li class="nav-itemmm d-none d-sm-inline-block ">
+            <a href="{% url 'dashboard' %}" class="nav-link text-white"
+                style="font-size: 20px; font-style: oblique; text-shadow: 3px 3px 2.5px black;">Inicio</a>
+        </li>
+    </ul>
+    <div class="container">
+        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+        </div>
+    </div>
+    <span class="icon" id="logo">
+        <!-- <img src="{% static 'img/icon.png' %}" alt="Logo palmera"> -->
+    </span>
+    <div class="col-sm-6">
+        <h1 class="m-0" style="font-size: 50px; font-style: oblique; color: white; text-shadow: 3px 3px 2.5px black;">Panel de administración</h1>
+    </div>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-itemmm">
+            <a class="nav-link" href="">
+                <i id="darkModeToggle" class="fas fa-moon" title="Modo oscuro-claro"
+                    style="font-size: 30px; color: white; text-shadow: 3px 3px 2.5px black;" aria-hidden="true"
+                    onclick="toggleDarkMode()"></i>
+            </a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-itemmm">
+            <a class="nav-link" href="{% static 'resources/Manual de usuario (Software G&V Asuán).pdf' %}" target="_blank">
+                <i class="fas fa-question" title="Ayuda"
+                    style="font-size: 30px; color: white; text-shadow: 3px 3px 2.5px black;" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+    {% if perms.app.view_usuario %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-itemmm">
+            <a class="nav-link" href="{% url 'app:gestionar_backups'%}">
+                <i class="fas fa-database" title="Administrar copias de seguridad"
+                    style="font-size: 30px; color: white; text-shadow: 3px 3px 2.5px black;" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+    {% endif %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-itemmm dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user" style="font-size: 30px; color: white; text-shadow: 3px 3px 2.5px black;"></i>
+            </a>
+            <div class="logout-menu dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <span class="dropdown-item" style="color: white">Usuario activo:<br>{{ user.username }}</span>
+                <a class="dropdown-item" style="color: white" href="#" onclick="confirmLogout(event)">Cerrar sesión</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<script src="{% static 'lib/sweetalert2/sweetHeader.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const darkModeIcon = document.getElementById("darkModeToggle");
+
+            localStorage.setItem('dark-mode', isDarkMode);
+
+            if (isDarkMode) {
+                darkModeIcon.classList.remove('fa-moon');
+                darkModeIcon.classList.add('fa-sun');
+            } else {
+                darkModeIcon.classList.remove('fa-sun');
+                darkModeIcon.classList.add('fa-moon');
+            }
+        }
+        if (localStorage.getItem('dark-mode') === 'true') {
+            document.body.classList.add('dark-mode');
+            const darkModeIcon = document.getElementById("darkModeToggle");
+            darkModeIcon.classList.remove('fa-moon');
+            darkModeIcon.classList.add('fa-sun');
+        }
+        window.toggleDarkMode = toggleDarkMode;
+    });
+
+    function confirmLogout(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: '¿Desea cerrar sesión?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#04644b',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cerrar sesión',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{% url 'logout' %}";
+            }
+        });
+    }
+</script>

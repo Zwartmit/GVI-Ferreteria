@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block contenido %}
+<form id="delete-form" method="post" action=".">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-trash"></i>
+                {{ titulo }}
+            </h3>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="alert alert-danger alert-dismissible">
+                <h5><i class="icon fas fa-ban"></i> Advertencia</h5>
+                ¿Desea eliminar el registro #{{ object.id }}?
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary swalDefaultSuccess"><i class="fas fa-trash-alt"></i> Sí, eliminar</button>
+            <a href="{{ listar_url }}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
+        </div>
+    </div>
+</form>
+
+<script src="{% static 'lib/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script>
+    document.querySelector('.swalDefaultSuccess').addEventListener('click', function() {
+        fetch(document.querySelector('#delete-form').action, {
+            method: 'POST',
+            body: new FormData(document.querySelector('#delete-form')),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: data.message,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#04644b'
+                }).then(() => {
+                    history.replaceState(null, '', "{{ listar_url }}");  
+                    window.location.href = "{{ listar_url }}"; 
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#04644b'
+                });
+            }
+        });        
+    });
+</script>
+{% endblock %}

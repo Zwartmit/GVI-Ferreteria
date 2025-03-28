@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% block contenido %}
+<form method="post" action=".">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-plus"></i>
+                {{titulo}}
+            </h3>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+            <div class="form-group">
+                <label for="text">{{ field.label }}:</label>
+                {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-primary btn-flat"><i class="fas fa-plus" style="border-radius: 10px;"></i> Guardar</button>
+        <a href="{{ listar_url }}" class="btn btn-danger btn-flat"> <i class="fas fa-times"></i> Cancelar
+        </a>
+    </div>
+    </div>
+</form>
+<script>
+    {% if form.errors %}
+    var errors = '';
+    {% for field in form %}
+    {% for error in field.errors %}
+    errors += '{{ error }}';
+    {% endfor %}
+    {% endfor %}
+
+    Swal.fire({
+        title: 'Error!',
+        text: errors,
+        icon: 'error',
+    });
+    {% endif %}
+</script>
+{% endblock %}

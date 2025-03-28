@@ -1,0 +1,230 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+{% endblock %}
+{% block contenido %}
+<div class="containerBackup">
+    <div class="containerTitle">
+        <h1>Administración de copias de <br>seguridad de la base de datos</h1>
+        <img class="img_db" src="{% static 'img/db_logo.png' %}" alt="Logo database">
+    </div>
+    <div class="backup-section">
+        <div class="generate-section">
+            <h2>Crear copia de seguridad</h2>
+            <form id="backupForm" method="post" action="{% url 'app:gestionar_backups' %}"> 
+                {% csrf_token %}
+                <button class="btn_generate fas fa-download" type="submit"></button>
+            </form>
+        </div>
+        <div class="restore-section">
+            <h2>Restaurar copia de seguridad</h2>
+            <form id="restoreForm" method="post" action="{% url 'app:restaurar_backup' %}"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <table id="backupTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre del archivo</th>
+                            <th>Fecha de creación</th>
+                            <th>Tamaño</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tbody id="backupList">
+                    </tbody>
+                </table>
+                <input type="hidden" id="selectedFile" name="backup_file">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.querySelector('#backupTable tbody');
+
+        function formatDateTime(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString();
+        }
+
+        function loadBackupFiles() {
+            fetch('{% url "app:backup_list" %}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        return;
+                    }
+                    tableBody.innerHTML = '';
+                    if (data.files.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td colspan="4">No hay copias de seguridad generadas</td>
+                        `;
+                        tableBody.appendChild(row);
+                    } else {
+                        data.files.forEach(file => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${file.filename}</td>
+                                <td>${formatDateTime(file.created_at)}</td> 
+                                <td>${(file.size / (1024 * 1024)).toFixed(2)} MB</td>
+                                <td>
+                                    <button type="button" class="select-file" data-filename="${file.filename}">Seleccionar</button>
+                                    <button type="button" class="delete-file" style="background-color: #d33" data-filename="${file.filename}">Eliminar</button>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        loadBackupFiles();
+
+        tableBody.addEventListener('click', function (e) {
+            if (e.target.classList.contains('select-file')) {
+                const filename = e.target.getAttribute('data-filename');
+                document.getElementById('selectedFile').value = filename;
+
+                Swal.fire({
+                    title: 'Archivo Seleccionado',
+                    text: `¿Deseas restaurar el archivo: ${filename}?`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, restaurar',
+                    confirmButtonColor: '#04644b',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const formData = new FormData();
+                        formData.append('backup_file', filename);
+                        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+                        fetch('{% url "app:restaurar_backup" %}', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Éxito',
+                                        text: data.messages.join(' '),
+                                        icon: 'success',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#04644b',
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data.messages.join(' '),
+                                        icon: 'error',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#04644b',
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error inesperado.',
+                                    icon: 'error'
+                                });
+                            });
+                    }
+                });
+            } else if (e.target.classList.contains('delete-file')) {
+                const filename = e.target.getAttribute('data-filename');
+
+                Swal.fire({
+                    title: 'Confirmar Eliminación',
+                    text: `¿Desea eliminar el archivo: ${filename}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    confirmButtonColor: '#04644b',
+                    cancelButtonText: 'Cancelar',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('{% url "app:eliminar_backup" %}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({ 'filename': filename })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    title: data.success ? 'Eliminado' : 'Error',
+                                    text: data.messages.join(' '),
+                                    icon: data.success ? 'success' : 'error',
+                                    confirmButtonText: 'Aceptar',
+                                    confirmButtonColor: '#04644b',
+                                });
+
+                                if (data.success) {
+                                    loadBackupFiles();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al intentar eliminar el archivo.',
+                                    icon: 'error'
+                                });
+                            });
+                    }
+                });
+            }
+        });
+
+        document.getElementById('backupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch('{% url "app:gestionar_backups" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const message = data.messages.join(" ");
+                    Swal.fire({
+                        title: data.success ? 'Éxito' : 'Error',
+                        text: message,
+                        icon: data.success ? 'success' : 'error',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#04644b'
+                    });
+                    loadBackupFiles();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error al crear el respaldo.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#04644b'
+                    });
+                });
+        });
+    });
+</script>
+{% endblock %}

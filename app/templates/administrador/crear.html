@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% block contenido %}
+<form method="post" action=".">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-plus"></i>
+                {{titulo}}
+            </h3>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+                {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-primary btn-flat"><i class="fas fa-plus"></i> Guardar</button>
+        <a href="{{ listar_url }}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (event) {
+            event.preventDefault(); 
+
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: response.message,  
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = "{% url 'app:administrador_lista' %}";
+                        });
+                    } else {
+                        let errorMessages = '';
+                        let errors = JSON.parse(response.errors);
+                        for (let field in errors) {
+                            for (let error of errors[field]) {
+                                errorMessages += `${error.message}<br>`;
+                            }
+                        }
+
+                        Swal.fire({
+                            title: 'Error',
+                            html: errorMessages,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '#04644b'
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

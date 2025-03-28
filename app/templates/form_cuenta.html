@@ -1,0 +1,197 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% block contenido %}
+{% load static %}
+
+<form method="post" action=".">
+    {% csrf_token %}
+    <div class="card card-default">
+        <div class="card-header"> 
+            <h3 class="card-title">
+                <i class="fas fa-plus"></i>
+                {{titulo}}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="invoice-container"> 
+                <header>
+                    <div class="header-section">
+                        <img src="{% static 'img/logo_asuan2.png' %}" alt="Logo de la Empresa" class="company-logo">
+                        <div id="fechaHora"></div>
+                    </div>
+                    <div class="details-section">
+                        <div class="company-details">
+                            <label for="details-company" style="font-size: 20px;">Detalles de la Empresa:</label><br><br>
+                            <label for="company-name">Nombre de la Empresa:</label>
+                            <input type="text" id="company-name" value="Asuan parque eco-turistico" readonly>
+        
+                            <label for="company-nit">NIT:</label>
+                            <input type="text" id="company-nit" value="900583340"readonly>
+        
+                            <label for="company-address">Dirección:</label>
+                            <input type="text" id="company-address" value="Vereda Bellavista, KM3 via Monterrey-Yopal"readonly>
+        
+                            <label for="company-email">Correo:</label>
+                            <input type="email" id="company-email" value="asuanparque@gmail.com" readonly>
+        
+                            <label for="company-phone">Teléfono:</label>
+                            <input type="tel" id="company-phone" value="+57 3209668241" readonly>
+                        </div>
+                        <div class="client-details">
+                            <label for="client-select" style="font-size: 20px;">Detalles del Cliente:</label><br><br>
+                            <div class="client-options">
+                                <div class="options">
+                                    <label for="client-select">Buscar cliente:</label><br>
+                                    <input class="client-id client-select" id="client-select"/>
+                                </div>
+                                <div class="options">
+                                    <label for="add-client">Agregar:</label>
+                                    <!-- Botón para abrir el modal -->
+                                    <button id="add-client" type="button" data-toggle="modal" data-target="#modal">
+                                        <i class="fas fa-plus"></i> Nuevo cliente
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="client-information">
+                                <label for="client-name">Nombre:</label>
+                                <input type="text" id="client-name" readonly>
+                                <div class="document">
+                                    <div class="document-type">
+                                        <label for="client-document_type">T. Documento:</label>
+                                        <input type="text" id="client-document_type" readonly>
+                                    </div>
+                                    <div class="document-number">
+                                        <label for="client-document_number">No. Documento:</label>
+                                        <input type="text" id="client-document_number" readonly>
+                                    </div>
+                                </div>
+                                <label for="client-email">Correo:</label>
+                                <input type="email" id="client-email" readonly>
+                                <div class="phone">
+                                    <div class="phone-prefix">
+                                        <label for="client-phone_prefix">Prefijo:</label>
+                                        <input type="tel" id="client-phone_prefix" readonly>
+                                    </div>
+                                    <div class="phone-number">
+                                        <label for="client-phone_number">Teléfono:</label>
+                                        <input type="tel" id="client-phone_number" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <main id="combined-sale">
+                        <!-- Productos -->
+                        <div class="div-tablas">
+                            <label for="details-products" style="font-size: 20px;">Agregar Productos:</label><br>
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th class="product-column">Producto</th>
+                                        <th class="quantity-column">Cantidad</th>
+                                        <th class="price-column">Precio</th>
+                                        <th class="stock-column">Stock</th>
+                                        <th class="delete-column">Eliminar</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="product-rows" id="product-rows">
+                                    <!-- Filas de productos -->
+                                </tbody>
+                            </table>
+                            <button type="button" onclick="addProductRow()">Agregar Producto</button>
+                        </div>
+                        <!-- Platos -->
+                        <div class="div-tablas">
+                            <label for="details-dishes" style="font-size: 20px;">Agregar Platos:</label><br>
+                            <table class="dish-table">
+                                <thead>
+                                    <tr>
+                                        <th class="dish-column">Plato</th>
+                                        <th class="quantity-dish-column">Cantidad</th>
+                                        <th class="price-dish-column">Precio</th>
+                                        <th class="delete-dish-column">Eliminar</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dish-rows">
+                                    <!-- Filas de platos -->
+                                </tbody>
+                            </table>
+                            <button type="button" onclick="addDishRow()">Agregar Plato</button>
+                        </div>
+                        <!-- Totales -->
+                        <div class="totals">
+                            <p>Total: <span id="subtotal" style="font-size: 35px; font-weight: bold;">$0</span></p>
+                            <div class="form-group">
+                                <label for="dinero_recibido">Dinero Recibido:</label>
+                                <input type="number" id="dinero_recibido" name="dinero_recibido" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cambio">Cambio:</label>
+                                <input type="text" id="cambio" name="cambio" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="waiter-select">Buscar mesero:</label><br>
+                            <input class="waiter-id waiter-select" id="waiter-select">
+                        </div>
+                    </main>
+                        <div class="form-group">
+                            <label for="{{ form.metodo_pago.id_for_label }}">{{ form.metodo_pago.label }}:</label>
+                            {{ form.metodo_pago|add_class:'form-control'|attr:'autocomplete:off' }}
+                        </div>
+                </header>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="detalles_venta" name="detalles_venta">
+    <input type="hidden" id="cuentas" name="cuentas">
+    <input type="hidden" id="client-id" name="client_id">
+    <div class="card-footer">
+        <button class="btn btn-info btn-flat"><i class="fas fa-plus"></i> Guardar</button>
+        <a href="{{ listar_url }}" class="btn btn-danger btn-flat">
+            <i class="fas fa-times"></i> Cancelar
+        </a>
+    </div>
+</form>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addClientModalLabel">Nuevo Cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="clienteForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ cliente_form.as_p }}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-client">Guardar cliente</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function mostrarFechaHora() {
+        const fechaHoraDiv = document.getElementById('fechaHora');
+        const fechaActual = new Date();
+        const opciones = {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        };
+        const fechaHoraFormateada = fechaActual.toLocaleDateString('es-ES', opciones).replace(',', '');
+        fechaHoraDiv.textContent = fechaHoraFormateada;
+    }
+
+    mostrarFechaHora();
+    setInterval(mostrarFechaHora, 1000);
+</script>
+{% endblock %}

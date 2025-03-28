@@ -1,0 +1,396 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Asuán, parque ecoturístico</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <link href="{%static 'img/icon.png' %}" rel="icon">
+  <link href="{%static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+  <link href="{%static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{%static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'lib/adminlte-3.0.4/plugins/font-awesome-5.11.1/css/all.min.css' %}">
+  <link href="{%static 'css/style.css' %}" rel="stylesheet">
+  <script src="{%static 'js/mainAcc.js' %}"></script>
+  <script src="{% static 'lib/sienna/sienna.js' %}"></script>
+</head>
+
+<body>
+  <!-- ======= Encabezado ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container">
+      <div class="header-container d-flex align-items-center justify-content-between">
+        <div class="logo">
+          <a href="#hero"><img src="{%static 'img/logo_asuan.png' %}" alt="Asuán" class="img-fluid"></a>
+        </div>
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="#hero">Inicio</a></li>
+            <li><a class="nav-link scrollto" href="#about">Nosotros</a></li>
+            <li><a class="nav-link scrollto" href="#services">Actividades</a></li>
+            <li><a class="nav-link scrollto " href="#portfolio">Comidas</a></li>
+            <li><a class="nav-link scrollto" href="#team">Equipo</a></li>
+            <li><a class="nav-link scrollto" href="#contact">Contacto</a></li>
+            <li><a id="darkModeToggle" class="btn-dark bx bxs-moon" style="font-size: 30px;" title="Modo oscuro-claro"
+                onclick="toggleDarkMode()"></a></li>
+            <li><a class="getstarted scrollto" href="{% url 'login'%}">Iniciar sesión</a></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <!-- Fin de encabezado -->
+
+  <!-- ======= Sección principal ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="200">
+      <h1>Un oasis perfecto para una experiencia natural inolvidable</h1>
+      <h2>Sumérgete en la belleza natural de nuestro lago y piérdete en el bosque que nos rodea</h2>
+    </div>
+  </section>
+  <!-- Fin de sección principal -->
+
+  <main id="main">
+    <!-- ======= Sección 'Nosotros' ======= -->
+    <section id="about" class="about">
+      <div class="container">
+        <div class="section-title" data-aos="fade-right">
+          <h2>Nosotros</h2>
+        </div>
+        <div class="row content">
+          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+            <img src="{% static 'img/logo_asuan2.png' %}" alt="Logo Asuán" class="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-left" data-aos-delay="200">
+            <h3>Donde la serenidad se encuentra con la aventura, y la sostenibilidad es nuestra prioridad. </h3>
+            <p>
+              Estamos encantados de darles la bienvenida a nuestro paraíso sostenible y natural.
+              Para garantizar que cada persona que visita este hermoso lugar pueda disfrutar de
+              la misma experiencia mágica en el futuro, les pedimos amablemente que se unan a
+              nosotros en la preservación y cuidado de este entorno único.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="counts" class="counts">
+      <div class="container">
+        <div class="row counters">
+          <h1>Recomendaciones</h1>
+        </div>
+      </div>
+    </section>
+    <section id="why-us" class="why-us">
+      <div class="container">
+        <div class="row">
+          <div class="icon-boxes d-flex flex-column justify-content-center">
+            <div class="row">
+              <div class="col-xl-4 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+                <div class="icon-box mt-4 mt-xl-0">
+                  <i class="bx bxs-tree"></i>
+                  <h4>Respeto por la Naturaleza</h4>
+                  <p>Caminar en sintonía con la naturaleza es esencial. Les pedimos que eviten dañar la flora y fauna
+                    local, manteniéndose en los senderos designados y respetando la vida silvestre que comparte este
+                    espacio con nosotros.</p>
+                </div>
+              </div>
+              <div class="col-xl-4 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200">
+                <div class="icon-box mt-4 mt-xl-0">
+                  <i class="bx bxs-coffee-togo"></i>
+                  <h4>Manejo de residuos</h4>
+                  <p>Por favor, lleven consigo cualquier residuo que generen durante su visita. Contamos con áreas
+                    designadas para la disposición adecuada de desechos. Contribuir a mantener limpio nuestro entorno es
+                    una manera simple pero efectiva de preservar la belleza del parque.</p>
+                </div>
+              </div>
+              <div class="col-xl-4 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300">
+                <div class="icon-box mt-4 mt-xl-0">
+                  <i class="bx bx-fork"></i>
+                  <h4>No ingresar bebidas ni alimentos</h4>
+                  <p>Con el objetivo de mantener la integridad de nuestro ecosistema y proteger la vida silvestre, les
+                    solicitamos que eviten ingresar bebidas y alimentos desde fuera del parque. Nuestras instalaciones
+                    cuentan con opciones gastronómicas sostenibles para satisfacer sus necesidades, y esta medida ayuda
+                    a reducir el impacto ambiental.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </section>
+    <!-- Fin de sección 'Nosotros' -->
+
+    <!-- ======= Sección 'Actividades' ======= -->
+    <section id="services" class="services section-bg">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="section-title" data-aos="fade-right">
+              <h2>Actividades</h2>
+              <p>Sumérgete en nuestras aguas cristalinas y disfruta de actividades náuticas. Desde el kayak hasta el
+                paddle board, te ofrecemos experiencias acuáticas que te harán vibrar de emoción y te permitirán
+                disfrutar el entorno acuático.</p>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row">
+              <div class="col-md-6 d-flex align-items-stretch">
+                <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
+                  <h4><a>Kayak</a></h4>
+                  <source><img src="{% static 'img/kayak.png' %}" alt="Kayak">
+                </div>
+              </div>
+              <div class="col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
+                <div class="icon-box" data-aos="zoom-in" data-aos-delay="200">
+                  <h4><a>Paddle board</a></h4>
+                  <source><img src="{% static 'img/paddle.png' %}" alt="Kayak">
+                </div>
+              </div>
+              <div class="col-md-6 d-flex align-items-stretch mt-4">
+                <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
+                  <h4><a>Bote</a></h4>
+                  <source><img src="{% static 'img/bote.png' %}" alt="Kayak">
+                </div>
+              </div>
+              <div class="col-md-6 d-flex align-items-stretch mt-4">
+                <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
+                  <h4><a>Voley playa</a></h4>
+                  <source><img src="{% static 'img/voley.png' %}" alt="Voley playa">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Fin de sección 'Actividades' -->
+
+    <!-- ======= Sección 'Comidas' ======= -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+        <div class="section-title" data-aos="fade-left">
+          <h2>Comidas</h2>
+          <p>A continuación encontrarás algunos de los deliciosos platos que ofrecemos en nuestro restaurante.</p>
+        </div>
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="{%static 'img/pechuga.png' %}" class="img-fluid" alt="Pechuga a la plancha"
+                style="width: 600px; height: 300px">
+              <div class="portfolio-info">
+                <h4>Pechuga a la plancha</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="{%static 'img/picada.png' %}" class="img-fluid" alt="Picada"
+                style="width: 600px; height: 300px">
+              <div class="portfolio-info">
+                <h4>Picada</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+            <div class="portfolio-wrap">
+              <img src="{%static 'img/cachama.jpg' %}" class="img-fluid" alt="Cachama frita"
+                style="width: 600px; height: 300px">
+              <div class="portfolio-info">
+                <h4>Cachama frita</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Fin de sección 'Comidas' -->
+
+    <!-- ======= Sección 'Equipo' ======= -->
+    <section id="team" class="team">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="section-title" data-aos="fade-right">
+              <h2>Equipo</h2>
+              <p>Desarrolladores del proyecto.</p>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="member" data-aos="zoom-in" data-aos-delay="100">
+                  <!-- <div class="pic"><img src="{%static 'img/team/Brandon.png' %}" class="img-fluid" alt="Brandon Urbano"></div> -->
+                  <div class="member-info">
+                    <h4>Brandon Urbano</h4>
+                    <p></p>
+                    <div class="social">
+                      <a target="_blank" href="https://www.instagram.com/zwart_mit/"><i
+                          class="ri-instagram-fill"></i></a>
+                      <a target="_blank"
+                        href="https://www.linkedin.com/in/brandonurbano-dev?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i
+                          class="ri-linkedin-box-fill"></i> </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 mt-4 mt-lg-0">
+                <div class="member" data-aos="zoom-in" data-aos-delay="200">
+                  <!-- <div class="pic"><img src="{%static 'img/team/David.jpg' %}" class="img-fluid" alt="David Cubides"></div> -->
+                  <div class="member-info">
+                    <h4>David Cubides</h4>
+                    <p></p>
+                    <div class="social">
+                      <a target="_blank" href="https://www.instagram.com/incogn___/"><i
+                          class="ri-instagram-fill"></i></a>
+                      <a href=""><i class="ri-linkedin-box-fill"></i> </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 mt-4">
+                <div class="member" data-aos="zoom-in" data-aos-delay="300">
+                  <!-- <div class="pic"><img src="{%static 'img/team/Diego.jpg' %}" class="img-fluid" alt="Diego Joya"></div> -->
+                  <div class="member-info">
+                    <h4>Diego Joya</h4>
+                    <p></p>
+                    <div class="social">
+                      <a target="_blank" href="https://www.instagram.com/d.z.v.i.o/"><i
+                          class="ri-instagram-fill"></i></a>
+                      <a target="_blank" href="http://www.linkedin.com/in/alejandro-joya-21b2052b9"><i
+                          class="ri-linkedin-box-fill"></i> </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Fin de sección 'Equipo' -->
+
+    <!-- ======= Sección 'Contacto' ======= -->
+    <section id="contact" class="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4" data-aos="fade-right">
+            <div class="section-title">
+              <h2>Contacto</h2>
+              <p><b>Horario de atención</b><br>
+                Lunes a Domingo de 10:00 am a 6:00 pm</p>
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.55463766328!2d-72.90748367501986!3d4.846256245129339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e6acd002f16f80f%3A0x995814b133d090f0!2sAsu%C3%A1n%20Parque%20Eco%20Turistico!5e0!3m2!1ses!2sco!4v1719334109950!5m2!1ses!2sco"
+              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="info mt-4">
+              <i class="bi bi-geo-alt"></i>
+              <h4>Estamos ubicados en:</h4>
+              <p>Monterrey, Casanare</p>
+            </div>
+            <div class="info mt-4">
+              <i class="bi bi-chat-right-heart-fill"></i>
+              <h4>Nuestras redes sociales:</h4>
+              <div>
+                <p>
+                  <a target="_blank"
+                    href="https://www.facebook.com/people/Asuán-Parque-Eco-Turístico/61554401715893/?mibextid=LQQJ4d">Facebook</a>
+                  /
+                  <a target="_blank" href="https://www.instagram.com/asuan_parqueeco/">Instragram</i></a>
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 mt-4">
+                <div class="info">
+                  <i class="bi bi-envelope"></i>
+                  <h4>Envíanos un correo:</h4>
+                  <p><a href="https://mail.google.com/mail/?view=cm&fs=1&to=asuan.adso@gmail.com"
+                      target="_blank">asuan.adso@gmail.com</a></p>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="info w-100 mt-4">
+                  <i class="bi bi-phone"></i>
+                  <h4>Teléfono:</h4>
+                  <p>+57 320 9668241</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Fin de sección 'Contacto' -->
+  </main>
+
+  <!-- ======= Pie de página ======= -->
+  <footer class="footer">
+    <div class="contenedor">
+      <div class="footer1">
+        <strong>Copyright &copy; 2024-2030 <a target="_blank" href="https://www.asuanparque.com"
+            style="color: black">Asuán</a>.</strong> All rights reserved.
+      </div>
+      <div class="footer2">
+        <img src="{%static 'img/logo_asuan.png' %}" alt="Logo Asuán">
+      </div>
+    </div>
+  </footer>
+  <!-- Fin del pie de página -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+  <script src="{%static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{%static 'vendor/aos/aos.js' %}"></script>
+  <script src="{%static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{%static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{%static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{%static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{%static 'vendor/php-email-form/validate.js' %}"></script>
+  <script src="{%static 'js/main.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        const darkModeIcon = document.getElementById("darkModeToggle");
+
+        localStorage.setItem('dark-mode', isDarkMode);
+
+        if (isDarkMode) {
+          darkModeIcon.classList.remove('bxs-moon');
+          darkModeIcon.classList.add('bxs-sun');
+        } else {
+          darkModeIcon.classList.remove('bxs-sun');
+          darkModeIcon.classList.add('bxs-moon');
+        }
+      }
+
+      if (localStorage.getItem('dark-mode') === 'true') {
+        document.body.classList.add('dark-mode');
+        const darkModeIcon = document.getElementById("darkModeToggle");
+        darkModeIcon.classList.remove('bxs-moon');
+        darkModeIcon.classList.add('bxs-sun');
+      }
+
+      window.toggleDarkMode = toggleDarkMode;
+    });
+
+  </script>
+</body>
+
+</html>
