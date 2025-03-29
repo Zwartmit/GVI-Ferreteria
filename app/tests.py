@@ -2,7 +2,7 @@ from django.test import TestCase
 from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
-from asuan.wsgi import *
+from ferreteria.wsgi import *
 from app.models import *
 
 # LISTAR
