@@ -4,192 +4,223 @@
 
 <!doctype html>
 <html lang="es" class="light">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="{% static 'img/logo_ferreteria.png' %}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ferroeléctricos la 200</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="/static/css/style.css">
-  </head>
-  <body>
-    <header class="main-header">
-      <div class="container">
-        <div class="header-content">
-          <a href="/"><img src="{% static 'img/logo_ferreteria.png' %}" alt="🛠" style="width: auto; height: 81px;"></a>
-  
-          <button class="menu-toggle" onclick="toggleMenu()">
-            ☰
-          </button>
-    
-          <nav class="menu">
-            <a href="#">Inicio</a>
-            <a href="#nosotros">Nosotros</a>
-            <a href="#galeria">Galería</a>
-            <a href="#contacto">Contacto</a>
-            <a class="login-btn" href="{% url 'login' %}">Iniciar sesión</a>
-          </nav>
-        </div>
-      </div>
-    </header>
-    
-    <section id="inicio" class="hero">
-      <div class="hero-overlay"></div>
-      <div class="container">
-        <div class="hero-content">
-          <h2>Tu aliado en cada obra...</h2>
-        </div>
-      </div>
-      <div class="scroll-down">
-        <a href="#nosotros" class="scroll-btn">
-          🠟
-        </a>
-      </div>
-    </section>
-¿
-    <section id="nosotros" class="section bg-white">
-      <div class="container">
-        <h2 class="section-title">Nosotros</h2>
-        <div class="about-grid">
-          <div class="about-image">
-            <img src="{% static 'img/logo_ferreteria.png' %}" alt="Nuestro local">
-          </div>
-          <div class="about-content">
-            <h3>Nuestra Historia...</h3>
-            <p>Desde 2000, Ferroeléctricos la 200 ha sido sinónimo de calidad y servicio en el sector de herramientas y material eléctrico. Comenzamos como una pequeña tienda familiar y hoy somos referentes en el mercado, gracias a nuestra dedicación y compromiso con nuestros clientes.</p>
-            <div class="values-grid">
-              <div class="value-item">
-                <h4>Misión</h4>
-                <p>Proporcionar soluciones integrales y productos de calidad para todos los proyectos de nuestros clientes.</p>
-              </div>
-              <div class="value-item">
-                <h4>Visión</h4>
-                <p>Ser la ferretería líder en innovación y servicio al cliente en toda la región.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section id="galeria" class="section bg-gray">
-      <div class="container">
-        <h2 class="section-title">Galería</h2>
-        <div class="carousel">
-          <div class="carousel-container">
-            <div class="carousel-slide">
-              <img src="https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&q=80&w=1000" alt="Herramientas Eléctricas">
-            </div>
-            <div class="carousel-slide">
-              <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&q=80&w=1000" alt="Herramientas Manuales">
-            </div>
-            <div class="carousel-slide">
-              <img src="https://images.unsplash.com/photo-1558402529-d2638a7023e9?auto=format&fit=crop&q=80&w=1000" alt="Accesorios Eléctricos">
-            </div>
-          </div>
-          <button class="carousel-btn prev">&lt;</button>
-          <button class="carousel-btn next">&gt;</button>
-        </div>
-      </div>
-    </section>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="{% static 'img/logo_ferreteria.png' %}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ferroeléctricos la 200</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
 
-    <section id="contacto" class="section bg-gray">
-      <div class="container">
-        <h2 class="section-title">Contacto</h2>
-        <div class="contact-container">
-          <div class="contact-info-cards">
-            <div class="contact-card">
-              <i data-lucide="map-pin"></i>
-              <h3>Dirección</h3>
-              <p>La Paz, Cl. 200 #20-24, Floridablanca, Santander</p>
+<body>
+  <header class="main-header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/"><img src="{% static 'img/logo_ferreteria.png' %}" alt="🛠" style="width: auto; height: 81px;"></a>
+
+        <button class="menu-toggle" onclick="toggleMenu()">
+          ☰
+        </button>
+
+        <nav class="menu">
+          <a href="#">Inicio</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#galeria">Galería</a>
+          <a href="#contacto">Contacto</a>
+          <a class="login-btn" href="{% url 'login' %}">Iniciar sesión</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <section id="inicio" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container">
+      <div class="hero-content">
+        <h2>Tu aliado en cada obra...</h2>
+      </div>
+    </div>
+    <div class="scroll-down">
+      <a href="#nosotros" class="scroll-btn">
+        🠟
+      </a>
+    </div>
+  </section>
+  ¿
+  <section id="nosotros" class="section bg-white">
+    <div class="container">
+      <h2 class="section-title">Nosotros</h2>
+      <div class="about-grid">
+        <div class="about-image">
+          <img src="{% static 'img/logo_ferreteria.png' %}" alt="Nuestro local">
+        </div>
+        <div class="about-content">
+          <h3>Nuestra Historia...</h3>
+          <p>Desde 2000, Ferroeléctricos la 200 ha sido sinónimo de calidad y servicio en el sector de herramientas y
+            material eléctrico. Comenzamos como una pequeña tienda familiar y hoy somos referentes en el mercado,
+            gracias a nuestra dedicación y compromiso con nuestros clientes.</p>
+          <div class="values-grid">
+            <div class="value-item">
+              <h4>Misión</h4>
+              <p>Proporcionar soluciones integrales y productos de calidad para todos los proyectos de nuestros
+                clientes.</p>
             </div>
-            <div class="contact-card">
-              <i data-lucide="phone"></i>
-              <h3>Teléfono</h3>
-              <p>320-966-8241</p>
+            <div class="value-item">
+              <h4>Visión</h4>
+              <p>Ser la ferretería líder en innovación y servicio al cliente en toda la región.</p>
             </div>
-            <div class="contact-card">
-              <i data-lucide="mail"></i>
-              <h3>Email</h3>
-              <p>info@ferroelectricos200.com</p>
-            </div>
-            <div class="contact-card">
-              <i data-lucide="clock"></i>
-              <h3>Horario</h3>
-              <p>Lun - Dom: 7 am - 7 pm</p>
-            </div>
-          </div>
-          
-          <div class="contact-main">
-            <div class="map">
-              <iframe src="https://www.google.com/maps/embed?pb=!3m2!1ses-419!2sco!4v1743133966282!5m2!1ses-419!2sco!6m8!1m7!1s94j0elyEXpqIHJTiT143BQ!2m2!1d7.061251191556515!2d-73.09626304873647!3f169.04723302305788!4f-3.516935218493785!5f0.7820865974627469"
-              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <form class="contact-form">
-              <h3>Envíanos un mensaje</h3>
-              <div class="form-grid">
-                <div class="form-group">
-                  <label>Nombre</label>
-                  <input type="text" placeholder="Tu nombre">
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" placeholder="tu@email.com">
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Asunto</label>
-                <input type="text" placeholder="Asunto del mensaje">
-              </div>
-              <div class="form-group">
-                <label>Mensaje</label>
-                <textarea placeholder="Tu mensaje"></textarea>
-              </div>
-              <button type="submit" class="btn">Enviar Mensaje</button>
-            </form>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-section">
-            <h3>Contáctanos</h3>
-            <div class="footer-info">
-              <p><i data-lucide="phone"></i>320-966-8241</p>
-              <p><i data-lucide="mail"></i> info@ferroelectricos200.com</p>
-              <p><i data-lucide="map-pin"></i> La Paz, Cl. 200 #20-24, Floridablanca, Santander</p>
-            </div>
+  <section id="galeria" class="section bg-gray">
+    <div class="container">
+      <h2 class="section-title">Galería</h2>
+      <div class="carousel">
+        <div class="carousel-container">
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&q=80&w=1000"
+              alt="Herramientas Eléctricas">
           </div>
-          <div class="footer-section">
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&q=80&w=1000"
+              alt="Herramientas Manuales">
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1558402529-d2638a7023e9?auto=format&fit=crop&q=80&w=1000"
+              alt="Accesorios Eléctricos">
+          </div>
+        </div>
+        <button class="carousel-btn prev">&lt;</button>
+        <button class="carousel-btn next">&gt;</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="section bg-gray">
+    <div class="container">
+      <h2 class="section-title">Contacto</h2>
+      <div class="contact-container">
+        <div class="contact-info-cards">
+          <div class="contact-card">
+            <i data-lucide="map-pin"></i>
+            <h3>Dirección</h3>
+            <p>La Paz, Cl. 200 #20-24, Floridablanca, Santander</p>
+          </div>
+          <div class="contact-card">
+            <i data-lucide="phone"></i>
+            <h3>Teléfono</h3>
+            <p>320-966-8241</p>
+          </div>
+          <div class="contact-card">
+            <i data-lucide="mail"></i>
+            <h3>Email</h3>
+            <p>info@ferroelectricos200.com</p>
+          </div>
+          <div class="contact-card">
+            <i data-lucide="clock"></i>
             <h3>Horario</h3>
-            <p>Lunes a Domingo</p>
-            <p>7 am - 7 pm</p>
-          </div>
-          <div class="footer-section">
-            <h3>Síguenos</h3>
-            <p>Encuentra nuestras ofertas y novedades en redes sociales</p>
+            <p>Lun - Dom: 7 am - 7 pm</p>
           </div>
         </div>
-        <div class="footer-bottom">
-          <p>© 2024 Ferroeléctricos la 200. Todos los derechos reservados.</p>
+
+        <div class="contact-main">
+          <div class="map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!3m2!1ses-419!2sco!4v1743133966282!5m2!1ses-419!2sco!6m8!1m7!1s94j0elyEXpqIHJTiT143BQ!2m2!1d7.061251191556515!2d-73.09626304873647!3f169.04723302305788!4f-3.516935218493785!5f0.7820865974627469"
+              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <form class="contact-form">
+            <h3>Envíanos un mensaje</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" placeholder="Tu nombre">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="tu@email.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Asunto</label>
+              <input type="text" placeholder="Asunto del mensaje">
+            </div>
+            <div class="form-group">
+              <label>Mensaje</label>
+              <textarea placeholder="Tu mensaje"></textarea>
+            </div>
+            <button type="submit" class="btn">Enviar Mensaje</button>
+          </form>
         </div>
       </div>
-    </footer>
+    </div>
+  </section>
 
-    <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
-      <i data-lucide="chevron-up"></i>
-    </button>
-    <script>
-      function toggleMenu() {
-        var menu = document.getElementById("menu");
-        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-      }
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h3>Contáctanos</h3>
+          <div class="footer-info">
+            <p><i data-lucide="phone"></i>320-966-8241</p>
+            <p><i data-lucide="mail"></i> info@ferroelectricos200.com</p>
+            <p><i data-lucide="map-pin"></i> La Paz, Cl. 200 #20-24, Floridablanca, Santander</p>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3>Horario</h3>
+          <p>Lunes a Domingo</p>
+          <p>7 am - 7 pm</p>
+        </div>
+        <div class="footer-section">
+          <h3>Síguenos</h3>
+          <p>Encuentra nuestras ofertas y novedades en redes sociales</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 Ferroeléctricos la 200. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+  <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">⬆️</button>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const scrollToTop = document.getElementById("scrollToTop");
+      const scrollToStart = document.getElementById("scrollToStart");
+
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 300) {
+          scrollToTop.style.display = "block";
+          scrollToStart.style.display = "block";
+        } else {
+          scrollToTop.style.display = "none";
+          scrollToStart.style.display = "none";
+        }
+      });
+
+      scrollToTop.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      scrollToStart.addEventListener("click", function () {
+        window.scrollTo({ top: document.getElementById("inicio").offsetTop, behavior: "smooth" });
+      });
+    });  
+  </script>
+  <script>
+    function toggleMenu() {
+      var menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
       const menuToggle = document.querySelector(".menu-toggle");
       const navMenu = document.querySelector("nav");
 
@@ -210,30 +241,31 @@
         }
       });
     });
-    </script>
-    <script>
-      const carousel = document.querySelector('.carousel-container');
-      const slides = document.querySelectorAll('.carousel-slide');
-      const prevBtn = document.querySelector('.prev');
-      const nextBtn = document.querySelector('.next');
-      let index = 0;
-    
-      function updateCarousel() {
-        const slideWidth = slides[0].clientWidth;
-        carousel.style.transform = `translateX(${-index * slideWidth}px)`;
-      }
-    
-      nextBtn.addEventListener('click', () => {
-        index = (index + 1) % slides.length;
-        updateCarousel();
-      });
-    
-      prevBtn.addEventListener('click', () => {
-        index = (index - 1 + slides.length) % slides.length;
-        updateCarousel();
-      });
-    
-      window.addEventListener('resize', updateCarousel);
-    </script>
-  </body>
+  </script>
+  <script>
+    const carousel = document.querySelector('.carousel-container');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let index = 0;
+
+    function updateCarousel() {
+      const slideWidth = slides[0].clientWidth;
+      carousel.style.transform = `translateX(${-index * slideWidth}px)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      index = (index + 1) % slides.length;
+      updateCarousel();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      index = (index - 1 + slides.length) % slides.length;
+      updateCarousel();
+    });
+
+    window.addEventListener('resize', updateCarousel);
+  </script>
+</body>
+
 </html>

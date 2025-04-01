@@ -13,7 +13,7 @@
 {% for p in object_list %}
 <tr>
     <td>{{ p.id }}</td>
-    <td>{{ p.presentacion }} {{ p.get_unidad_medida_display }}</td>
+    <td>{{ p.presentacion }}</td>
     <td>{{ p.estado | yesno:"Activo,Inactivo" }}</td>
     <td>
         <a href="{% url 'app:presentacion_editar' p.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i></a>

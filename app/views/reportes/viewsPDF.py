@@ -209,7 +209,7 @@ def export_ventas_pdf(request, fecha_inicio=None, fecha_fin=None):
 #     headers = ['ID', 'ID Venta', 'Fecha Venta', 'Producto', 'Cantidad', 'Subtotal Venta']
 #     data_rows = [
 #         [detalle.id, detalle.id_venta, detalle.id_venta.fecha_venta.strftime("%Y-%m-%d %H:%M:%S"), 
-#          f"{detalle.id_producto.producto}-{detalle.id_producto.id_presentacion.presentacion}({detalle.id_producto.id_presentacion.unidad_medida})", 
+#          f"{detalle.id_producto.producto}-{detalle.id_producto.id_presentacion.presentacion}", 
 #          detalle.cantidad_producto, detalle.subtotal_venta]
 #         for detalle in Detalle_venta.objects.all()
 #     ]

@@ -52,7 +52,7 @@ def productos_api(request):
     term = request.GET.get('term', '')
     productos = Producto.objects.filter(
         Q(producto__icontains=term) & Q(estado=True)
-    ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion', 'id_presentacion__unidad_medida')
+    ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion')
     return JsonResponse(list(productos), safe=False)
 
 def clientes_api(request):

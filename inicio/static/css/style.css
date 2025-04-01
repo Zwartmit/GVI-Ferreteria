@@ -589,33 +589,22 @@ footer {
   text-align: center;
 }
 
-.scroll-to-top {
+.scroll-to-top, .scroll-to-start {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background-color: var(--primary);
-  color: white;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  bottom: 20px;
+  background-color: #9b0707;
+  height: 60px;
+  width: 60px;
   border: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 25px;
+  display: none;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.scroll-to-top.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.scroll-to-top:hover {
-  transform: translateY(-2px);
+.scroll-to-top {
+  right: 30px;
 }
 
 @media (max-width: 768px) {

@@ -69,11 +69,6 @@ class PresentacionForm(ModelForm):
                     "placeholder": "Presentación",
                 }
             ),
-            "unidad_medida": Select(
-                attrs={
-                    "placeholder": "Unidad de medida",
-                }
-            ),
             "estado": Select(
                 choices=[(True, "Activo"), (False, "Inactivo")],
                 attrs={

@@ -36,23 +36,16 @@ class Marca(models.Model):
 ########################################################################################################################################
 
 class Presentacion(models.Model):
-    class unidadMedida(models.TextChoices):
-        L = 'litro(s)', 'litro(s)'
-        ML = 'mililitro(s)', 'mililitro(s)'
-        G = 'gramo(s)', 'gramo(s)'
-
     presentacion = models.CharField(max_length=50, verbose_name="Presentación")
-    unidad_medida = models.CharField(max_length=12, choices=unidadMedida.choices, default="", verbose_name="Unidad de medida")
     estado = models.BooleanField(default=True, verbose_name="Estado")
 
     def __str__(self):
-        return f"{self.presentacion} {self.get_unidad_medida_display()}"
+        return f"{self.presentacion}"
 
     class Meta:
         verbose_name = "presentacion"
         verbose_name_plural = "presentaciones"
         db_table = "Presentacion"
-        unique_together = ('presentacion', 'unidad_medida')  
 
         
 ########################################################################################################################################
@@ -67,7 +60,7 @@ class Producto(models.Model):
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
 
     def __str__(self):
-        return f"{self.producto}-{self.id_presentacion.presentacion}({self.id_presentacion.unidad_medida})"
+        return f"{self.producto}-{self.id_presentacion.presentacion}({self.id_presentacion})"
 
     class Meta:
         verbose_name= "producto"
@@ -226,7 +219,7 @@ class Detalle_venta(models.Model):
     id_venta = models.ForeignKey(Venta, on_delete=models.PROTECT)
     id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     cantidad_producto = models.PositiveIntegerField(verbose_name="Cantidad de productos")
-    subtotal_venta = models.DecimalField(max_digits=8, decimal_places=2,verbose_name="Subtotal", default="0")
+    subtotal_venta = models.DecimalField(max_digits=11, decimal_places=2,verbose_name="Subtotal", default="0")
     fecha_detalle = models.DateTimeField(auto_now_add=True, verbose_name="Fecha detalle")
 
     def __str__(self):

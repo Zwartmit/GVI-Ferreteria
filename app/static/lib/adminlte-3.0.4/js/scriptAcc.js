@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return {
                         results: data.map(producto => ({
                             id: producto.id,
-                            text:`${producto.producto} - ${producto.id_presentacion__presentacion} (${producto.id_presentacion__unidad_medida})`,
+                            text:`${producto.producto} - ${producto.id_presentacion__presentacion})`,
                             valor: producto.valor,
                             cantidad: producto.cantidad
                         }))
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return {
                         results: data.map(producto => ({
                             id: producto.id,
-                            text:`${producto.producto} - ${producto.id_presentacion__presentacion} (${producto.id_presentacion__unidad_medida})`,
+                            text:`${producto.producto} - ${producto.id_presentacion__presentacion}`,
                             valor: producto.valor,
                             cantidad: producto.cantidad
                         }))

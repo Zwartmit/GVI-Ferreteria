@@ -226,7 +226,7 @@ def export_presentaciones_excel(request):
     presentaciones = Presentacion.objects.all()
     for row_num, presentacion in enumerate(presentaciones, 6):  
         ws.cell(row=row_num, column=2, value=presentacion.id)
-        ws.cell(row=row_num, column=3, value=f"{presentacion.presentacion} {presentacion.unidad_medida}")
+        ws.cell(row=row_num, column=3, value=f"{presentacion.presentacion}")
         ws.cell(row=row_num, column=4, value='Activo' if presentacion.estado else 'Inactivo')
         
         for col_num in range(2, 5):
@@ -309,7 +309,7 @@ def export_productos_excel(request):
         ws.cell(row=row_num, column=6, value='Activo' if producto.estado else 'Inactivo')
         ws.cell(row=row_num, column=7, value=producto.id_categoria.categoria)
         ws.cell(row=row_num, column=8, value=producto.id_marca.marca) 
-        ws.cell(row=row_num, column=9, value=f"{producto.id_presentacion.presentacion} {producto.id_presentacion.unidad_medida}") 
+        ws.cell(row=row_num, column=9, value=f"{producto.id_presentacion.presentacion}") 
         
         for col_num in range(2, 10): 
             cell = ws.cell(row=row_num, column=col_num)
@@ -890,7 +890,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
 #         ws.cell(row=row_num, column=2, value=detalle.id)
 #         ws.cell(row=row_num, column=3, value=detalle.id_venta.id)
 #         ws.cell(row=row_num, column=4, value=detalle.id_venta.fecha_venta.replace(tzinfo=None))
-#         producto_info = f"{detalle.id_producto.producto}-{detalle.id_producto.id_presentacion.presentacion}({detalle.id_producto.id_presentacion.unidad_medida})"
+#         producto_info = f"{detalle.id_producto.producto}-{detalle.id_producto.id_presentacion.presentacion}"
 #         ws.cell(row=row_num, column=5, value=producto_info)
 #         ws.cell(row=row_num, column=6, value=detalle.cantidad_producto)
 #         ws.cell(row=row_num, column=7, value=detalle.subtotal_venta)

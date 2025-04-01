@@ -24,7 +24,7 @@
         <td>{{ p.estado | yesno:"Activo,Inactivo" }}</td>
         <td>{{ p.id_categoria.categoria }}</td>
         <td>{{ p.id_marca.marca }}</td>
-        <td>{{ p.id_presentacion.presentacion }} {{ p.id_presentacion.get_unidad_medida_display }}</td>
+        <td>{{ p.id_presentacion.presentacion }}</td>
         <td>
             <a href="{% url 'app:producto_editar' p.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i>
             </a><a href="{% url 'app:producto_eliminar' p.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
