@@ -52,7 +52,7 @@ class Presentacion(models.Model):
         verbose_name = "presentacion"
         verbose_name_plural = "presentaciones"
         db_table = "Presentacion"
-        unique_together = ('presentacion', 'unidad_medida')  # Añade la restricción única
+        unique_together = ('presentacion', 'unidad_medida')  
 
         
 ########################################################################################################################################
@@ -75,40 +75,7 @@ class Producto(models.Model):
         db_table ='Producto'
 
 ########################################################################################################################################
-
-class Mesero(models.Model):
-    class TipoDocumento(models.TextChoices):
-        CC = 'CC', 'Cédula de Ciudadanía'
-        TI = 'TI', 'Tarjeta de Identidad'
-        CE = 'CE', 'Cédula de Extranjería'
-        RC = 'RC', 'Registro Civil'
-        PSP = 'PSP', 'Pasaporte'
-  
-    def validar_email(value):
-        value = "foo.bar@baz.qux"
-        try:
-            validate_email(value)
-        except ValidationError:
-            raise ValidationError("Correo rechazado")  
-        
-    nombre = models.CharField(max_length=50, verbose_name="Nombre")
-    tipo_documento = models.CharField(max_length=3, choices=TipoDocumento.choices, default=TipoDocumento.CC, verbose_name="Tipo de documento")
-    numero_documento = models.PositiveIntegerField(verbose_name="Número de documento", unique=True)
-    email = models.EmailField(max_length=50, verbose_name="Email", validators=[validate_email])
-    pais_telefono = models.CharField(max_length=50, choices=[(pais, pais) for pais in codigos_telefonicos_paises], default='Colombia (+57)', verbose_name="Prefijo telefónico")
-    telefono = models.PositiveIntegerField(verbose_name="Teléfono")
-    estado = models.BooleanField(default=True, verbose_name="Estado")
-
-    def __str__(self):
-        return f"{self.nombre}"
-
-    class Meta:
-        verbose_name= "mesero"
-        verbose_name_plural ='meseros'
-        db_table ='Mesero'
-
-########################################################################################################################################
-
+ 
 class Cliente(models.Model):
     class TipoDocumento(models.TextChoices):
         CC = 'CC', 'Cédula de Ciudadanía'
@@ -139,22 +106,6 @@ class Cliente(models.Model):
         verbose_name= "cliente"
         verbose_name_plural ='clientes'
         db_table ='Cliente'
-
-########################################################################################################################################
-
-class Plato(models.Model):
-    plato = models.CharField(max_length=50, verbose_name="Nombre del plato")
-    descripcion = models.CharField(max_length=300, verbose_name="Descripción")
-    valor = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Valor")
-    estado = models.BooleanField(default=True, verbose_name="Estado")
-
-    def __str__(self):
-        return f"{self.plato}"
-
-    class Meta:
-        verbose_name= "plato"
-        verbose_name_plural ='platos'
-        db_table ='Plato'
 
 ########################################################################################################################################
 
@@ -252,8 +203,6 @@ class Venta(models.Model):
     
     class TipoVenta(models.TextChoices):
         Caja = 'Caja', 'Venta en Caja'
-        Cuenta = 'Cuenta', 'Venta en Cuenta'
-
 
     fecha_venta = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de la venta")
     total_venta = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Total de la venta", null=True, blank=True)
@@ -290,22 +239,10 @@ class Detalle_venta(models.Model):
 
 ########################################################################################################################################
 
-class Cuenta(models.Model):
-
-    id_venta = models.ForeignKey(Venta, on_delete=models.PROTECT)
-    id_plato = models.ForeignKey(Plato,on_delete=models.PROTECT)
-    cantidad_plato = models.PositiveIntegerField(verbose_name="Cantidad")
-    subtotal_plato = models.DecimalField(max_digits=8, decimal_places=2,verbose_name="Subtotal", default="0")
-    id_cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
-    id_mesero = models.ForeignKey(Mesero, on_delete=models.PROTECT) 
-    fecha_cuenta = models.DateTimeField(auto_now_add=True, verbose_name="Fecha cuentas")
+class Verificador(models.Model):
+    codigo = models.CharField(max_length=10, unique=True)
+    nombre = models.CharField(max_length=100)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return str(self.id_plato)
-
-    class Meta:
-        verbose_name= "cuenta"
-        verbose_name_plural ='cuentas'
-        db_table = 'Cuenta'
-
-########################################################################################################################################
+        return self.nombre

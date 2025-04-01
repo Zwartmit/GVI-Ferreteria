@@ -50,7 +50,7 @@ def generate_pdf_report(title_text, headers, data_rows, filename):
     col_widths = [2 * inch, 2 * inch, 2 * inch, 2 * inch, 2 * inch, 2 * inch]
     table = Table(data, colWidths=col_widths)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#9b0707")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#04644B")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),

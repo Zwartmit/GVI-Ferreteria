@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-collapse elevation-2">
     <div class="sidebar">
         <div class="logo-container text-center">
-            <img src="{% static 'img/logo_ferreteria.png' %}" alt="Logo Asuán" style="width: 150px; height: 150px; filter: drop-shadow(3px 3px 2.5px black);" class="logo-image img-fluid">
+            <img src="{% static 'img/logo.png' %}" alt="Logo Asuán" style="width: 150px; height: 150px;" class="logo-image img-fluid">
         </div>
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
@@ -30,13 +30,6 @@
                                 <span>Ventas por caja</span>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:cuenta' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-file-invoice-dollar" style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Ventas por cuenta</span>
-                            </a>
-                        </li> -->
                     </ul>
                 </li>
                 <li class="nav-itemm">
@@ -86,60 +79,6 @@
                                 <i class="nav-icon fas fa-shapes"
                                     style="font-size: 20px; margin-right: 10px; color: white;"></i>
                                 <span>Presentaciones</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-itemm">
-                    <a href="#submenu3" class="nav-link d-flex justify-content-between align-items-center"
-                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
-                        <div class="d-flex align-items-center">
-                            <i class="nav-icon fas fa-drumstick-bite" style="font-size: 25px; margin-right: 10px;"></i>
-                            <p class="mb-0" style="font-size: 19px;">Gestión de restaurante</p>
-                        </div>
-                    </a>
-                    <ul class="collapse list-unstyled pl-4" id="submenu3">
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:plato_lista' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-list"
-                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Lista de platos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:plato_crear' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-plus"
-                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Registrar plato</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-itemm">
-                    <a href="#submenu4" class="nav-link d-flex justify-content-between align-items-center"
-                        data-toggle="collapse" aria-expanded="false" style="color: white; font-size: 13px;">
-                        <div class="d-flex align-items-center">
-                            <i class="nav-icon fas fa-user-friends" style="font-size: 25px; margin-right: 10px;"></i>
-                            <p class="mb-0" style="font-size: 19px;">Gestión de meseros</p>
-                        </div>
-                    </a>
-                    <ul class="collapse list-unstyled pl-4" id="submenu4">
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:mesero_lista' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-list"
-                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Lista de meseros</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:mesero_crear' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-plus"
-                                    style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Registrar mesero</span>
                             </a>
                         </li>
                     </ul>
@@ -199,7 +138,15 @@
                         </li>
                     </ul>
                 </li>
-                {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'app:verificador' %}" class="nav-link d-flex justify-content-between align-items-center" style="color: white; font-size: 13px;">
+                        <div class="d-flex align-items-center">
+                            <i class="nav-icon fas fa-barcode" style="font-size: 25px; margin-right: 10px;"></i>
+                            <p class="mb-0" style="font-size: 19px;">Verificador de Precios</p>
+                        </div>
+                    </a>
+                </li>
+                {% endif %}                
                 <li class="nav-itemm">
                     <a href="{% url 'app:gestion_reportes' %}" class="nav-link d-flex justify-content-between align-items-center" style="color: white; font-size: 13px;">
                         <div class="d-flex align-items-center">
@@ -209,7 +156,7 @@
                     </a>                    
                 </li>
             </ul>
-        </nav>
+        </nav> 
     </div>
 </aside>
 <script>

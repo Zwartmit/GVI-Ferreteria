@@ -18,7 +18,7 @@ def export_categorias_excel(request):
     
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                          right=Side(style='medium'), 
@@ -95,7 +95,7 @@ def export_marcas_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                          right=Side(style='medium'), 
@@ -172,7 +172,7 @@ def export_presentaciones_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                          right=Side(style='medium'), 
@@ -249,7 +249,7 @@ def export_productos_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                          right=Side(style='medium'), 
@@ -331,7 +331,7 @@ def export_platos_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                            right=Side(style='medium'), 
@@ -421,7 +421,7 @@ def export_meseros_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                            right=Side(style='medium'), 
@@ -502,7 +502,7 @@ def export_clientes_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                            right=Side(style='medium'), 
@@ -583,7 +583,7 @@ def export_administradores_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                            right=Side(style='medium'), 
@@ -663,7 +663,7 @@ def export_operadores_excel(request):
 
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                            right=Side(style='medium'), 
@@ -749,7 +749,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
-    green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+    green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
                          right=Side(style='medium'), 
@@ -831,7 +831,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     
 #     bold_font = Font(bold=True)
 #     center_alignment = Alignment(horizontal="center", vertical="center")
-#     green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+#     green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
 #     white_font = Font(color="FFFFFF")
 #     medium_border = Border(left=Side(style='medium'), 
 #                          right=Side(style='medium'), 
@@ -915,7 +915,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     
 #     bold_font = Font(bold=True)
 #     center_alignment = Alignment(horizontal="center", vertical="center")
-#     green_fill = PatternFill(start_color="9b0707", end_color="9b0707", fill_type="solid")
+#     green_fill = PatternFill(start_color="04644B", end_color="04644B", fill_type="solid")
 #     white_font = Font(color="FFFFFF")
 #     medium_border = Border(left=Side(style='medium'), 
 #                          right=Side(style='medium'), 
