@@ -1,4 +1,8 @@
 from django.shortcuts import render
 
 def verificador(request):
-    return render(request, 'verificador/verificador.html')
+    contexto = {
+        'titulo': 'Verificador de precios',
+        'entidad': 'Verificador de precios'
+    }
+    return render(request, 'verificador/verificador.html', contexto)

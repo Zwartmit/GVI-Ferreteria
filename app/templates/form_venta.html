@@ -15,25 +15,25 @@
             <div class="invoice-container">
                 <header>
                     <div class="header-section">
-                        <img src="{% static 'img/logo_asuan2.png' %}" alt="Logo de la Empresa" class="company-logo">
+                        <img src="{% static 'img/logo_ferreteria.png' %}" alt="🛠" class="company-logo">
                         <div id="fechaHora"></div>
                     </div>
                     <div class="details-section">
                         <div class="company-details">
                             <label for="company-name">Nombre de la Empresa:</label>
-                            <input type="text" id="company-name" value="FERROELECTRICOS" readonly>
+                            <input type="text" id="company-name" value="Ferroeléctricos" readonly>
         
                             <label for="company-nit">NIT:</label>
                             <input type="text" id="company-nit" value="7334184-6"readonly>
         
                             <label for="company-address">Dirección:</label>
-                            <input type="text" id="company-address" value="Calle 200 #20-24, Floridablanca-Santander"readonly>
+                            <input type="text" id="company-address" value="La Paz, Cl. 200 #20-24, Floridablanca, Santander"readonly>
         
                             <label for="company-email">Correo:</label>
                             <input type="email" id="company-email" value="FERROELECTRICOS@gmail.com" readonly>
         
                             <label for="company-phone">Teléfono:</label>
-                            <input type="tel" id="company-phone" value="+57 3209668241" readonly>
+                            <input type="tel" id="company-phone" value="320-966-8241" readonly>
                         </div>
                         <main id="product-sale">
                             <table class="product-sale-table">
@@ -75,7 +75,7 @@
     </div>
     <input type="hidden" id="detalles_venta" name="detalles_venta">
     <div class="card-footer">
-        <button class="btn btn-info btn-flat"><i class="fas fa-plus"></i> Guardar</button>
+        <button class="btn btn-flat" style="background-color: #0D6EFD; color: white;"><i class="fas fa-plus"></i> Guardar</button>
         <a href="{{ listar_url }}" class="btn btn-danger btn-flat">
             <i class="fas fa-times"></i> Cancelar
         </a>

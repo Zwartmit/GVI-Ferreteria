@@ -14,33 +14,31 @@ const productos = {
     "1013": { nombre: "Mortadela", precio: 3500 },
     "1014": { nombre: "Harina", precio: 2000 },
     "1015": { nombre: "Chocolate", precio: 4000 },
-    
-};  
+};
 
 function verificarPrecio() {
-    const productoCodigo = document.getElementById('producto').value.trim();
+    const inputField = document.getElementById('producto');
+    const productoCodigo = inputField.value.trim();
     const resultado = document.getElementById('resultado');
-    console.log("Código ingresado por el usuario:", productoCodigo);
 
-    if (productoCodigo === "salir") {
-        resultado.textContent = "Gracias por consultar.";
-        limpiarResultadoConRetardo();
+    if (productoCodigo === "") {
+        resultado.textContent = "Por favor ingrese un código.";
+        resultado.style.color = "red"; 
         return;
     }
+
     if (productos[productoCodigo]) {
         const productoEncontrado = productos[productoCodigo];
-        resultado.textContent = `${productoEncontrado.nombre} - $${productoEncontrado.precio.toFixed(2)}`;
+        resultado.textContent = `${productoEncontrado.nombre} - $${productoEncontrado.precio}`;
+        resultado.style.color = "white"; 
     } else {
         resultado.textContent = "Producto no encontrado.";
+        resultado.style.color = "yellow"; 
     }
-    document.getElementById('producto').value = "";
 
-    limpiarResultadoConRetardo();
-}
-function limpiarResultadoConRetardo() {
-    setTimeout(() => {
-        const resultado = document.getElementById('resultado');
-        resultado.textContent = ""; 
-    }, 4000); 
+    inputField.value = "";
 }
 
+function limpiarResultado() {
+    document.getElementById('resultado').textContent = "";
+}

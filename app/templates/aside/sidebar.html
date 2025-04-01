@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-collapse elevation-2">
     <div class="sidebar">
         <div class="logo-container text-center">
-            <img src="{% static 'img/logo.png' %}" alt="Logo Asuán" style="width: 150px; height: 150px;" class="logo-image img-fluid">
+            <img src="{% static 'img/logo_ferreteria.png' %}" alt="Logo Asuán" style="width: 150px; height: 150px;" class="logo-image img-fluid">
         </div>
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
@@ -17,17 +17,17 @@
                     </a>
                     <ul class="collapse list-unstyled pl-4" id="submenu1">
                         <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'app:venta_crear' %}"
+                                style="font-size: 19px; color: white;">
+                                <i class="nav-icon fas fa-cash-register" style="font-size: 20px; margin-right: 10px; color: white;"></i>
+                                <span>Nueva venta</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link d-flex align-items-center" href="{% url 'app:venta_lista' %}"
                                 style="font-size: 19px; color: white;">
                                 <i class="nav-icon fas fa-search" style="font-size: 20px; margin-right: 10px; color: white;"></i>
                                 <span>Consultar ventas</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="{% url 'app:venta_crear' %}"
-                                style="font-size: 19px; color: white;">
-                                <i class="nav-icon fas fa-cash-register" style="font-size: 20px; margin-right: 10px; color: white;"></i>
-                                <span>Ventas por caja</span>
                             </a>
                         </li>
                     </ul>

@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="button" class="btn btn-primary swalDefaultSuccess"><i class="fas fa-trash-alt"></i> Sí, eliminar</button>
+            <button type="button" class="btn swalDefaultSuccess" style="background-color: #0D6EFD; color: white;"><i class="fas fa-trash-alt"></i> Sí, eliminar</button>
             <a href="{{ listar_url }}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
         </div>
     </div>
@@ -42,7 +42,7 @@
                     title: 'Éxito',
                     text: data.message,
                     confirmButtonText: 'Aceptar',
-                    confirmButtonColor: '#04644b'
+                    confirmButtonColor: '#0D6EFD'
                 }).then(() => {
                     history.replaceState(null, '', "{{ listar_url }}");  
                     window.location.href = "{{ listar_url }}"; 
@@ -53,7 +53,7 @@
                     title: 'Error',
                     text: data.message,
                     confirmButtonText: 'Aceptar',
-                    confirmButtonColor: '#04644b'
+                    confirmButtonColor: '#0D6EFD'
                 });
             }
         });        
