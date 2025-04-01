@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span id="product-stock-${productRowCounter}" class="product-stock">0</span>
             </td>
             <td class="delete-column">
-                <i type="button" id="delete-row-${productRowCounter}" class="delete-row fas fa-trash-alt" style="color: #04644B; font-size: 25px;"
+                <i type="button" id="delete-row-${productRowCounter}" class="delete-row fas fa-trash-alt" style="color: #9b0707; font-size: 25px;"
                     onmouseover="this.style.color='#ff0000';"
-                    onmouseout="this.style.color='#04644B';"></i>
+                    onmouseout="this.style.color='#9b0707';"></i>
             </td>
             <td><span id="product-total-${productRowCounter}" class="product-total">$0.00</span></td>
         `;
@@ -139,9 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input id="dish-price-${dishRowCounter}" type="number" class="dish-price" min="0" step="0.01" required readonly>
             </td>
             <td class="delete-dish-column">
-                <i type="button" id="delete-dish-row-${dishRowCounter}" class="delete-dish-row fas fa-trash-alt" style="color: #04644B; font-size: 25px;"
+                <i type="button" id="delete-dish-row-${dishRowCounter}" class="delete-dish-row fas fa-trash-alt" style="color: #9b0707; font-size: 25px;"
                     onmouseover="this.style.color='#ff0000';"
-                    onmouseout="this.style.color='#04644B';"></i>
+                    onmouseout="this.style.color='#9b0707';"></i>
             </td>
             <td><span id="dish-total-${dishRowCounter}" class="dish-total">$0.00</span></td>
         `;
@@ -561,9 +561,9 @@ document.addEventListener('DOMContentLoaded', function () {
             <td class="price-sale-column"><input type="number" class="product-price" min="0" step="0.01" required readonly></td>
             <td class="stock-sale-column"><span class="product-stock">0</span></td>
             <td class="delete-sale-column">
-                <i type="button" class="delete-row fas fa-trash-alt" style="color: #04644B; font-size: 25px;"
+                <i type="button" class="delete-row fas fa-trash-alt" style="color: #9b0707; font-size: 25px;"
                     onmouseover="this.style.color='#ff0000';"
-                    onmouseout="this.style.color='#04644B';"></i>
+                    onmouseout="this.style.color='#9b0707';"></i>
             </td>
             <td><span class="product-total">$0.00</span></td>
         `;

@@ -39,7 +39,7 @@
         text: 'Ya existe un producto con este nombre.',
         icon: 'error',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     });
     {% elif request.GET.created %}
     Swal.fire({
@@ -47,7 +47,7 @@
         text: 'Producto registrado con éxito.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = "{% url 'app:producto_lista' %}";
@@ -59,7 +59,7 @@
         text: 'Producto editado con éxito.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = "{% url 'app:producto_lista' %}";

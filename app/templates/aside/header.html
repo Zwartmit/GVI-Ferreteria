@@ -1,14 +1,11 @@
 {% load static %}
 <nav class="main-header navbar navbar-expand navbar-dark navbar-green">
     <ul class="navbar-nav">
-        <li class="nav-itemmm">
-            <a class="nav-link" id="toggle-menu" data-widget="pushmenu" href="#" role="button">
-                <i class="fas fa-bars" style="color: white; font-size: 30px; text-shadow: 3px 3px 2.5px black;"></i>
-            </a>
-        </li>
-        <li class="nav-itemmm d-none d-sm-inline-block ">
+        <li class="nav-itemmm d-none d-sm-inline-block">
             <a href="{% url 'dashboard' %}" class="nav-link text-white"
-                style="font-size: 20px; font-style: oblique; text-shadow: 3px 3px 2.5px black;">Inicio</a>
+                style="font-size: 25px; text-shadow: 3px 3px 2.5px black;">
+                <i class="fas fa-home"></i>
+            </a>
         </li>
     </ul>
     <div class="container">
@@ -19,21 +16,9 @@
         <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         </div>
     </div>
-    <span class="icon" id="logo">
-        <!-- <img src="{% static 'img/icon.png' %}" alt="Logo palmera"> -->
-    </span>
     <div class="col-sm-6">
         <h1 class="m-0" style="font-size: 50px; font-style: oblique; color: white; text-shadow: 3px 3px 2.5px black;">Panel de administración</h1>
     </div>
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-itemmm">
-            <a class="nav-link" href="">
-                <i id="darkModeToggle" class="fas fa-moon" title="Modo oscuro-claro"
-                    style="font-size: 30px; color: white; text-shadow: 3px 3px 2.5px black;" aria-hidden="true"
-                    onclick="toggleDarkMode()"></i>
-            </a>
-        </li>
-    </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-itemmm">
             <a class="nav-link" href="{% static 'resources/Manual de usuario (Software G&V Asuán).pdf' %}" target="_blank">
@@ -67,31 +52,6 @@
 </nav>
 <script src="{% static 'lib/sweetalert2/sweetHeader.js' %}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const darkModeIcon = document.getElementById("darkModeToggle");
-
-            localStorage.setItem('dark-mode', isDarkMode);
-
-            if (isDarkMode) {
-                darkModeIcon.classList.remove('fa-moon');
-                darkModeIcon.classList.add('fa-sun');
-            } else {
-                darkModeIcon.classList.remove('fa-sun');
-                darkModeIcon.classList.add('fa-moon');
-            }
-        }
-        if (localStorage.getItem('dark-mode') === 'true') {
-            document.body.classList.add('dark-mode');
-            const darkModeIcon = document.getElementById("darkModeToggle");
-            darkModeIcon.classList.remove('fa-moon');
-            darkModeIcon.classList.add('fa-sun');
-        }
-        window.toggleDarkMode = toggleDarkMode;
-    });
-
     function confirmLogout(event) {
         event.preventDefault();
         Swal.fire({
@@ -99,7 +59,7 @@
             text: "",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#04644b',
+            confirmButtonColor: '#9b0707',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, cerrar sesión',
             cancelButtonText: 'Cancelar'
