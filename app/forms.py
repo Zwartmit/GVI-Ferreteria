@@ -197,81 +197,6 @@ class ClienteForm(ModelForm):
             )
         }
 
-class MeseroForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["nombre"].widget.attrs["autofocus"] = True
-            
-    class Meta:
-        model = Mesero
-        fields = "__all__"
-        widgets = {
-            "nombre": TextInput(
-                attrs={
-                    "placeholder": "Nombre del mesero",
-                }
-            ),
-            "tipo_documento": Select(
-                attrs={
-                    "placeholder": "Tipo de documento",
-                }
-            ),
-            "numero_documento": NumberInput(
-                attrs={
-                    "placeholder": "Número de documento",
-                }
-            ),
-            "email": EmailInput(
-                attrs={
-                    
-                    "placeholder": "Email",
-                }
-            ),
-            "telefono": NumberInput(
-                attrs={
-                    "placeholder": "Teléfono",
-                }
-            ),
-            "estado": Select(
-                choices=[(True, "Activo"), (False, "Inactivo")],
-                attrs={
-                    "placeholder": "Estado del plato",
-                },
-            )
-        }
-
-class PlatoForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["plato"].widget.attrs["autofocus"] = True
-
-    class Meta:
-        model = Plato
-        fields = "__all__"
-        widgets = {
-            "plato": TextInput(
-                attrs={
-                    "placeholder": "Nombre del plato",
-                }
-            ),
-            "descripcion": Textarea(
-                attrs={
-                    "placeholder": "Descripción del plato",
-                }
-            ),
-            "valor": NumberInput(
-                attrs={
-                    "placeholder": "Valor del plato",
-                }
-            ),
-            "estado": Select(
-                choices=[(True, "Activo"), (False, "Inactivo")],
-                attrs={
-                    "placeholder": "Estado del plato",
-                },
-            )
-        }
-
 class AdministradorForm(ModelForm):
     username = forms.CharField(
         label="Nombre de usuario",
@@ -518,39 +443,6 @@ class DetalleVentaForm(ModelForm):
             ),
         }
         
-class CuentaForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["cantidad_plato"].widget.attrs["autofocus"] = True
-        self.fields['id_plato'].queryset = Producto.objects.all()
-
-    class Meta:
-        model = Cuenta
-        fields = "__all__"
-        # exclude = ['fecha_cuenta']
-        widgets = {
-            "cantidad_plato": NumberInput(
-                attrs={
-                    "placeholder": "Cantidad"
-                }
-            ),
-            "id_plato": Select2Widget(
-                attrs={
-                    "class": "product-select"
-                }
-            ),
-            "id_cliente": Select2Widget(
-                attrs={
-                    "class": "client-select"
-                }
-            ),
-            "id_mesero": Select2Widget(
-                attrs={
-                    "class": "client-select"
-                }
-            ),
-        }
-
 class ReporteForm(forms.Form):
     FORMATO_CHOICES = [
         ('excel', 'Excel'),
