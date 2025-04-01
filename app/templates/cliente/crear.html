@@ -43,7 +43,7 @@
         text: errors,
         icon: 'error',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     });
 {% elif request.GET.created %}
     Swal.fire({
@@ -51,7 +51,7 @@
         text: 'Cliente registrado con éxito.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = "{% url 'app:cliente_lista' %}";
@@ -63,7 +63,7 @@
         text: 'Cliente editado con éxito.',
         icon: 'success',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#04644b'
+        confirmButtonColor: '#9b0707'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = "{% url 'app:cliente_lista' %}";

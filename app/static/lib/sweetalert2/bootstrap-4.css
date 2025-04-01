@@ -320,7 +320,7 @@
     border: 0;
     border-radius: 0.25em;
     background: initial;
-    background-color: #04644b;
+    background-color: #9b0707;
     color: #fff;
     font-size: 1.0625em; }
   .swal2-styled.swal2-cancel {
@@ -1270,7 +1270,7 @@ body.swal2-toast-column .swal2-toast {
     padding-right: 0.75rem;
     background-image: none; }
   .swal2-select:disabled {
-    background-color: #04644b;
+    background-color: #9b0707;
     color: #fff; }
   .swal2-select::-ms-expand {
     display: none; }
@@ -1284,8 +1284,8 @@ body.swal2-toast-column .swal2-toast {
     z-index: -1;
     opacity: 0; }
     .swal2-radio label input:checked ~ .swal2-label::before {
-      border-color: #04644b;
-      background: #04644b;
+      border-color: #9b0707;
+      background: #9b0707;
       color: #fff; }
     .swal2-radio label input:focus ~ .swal2-label::before {
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
@@ -1333,8 +1333,8 @@ body.swal2-toast-column .swal2-toast {
     z-index: -1;
     opacity: 0; }
     .swal2-checkbox input:checked ~ .swal2-label::before {
-      border-color: #04644b;
-      background: #04644b;
+      border-color: #9b0707;
+      background: #9b0707;
       color: #fff; }
     .swal2-checkbox input:focus ~ .swal2-label::before {
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
@@ -1402,7 +1402,7 @@ body.swal2-toast-column .swal2-toast {
       transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
       border: 0;
       border-radius: 1rem;
-      background: #04644b;
+      background: #9b0707;
       box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
       -webkit-appearance: none;
               appearance: none; }
@@ -1425,7 +1425,7 @@ body.swal2-toast-column .swal2-toast {
       transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
       border: 0;
       border-radius: 1rem;
-      background: #04644b;
+      background: #9b0707;
       box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
       -moz-appearance: none;
            appearance: none; }
@@ -1450,7 +1450,7 @@ body.swal2-toast-column .swal2-toast {
       transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
       border: 0;
       border-radius: 1rem;
-      background: #04644b;
+      background: #9b0707;
       box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
       appearance: none; }
       .swal2-range input::-ms-thumb:active {

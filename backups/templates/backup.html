@@ -4,10 +4,6 @@
 {% endblock %}
 {% block contenido %}
 <div class="containerBackup">
-    <div class="containerTitle">
-        <h1>Administración de copias de <br>seguridad de la base de datos</h1>
-        <img class="img_db" src="{% static 'img/db_logo.png' %}" alt="Logo database">
-    </div>
     <div class="backup-section">
         <div class="generate-section">
             <h2>Crear copia de seguridad</h2>
@@ -72,7 +68,7 @@
                                 <td>${formatDateTime(file.created_at)}</td> 
                                 <td>${(file.size / (1024 * 1024)).toFixed(2)} MB</td>
                                 <td>
-                                    <button type="button" class="select-file" data-filename="${file.filename}">Seleccionar</button>
+                                    <button type="button" class="select-file" style="background-color: #0d6efd" data-filename="${file.filename}">Seleccionar</button>
                                     <button type="button" class="delete-file" style="background-color: #d33" data-filename="${file.filename}">Eliminar</button>
                                 </td>
                             `;
@@ -98,7 +94,7 @@
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, restaurar',
-                    confirmButtonColor: '#04644b',
+                    confirmButtonColor: '#0d6efd',
                     cancelButtonText: 'Cancelar',
                     cancelButtonColor: '#d33'
                 }).then((result) => {
@@ -119,7 +115,7 @@
                                         text: data.messages.join(' '),
                                         icon: 'success',
                                         confirmButtonText: 'Aceptar',
-                                        confirmButtonColor: '#04644b',
+                                        confirmButtonColor: '#9b0707',
                                     });
                                 } else {
                                     Swal.fire({
@@ -127,7 +123,7 @@
                                         text: data.messages.join(' '),
                                         icon: 'error',
                                         confirmButtonText: 'Aceptar',
-                                        confirmButtonColor: '#04644b',
+                                        confirmButtonColor: '#9b0707',
                                     });
                                 }
                             })
@@ -150,7 +146,7 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, eliminar',
-                    confirmButtonColor: '#04644b',
+                    confirmButtonColor: '#0d6efd',
                     cancelButtonText: 'Cancelar',
                     cancelButtonColor: '#d33'
                 }).then((result) => {
@@ -170,7 +166,7 @@
                                     text: data.messages.join(' '),
                                     icon: data.success ? 'success' : 'error',
                                     confirmButtonText: 'Aceptar',
-                                    confirmButtonColor: '#04644b',
+                                    confirmButtonColor: '#9b0707',
                                 });
 
                                 if (data.success) {
@@ -210,7 +206,7 @@
                         text: message,
                         icon: data.success ? 'success' : 'error',
                         confirmButtonText: 'Aceptar',
-                        confirmButtonColor: '#04644b'
+                        confirmButtonColor: '#9b0707'
                     });
                     loadBackupFiles();
                 })
@@ -221,7 +217,7 @@
                         text: 'Error al crear el respaldo.',
                         icon: 'error',
                         confirmButtonText: 'Aceptar',
-                        confirmButtonColor: '#04644b'
+                        confirmButtonColor: '#9b0707'
                     });
                 });
         });
