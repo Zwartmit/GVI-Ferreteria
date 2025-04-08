@@ -102,4 +102,5 @@ urlpatterns = [
     path('venta/clientes_api/', clientes_api, name='clientes_api'),
 
     path('verificador/', verificador, name='verificador'),
+   
 ]

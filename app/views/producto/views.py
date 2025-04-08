@@ -19,7 +19,7 @@ def lista_productos(request):
         'titulo': 'Listado de productos',
         'productos': Producto.objects.all()
     }
-    return render(request, 'producto/listar.html',nombre)
+    return render(request, 'producto/listar.html', nombre)
 
 ###### LISTAR ######
 
@@ -129,3 +129,4 @@ class ProductoDeleteView(DeleteView):
             return JsonResponse({'success': True, 'message': 'Producto eliminado con éxito.'})
         except ProtectedError:
             return JsonResponse({'success': False, 'message': 'No se puede eliminar el producto.'})
+

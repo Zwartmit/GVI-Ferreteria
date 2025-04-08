@@ -6,6 +6,7 @@
     <th scope="col">Producto</th>
     <th scope="col">Cantidad</th>
     <th scope="col">Valor</th>
+    <th scope="col">NumVerificador</th>
     <th scope="col">Estado</th>
     <th scope="col">Categoría</th>
     <th scope="col">Marca</th>
@@ -21,6 +22,7 @@
         <td>{{ p.producto }}</td>
         <td>{{ p.cantidad }}</td>
         <td>{{ p.valor }}</td>
+        <td>{{ p.NumVerificador }}</td>
         <td>{{ p.estado | yesno:"Activo,Inactivo" }}</td>
         <td>{{ p.id_categoria.categoria }}</td>
         <td>{{ p.id_marca.marca }}</td>
@@ -39,7 +41,7 @@
             responsive: true,
             initComplete: function () {
                 var api = this.api();
-                var columnNames = ['id', 'Producto', 'Cantidad', 'Valor', 'Estado', 'Categoría', 'Marca', 'Presentación', 'Opciones'];
+                var columnNames = ['id', 'Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Estado', 'Categoría', 'Marca', 'Presentación', 'Opciones'];
                 var excludedColumnIndex = columnNames.indexOf('Opciones'); 
                 api.columns().every(function (index) {
                     var column = this;

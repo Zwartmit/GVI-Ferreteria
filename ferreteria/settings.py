@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'django_browser_reload',
+    'django.contrib.humanize',
     #apps
     'app',
     #dash

@@ -1,25 +1,63 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block contenido %}
 <div class="containerVerificador">
-    <div class="verificador-container">
-      <div class="verificador">
-        <h2 class="mb-4 text-center">Consulta de Precio</h2>
+  <div class="verificador-container">
+    <div class="verificador">
+      <h2 class="mb-4 text-center">Consulta de Precio</h2>
+
+      <form method="post">
+        {% csrf_token %}
         <div class="input-group">
-          <input type="text" id="producto" class="form-control" placeholder="Ingresa el código" aria-label="Código del producto">
+          <input type="text" name="codigo" class="form-control" placeholder="Ingresa el código" aria-label="Código del producto">
         </div>
-        <div class="d-flex justify-content-between">
-          <button class="btn-ver" onclick="verificarPrecio()">
+        <div class="d-flex justify-content-between mt-3">
+          <button class="btn-ver" type="submit">
             <i class="fas fa-search me-1"></i> Consultar
           </button>
-          <button class="btn btn-danger" onclick="limpiarResultado()">
+          <a href="{% url 'app:verificador' %}" class="btn btn-danger">
             <i class="fas fa-trash"></i>
-          </button>
+          </a>
         </div>
-        <div id="resultado" class="resultado-cuadro mt-4 p-3 border rounded"></div>
+      </form>
+
+      <div id="resultado" class="resultado-cuadro mt-4 p-3 border rounded text-center">
+        {% if resultado %}
+          <strong>Producto:</strong> {{ resultado.nombre }}<br>
+          <strong>Precio:</strong> ${{ resultado.valor|floatformat:0|intcomma }}
+        {% elif error %}
+          <span style="color:red;">{{ error }}</span>
+        {% endif %}
       </div>
     </div>
-    <script src="{% static '/lib/adminlte-3.0.4/js/verificador.js' %}"></script>
   </div>
+</div>
+
+{% if resultado or error %}
+{% if resultado or error %}
+<script>
+  setTimeout(function(){
+    document.getElementById("resultado").style.display = "none";
+  }, 3000);
+</script>
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const inputCodigo = document.querySelector('input[name="codigo"]');
+    if (inputCodigo) {
+      inputCodigo.focus();
+      setInterval(() => {
+        if (document.activeElement !== inputCodigo) {
+          inputCodigo.focus();
+        }
+      }, 1000);
+    }
+  });
+</script>
+
+{% endif %}
+
 {% endblock %}

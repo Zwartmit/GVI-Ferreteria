@@ -54,6 +54,7 @@ class Producto(models.Model):
     producto = models.CharField(max_length=50, verbose_name="Producto")
     cantidad = models.PositiveIntegerField(verbose_name="Cantidad")
     valor = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Valor")
+    NumVerificador = models.BigIntegerField(verbose_name="NumVerificador")
     estado = models.BooleanField(default=True, verbose_name="Estado")
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
     id_marca = models.ForeignKey(Marca, on_delete=models.PROTECT, verbose_name="Marca")

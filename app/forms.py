@@ -104,6 +104,12 @@ class ProductoForm(ModelForm):
                     "placeholder": "Valor del producto",
                 }
             ),
+            'NumVerificador': NumberInput(
+                attrs={
+                    'placeholder': 'Número para el verificador',
+                    'class': 'form-control',  
+                }
+            ),
             "estado": Select(
                 choices=[(True, "Activo"), (False, "Inactivo")],
                 attrs={
