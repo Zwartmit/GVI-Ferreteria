@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from app.models import Producto
+from django.core.exceptions import MultipleObjectsReturned
 
 def verificador(request):
     resultado = None
@@ -8,7 +9,7 @@ def verificador(request):
     if request.method == 'POST':
         codigo = request.POST.get('codigo', '').strip()
 
-        if codigo:  # <-- Agregamos esta validación
+        if codigo:
             try:
                 producto = Producto.objects.get(NumVerificador=codigo)
                 resultado = {
@@ -17,6 +18,8 @@ def verificador(request):
                 }
             except Producto.DoesNotExist:
                 error = 'Código no encontrado'
+            except MultipleObjectsReturned:
+                error = 'Error: hay múltiples productos con ese código'
         else:
             error = 'Por favor ingresa un código'
 
