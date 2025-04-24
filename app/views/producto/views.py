@@ -1,4 +1,5 @@
 from django.contrib import messages
+import pandas as pd
 import django
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
@@ -10,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from django.db.models import ProtectedError
-from app.models import Producto
+from app.models import Producto, Categoria, Marca, Presentacion, Compra, Detalle_compra
 from app.forms import ProductoForm
 
 @method_decorator(never_cache, name='dispatch')
@@ -130,3 +131,66 @@ class ProductoDeleteView(DeleteView):
         except ProtectedError:
             return JsonResponse({'success': False, 'message': 'No se puede eliminar el producto.'})
 
+###### IMPORTAR ######
+
+def importar_factura_view(request):
+    if request.method == 'POST' and request.FILES.get('archivo'):
+        archivo = request.FILES['archivo']
+        try:
+            df = pd.read_excel(archivo)
+
+            required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Marca', 'Presentación']
+
+            if not all(col in df.columns for col in required_columns):
+                messages.error(request, "El archivo no contiene todas las columnas requeridas: " + ", ".join(required_columns))
+                return redirect('app:producto_lista')
+            
+            missing_columns = [col for col in required_columns if col not in df.columns]
+
+            if missing_columns:
+                messages.error(
+                    request,
+                    f"El archivo no contiene las siguientes columnas requeridas: {', '.join(missing_columns)}"
+                )
+                return redirect('app:producto_lista')
+            
+            compra = Compra.objects.create(proveedor="Proveedor Desconocido", estado=True)
+
+            for _, row in df.iterrows():
+                categoria, _ = Categoria.objects.get_or_create(categoria=row['Categoría'])
+                marca, _ = Marca.objects.get_or_create(marca=row['Marca'])
+                presentacion, _ = Presentacion.objects.get_or_create(presentacion=row['Presentación'])
+
+                producto, created = Producto.objects.get_or_create(
+                    producto=row['Producto'],
+                    NumVerificador=row['NumVerificador'],
+                    defaults={
+                        'cantidad': row['Cantidad'],
+                        'valor': row['Valor'],
+                        'estado': True,
+                        'id_categoria': categoria,
+                        'id_marca': marca,
+                        'id_presentacion': presentacion,
+                    }
+                )
+
+                if not created:
+                    producto.cantidad += row['Cantidad']
+                    producto.valor = row['Valor']
+                    producto.save()
+
+                Detalle_compra.objects.create(
+                    compra=compra,
+                    producto=producto,
+                    cantidad=row['Cantidad'],
+                    valor_unitario=row['Valor'],
+                    subtotal=row['Cantidad'] * row['Valor']
+                )
+
+            messages.success(request, "Datos importados correctamente desde la factura.")
+        except Exception as e:
+            messages.error(request, f"Error al procesar el archivo: {e}")
+        return redirect('app:producto_lista')
+    else:
+        messages.error(request, "No se seleccionó un archivo.")
+        return redirect('app:producto_lista')

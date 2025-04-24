@@ -9,8 +9,8 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
-from app.models import Venta, Producto, Detalle_venta, Cliente
-from app.forms import VentaForm, ClienteForm, DetalleVentaForm
+from app.models import Venta, Producto, Detalle_venta
+from app.forms import VentaForm, DetalleVentaForm
 import json
 
 @never_cache
@@ -54,13 +54,6 @@ def productos_api(request):
         Q(producto__icontains=term) & Q(estado=True)
     ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion')
     return JsonResponse(list(productos), safe=False)
-
-def clientes_api(request):
-    term = request.GET.get('term', '')
-    clientes = Cliente.objects.filter(
-        Q(nombre__icontains=term) | Q(numero_documento__icontains=term), estado=True
-    ).values('id', 'nombre', 'tipo_documento', 'numero_documento', 'email', 'pais_telefono', 'telefono')
-    return JsonResponse(list(clientes), safe=False)
 
 ###### CREAR ######
 

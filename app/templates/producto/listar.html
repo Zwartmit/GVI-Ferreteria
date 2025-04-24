@@ -33,6 +33,15 @@
         </td>
     </tr>
     {% endfor %}
+    <div>
+        <form id="import-form" method="POST" enctype="multipart/form-data" action="{% url 'app:producto_importar' %}">
+            {% csrf_token %}
+            <input type="file" id="file-input" name="archivo" style="display: none;" accept=".xlsx,.xls,.csv">
+            <button type="button" class="btn btn-success" onclick="document.getElementById('file-input').click();">
+                <i class="fas fa-file-import"></i> Importar datos
+            </button>
+        </form>    
+    </div>
 {% endblock %}
 {% block javascript %}
 <script type="application/javascript">
@@ -70,4 +79,52 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    {% for message in messages %}
+        Swal.fire({
+            icon: "{% if message.tags == 'error' %}error{% else %}success{% endif %}",
+            title: "{{ message|escapejs }}",
+            showConfirmButton: false,
+            timer: 4000
+        });
+    {% endfor %}
+</script>
+<script>
+    document.getElementById('file-input').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const extension = file.name.split('.').pop().toLowerCase();
+            if (extension !== 'xlsx' && extension !== 'xls' && extension !== 'csv') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Formato inválido',
+                    text: 'Solo se permiten archivos .xlsx, .xls o .csv',
+                    showConfirmButton: true,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'Aceptar'
+                });
+                this.value = '';
+                return;
+            }
+    
+            Swal.fire({
+                title: '¿Importar productos?',
+                text: "¿Deseas cargar los productos desde este archivo?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, importar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('import-form').submit();
+                } else {
+                    document.getElementById('file-input').value = '';
+                }
+            });
+        }
+    });
+    </script>    
 {% endblock %}

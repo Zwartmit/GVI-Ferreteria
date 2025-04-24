@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 from .choices import codigos_telefonicos_paises
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -6,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
 
 class Categoria(models.Model):
     categoria = models.CharField(max_length=50, verbose_name="Categoría", unique=True)
@@ -59,47 +61,15 @@ class Producto(models.Model):
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
     id_marca = models.ForeignKey(Marca, on_delete=models.PROTECT, verbose_name="Marca")
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
+    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
 
     def __str__(self):
         return f"{self.producto}-{self.id_presentacion.presentacion}({self.id_presentacion})"
 
     class Meta:
-        verbose_name= "producto"
-        verbose_name_plural ='productos'
-        db_table ='Producto'
-
-########################################################################################################################################
- 
-class Cliente(models.Model):
-    class TipoDocumento(models.TextChoices):
-        CC = 'CC', 'Cédula de Ciudadanía'
-        TI = 'TI', 'Tarjeta de Identidad'
-        CE = 'CE', 'Cédula de Extranjería'
-        RC = 'RC', 'Registro Civil'
-        PSP = 'PSP', 'Pasaporte'
-
-    def validar_email(value):
-        value = "foo.bar@baz.qux"
-        try:
-            validate_email(value)
-        except ValidationError:
-            raise ValidationError("Correo rechazado")  
-        
-    nombre = models.CharField(max_length=50, verbose_name="Nombre")
-    tipo_documento = models.CharField(max_length=3, choices=TipoDocumento.choices, default=TipoDocumento.CC, verbose_name="Tipo de documento")
-    numero_documento = models.PositiveIntegerField(verbose_name="Número de documento", unique=True)
-    email = models.EmailField(max_length=50, verbose_name="Email", validators=[validate_email])
-    pais_telefono = models.CharField(max_length=50, choices=[(pais, pais) for pais in codigos_telefonicos_paises], default='Colombia (+57)', verbose_name="Prefijo telefónico")
-    telefono = models.PositiveIntegerField(verbose_name="Teléfono")
-    estado = models.BooleanField(default=True, verbose_name="Estado")
-
-    def __str__(self):
-        return f"{self.nombre} - {self.tipo_documento}: {self.numero_documento}"
-    
-    class Meta:
-        verbose_name= "cliente"
-        verbose_name_plural ='clientes'
-        db_table ='Cliente'
+        verbose_name = "producto"
+        verbose_name_plural = "productos"
+        db_table = "Producto"
 
 ########################################################################################################################################
 
@@ -153,7 +123,6 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
         user.delete()
 
 ########################################################################################################################################
-
 class Operador(models.Model):
     class TipoDocumento(models.TextChoices):
         CC = 'CC', 'Cédula de Ciudadanía'
@@ -230,6 +199,38 @@ class Detalle_venta(models.Model):
         verbose_name= "detalle_de_venta"
         verbose_name_plural ='detalles_de_ventas'
         db_table ='Detalle_venta' 
+
+########################################################################################################################################
+
+class Compra(models.Model):
+    proveedor = models.CharField(max_length=100, verbose_name="Proveedor")
+    fecha_compra = models.DateTimeField(default=datetime.now, verbose_name="Fecha de la compra")
+    estado = models.BooleanField(default=True, verbose_name="Estado")
+
+    def __str__(self):
+        return f"Compra #{self.id} - {self.proveedor}"
+
+    class Meta:
+        verbose_name = "compra"
+        verbose_name_plural = "compras"
+        db_table = "Compra"
+
+########################################################################################################################################
+
+class Detalle_compra(models.Model):
+    compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
+    producto = models.ForeignKey('Producto', on_delete=models.PROTECT)
+    cantidad = models.PositiveIntegerField()
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.producto} x {self.cantidad}"
+
+    class Meta:
+        verbose_name = "detalle_compra"
+        verbose_name_plural = "detalles_compras"
+        db_table = "Detalle_compra"
 
 ########################################################################################################################################
 

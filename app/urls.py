@@ -4,13 +4,11 @@ from app.views.categoria.views import *
 from app.views.marca.views import *
 from app.views.presentacion.views import *
 from app.views.producto.views import *
-from app.views.cliente.views import *
 from app.views.administrador.views import *
 from app.views.operador.views import *
 from app.views.venta.views import *
 from app.views.detalle_venta.views import *
 from app.views.reportes.viewsExcel import *
-from app.views.reportes.viewsPDF import *
 from app.views.reportes.views import *
 from app.views.verificador.views import *
 from backups.views import BackupDatabaseView, RestoreDatabaseView, DeleteBackupView, BackupListView
@@ -40,13 +38,8 @@ urlpatterns = [
     path('producto/crear/', ProductoCreateView.as_view(), name='producto_crear'),
     path('producto/editar/<int:pk>/', ProductoUpdateView.as_view(), name='producto_editar'),
     path('producto/eliminar/<int:pk>/', ProductoDeleteView.as_view(), name='producto_eliminar'),
+    path('producto/importar/', importar_factura_view, name='producto_importar'),
 
-    ### CRUD CLIENTE ###
-    path('cliente/listar/', ClienteListView.as_view(), name='cliente_lista'),
-    path('cliente/crear/', ClienteCreateView.as_view(), name='cliente_crear'),
-    path('cliente/editar/<int:pk>/', ClienteUpdateView.as_view(), name='cliente_editar'),
-    path('cliente/eliminar/<int:pk>/', ClienteDeleteView.as_view(), name='cliente_eliminar'),
-    
     ### CRUD ADMINISTRADOR ###
     path('administrador/listar/', AdministradorListView.as_view(), name='administrador_lista'),
     path('administrador/crear/', AdministradorCreateView.as_view(), name='administrador_crear'),
@@ -78,29 +71,12 @@ urlpatterns = [
 
     ### REPORTES ###
     path('gestion_reportes/', reporte_selector, name='gestion_reportes'),
-    path('reportes/categorias/excel/', export_categorias_excel, name='export_categorias_excel'),
-    path('reportes/marcas/excel/', export_marcas_excel, name='export_marcas_excel'),
-    path('reportes/presentaciones/excel/', export_presentaciones_excel, name='export_presentaciones_excel'),
     path('reportes/productos/excel/', export_productos_excel, name='export_productos_excel'),
-    path('reportes/platos/excel/', export_platos_excel, name='export_platos_excel'),
-    path('reportes/meseros/excel/', export_meseros_excel, name='export_meseros_excel'),
-    path('reportes/clientes/excel/', export_clientes_excel, name='export_clientes_excel'),
     path('reportes/administradores/excel/', export_administradores_excel, name='export_administradores_excel'),
     path('reportes/operadores/excel/', export_operadores_excel, name='export_operadores_excel'),
-    path('reportes/categorias/pdf/', export_categorias_pdf, name='export_categorias_pdf'),
-    path('reportes/marcas/pdf/', export_marcas_pdf, name='export_marcas_pdf'),
-    path('reportes/presentaciones/pdf/', export_presentaciones_pdf, name='export_presentaciones_pdf'),
-    path('reportes/productos/pdf/', export_productos_pdf, name='export_productos_pdf'),
-    path('reportes/platos/pdf/', export_platos_pdf, name='export_platos_pdf'),
-    path('reportes/meseros/pdf/', export_meseros_pdf, name='export_meseros_pdf'),
-    path('reportes/clientes/pdf/', export_clientes_pdf, name='export_clientes_pdf'),
-    path('reportes/administradores/pdf/', export_administradores_pdf, name='export_administradores_pdf'),
-    path('reportes/operadores/pdf/', export_operadores_pdf, name='export_operadores_pdf'),
 
-        ### API´S ###
+    ### API´S ###
     path('venta/productos_api/', productos_api, name='productos_api'),
-    path('venta/clientes_api/', clientes_api, name='clientes_api'),
-
     path('verificador/', verificador, name='verificador'),
    
 ]
