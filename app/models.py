@@ -185,11 +185,14 @@ class Venta(models.Model):
 ########################################################################################################################################
 
 class Detalle_venta(models.Model):
-    
     id_venta = models.ForeignKey(Venta, on_delete=models.PROTECT)
-    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
+    id_producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    nombre_producto = models.CharField(max_length=100)
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    
     cantidad_producto = models.PositiveIntegerField(verbose_name="Cantidad de productos")
-    subtotal_venta = models.DecimalField(max_digits=11, decimal_places=2,verbose_name="Subtotal", default="0")
+    subtotal_venta = models.DecimalField(max_digits=11, decimal_places=2, verbose_name="Subtotal", default="0")
     fecha_detalle = models.DateTimeField(auto_now_add=True, verbose_name="Fecha detalle")
 
     def __str__(self):
@@ -219,7 +222,7 @@ class Compra(models.Model):
 
 class Detalle_compra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
-    producto = models.ForeignKey('Producto', on_delete=models.PROTECT)
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
     valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)

@@ -58,28 +58,6 @@
                         <hr>
                         {% else %}
                         {% endif %}
-                        {% if item.venta.tipo_venta != 'Caja' %}
-                        <h5><b>Platos:</b></h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Plato</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for cuenta in item.cuentas %}
-                                <tr>
-                                    <td>{{ cuenta.id_plato }}</td>
-                                    <td>{{ cuenta.cantidad_plato }}</td>
-                                    <td>{{ cuenta.subtotal_plato }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% else %}
-                        {% endif %}
                         <h5><b>Productos:</b></h5>
                         <table class="table table-bordered">
                             <thead>
@@ -92,7 +70,7 @@
                             <tbody>
                                 {% for detalle in item.detalles_venta %}
                                 <tr>
-                                    <td>{{ detalle.id_producto }}</td>
+                                    <td>{{ detalle.nombre_producto }}</td>
                                     <td>{{ detalle.cantidad_producto }}</td>
                                     <td>{{ detalle.subtotal_venta }}</td>
                                 </tr>

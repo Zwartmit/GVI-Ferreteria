@@ -142,18 +142,23 @@ def importar_factura_view(request):
             required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Marca', 'Presentación']
 
             if not all(col in df.columns for col in required_columns):
-                messages.error(request, "El archivo no contiene todas las columnas requeridas: " + ", ".join(required_columns))
-                return redirect('app:producto_lista')
-            
-            missing_columns = [col for col in required_columns if col not in df.columns]
-
-            if missing_columns:
+                missing_columns = [col for col in required_columns if col not in df.columns]
                 messages.error(
                     request,
                     f"El archivo no contiene las siguientes columnas requeridas: {', '.join(missing_columns)}"
                 )
                 return redirect('app:producto_lista')
-            
+
+            for col in required_columns:
+                if df[col].isnull().any():
+                    mensajes_filas = df[df[col].isnull()].index.tolist()
+                    mensajes_filas = [str(i + 2) for i in mensajes_filas]
+                    messages.error(
+                        request,
+                        f"La columna '{col}' tiene datos faltantes en la(s) fila(s): {', '.join(mensajes_filas)}. Corrige antes de importar."
+                    )
+                    return redirect('app:producto_lista')
+
             compra = Compra.objects.create(proveedor="Proveedor Desconocido", estado=True)
 
             for _, row in df.iterrows():

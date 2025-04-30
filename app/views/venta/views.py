@@ -92,9 +92,12 @@ class VentaCreateView(CreateView):
             Detalle_venta.objects.create(
                 id_venta=venta,
                 id_producto=producto_instance,
+                nombre_producto=producto_instance.producto,
+                valor_unitario=producto_instance.valor,
                 cantidad_producto=detalle['cantidad_producto'],
                 subtotal_venta=detalle['subtotal_venta']
             )
+
         
         return JsonResponse({'success': True, 'message': 'Venta generada exitosamente'})
 
