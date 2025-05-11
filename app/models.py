@@ -6,7 +6,8 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator    
+from django.core.validators import FileExtensionValidator
 from django.utils import timezone
 
 class Categoria(models.Model):
@@ -161,7 +162,7 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
 ########################################################################################################################################        
 
 class Proveedor(models.Model):
-    nombre = models.CharField(max_length=50, verbose_name="Nombre")
+    nombre = models.CharField(max_length=50, verbose_name="Nombre", unique=True)
     telefono = models.PositiveIntegerField(verbose_name="Teléfono")
     email = models.EmailField(max_length=254, verbose_name="Email")
 
@@ -173,11 +174,11 @@ class Proveedor(models.Model):
         verbose_name_plural = "Proveedores"
         db_table = 'Proveedor'
 
-########################################################################################################################################        
+######################################################################################################################################## 
 
 class Factura(models.Model):
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='facturas')
-    archivo = models.FileField(upload_to='facturas_pdfs/', null=True, blank=True)
+    archivo = models.FileField( upload_to='facturas_pdfs/', null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     valor_abonado = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_registro = models.DateField(auto_now_add=True)

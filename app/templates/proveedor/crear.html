@@ -16,22 +16,27 @@
                 <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
                 {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
                 {% if field.errors %}
-                <div class="alert alert-danger">{{ field.errors }}</div>
+                <div class="alert alert-danger mt-1 mb-0 p-1">{{ field.errors|join:", " }}</div>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
     </div>
     <div class="card-footer">
-        <button class="btn btn-flat" style="background-color: #0D6EFD; color: white;"><i class="fas fa-plus"></i> Guardar</button>
-        <a href="{{ listar_url }}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
+        <button class="btn btn-flat" style="background-color: #0D6EFD; color: white;">
+            <i class="fas fa-plus"></i> Guardar
+        </button>
+        <a href="{{ listar_url }}" class="btn btn-danger btn-flat">
+            <i class="fas fa-times"></i> Cancelar
+        </a>
     </div>
 </form>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         $('form').on('submit', function (event) {
-            event.preventDefault(); 
+            event.preventDefault();
 
             $.ajax({
                 type: $(this).attr('method'),
@@ -41,16 +46,17 @@
                     if (response.success) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: response.message,  
+                            text: response.message,
                             icon: 'success',
-                            confirmButtonText: 'Aceptar'
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '#0D6EFD'
                         }).then(() => {
                             window.location.href = "{{ listar_url }}";
                         });
                     } else {
                         let errorMessages = '';
                         for (let field in response.errors) {
-                            errorMessages += `<strong>${field}</strong>: ${response.errors[field].join('<br>')}<br>`;
+                            errorMessages += `${response.errors[field].join('<br>')}<br>`;
                         }
 
                         Swal.fire({

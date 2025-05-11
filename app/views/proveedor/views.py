@@ -65,11 +65,6 @@ class ProveedorCreateView(CreateView):
     def form_invalid(self, form):
         return JsonResponse({'success': False, 'errors': form.errors})
 
-    def form_invalid(self, form):
-        if self.request.is_ajax():
-            return JsonResponse({'success': False, 'errors': form.errors})
-        return super().form_invalid(form)
-
 @method_decorator(login_required, name='dispatch')
 class ProveedorUpdateView(UpdateView):
     model = Proveedor

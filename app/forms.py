@@ -325,10 +325,16 @@ class OperadorForm(ModelForm):
             "conf_password": PasswordInput(attrs={"min": 1, "placeholder": "Confirme su contraseña"})
         }
 
-class ProveedorForm(ModelForm):
+class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
-        fields = "__all__"
+        fields = '__all__'
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        if Proveedor.objects.filter(nombre__iexact=nombre).exists():
+            raise forms.ValidationError('Ya existe un proveedor con este nombre.')
+        return nombre
 
 class FacturaForm(ModelForm):
     class Meta:
