@@ -138,3 +138,11 @@ class VentaDeleteView(DeleteView):
 
 def ventas_view(request):
     return render(request, 'venta/ventas.html')
+
+
+def productos_api(request):
+    term = request.GET.get('term', '')
+    productos = Producto.objects.filter(
+        (Q(producto__icontains=term) | Q(NumVerificador__icontains=term)) & Q(estado=True)
+    ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion')
+    return JsonResponse(list(productos), safe=False)

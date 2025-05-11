@@ -1,0 +1,123 @@
+{% extends 'listar_no.html' %}
+{% load static %}
+
+{% block columnas %}
+<tr>
+    <th scope="col">ID</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">Email</th>
+    <th scope="col">Teléfono</th>
+    <th scope="col"># Facturas</th>
+    <th scope="col">Deuda Total</th>
+    <th scope="col">Opciones</th>
+</tr>
+{% endblock %}
+
+{% block filas %}
+{% if not has_permission %}
+<tr>
+    <td colspan="7">
+        <div class="alert alert-danger" role="alert">
+            No tienes permiso para ver esta información.
+        </div>
+    </td>
+</tr>
+{% else %}
+{% for proveedor in object_list %}
+<tr>
+    <td>{{ proveedor.id }}</td>
+    <td>{{ proveedor.nombre }}</td>
+    <td>{{ proveedor.email }}</td>
+    <td>{{ proveedor.telefono }}</td>
+    <td>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalFacturas{{ proveedor.id }}">
+            Ver facturas ({{ proveedor.num_facturas }})
+        </button>
+
+        <div class="modal fade" id="modalFacturas{{ proveedor.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel{{ proveedor.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Facturas de {{ proveedor.nombre }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% if proveedor.facturas_list %}
+                            <ul class="list-group">
+                                {% for factura in proveedor.facturas_list %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% if factura.archivo %}
+                                            <a href="{{ factura.archivo.url }}" target="_blank">
+                                                {{ factura.archivo.name }}
+                                            </a>
+                                        {% else %}
+                                            Sin archivo adjunto
+                                        {% endif %}
+                                        <span class="badge badge-secondary">{{ factura.estado|capfirst }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No hay facturas registradas para este proveedor.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>${{ proveedor.deuda_total }}</td>
+    <td>
+        <a href="{% url 'app:proveedor_editar' proveedor.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i>
+        </a><a href="{% url 'app:proveedor_eliminar' proveedor.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script type="application/javascript">
+    $(document).ready(function () {
+        var table = $("#tabla").DataTable({
+            responsive: true,
+            initComplete: function () {
+                var api = this.api();
+                var columnNames = ['ID', 'Nombre', 'Email', 'Teléfono', '# Facturas', 'Deuda Total', 'Opciones'];
+                
+                var excludedIndices = [4, 5, 6];
+
+                api.columns().every(function (index) {
+                    var column = this;
+                    var header = $(column.header());
+                    header.empty();
+
+                    if (!excludedIndices.includes(index)) {
+                        var filterContainer = $('<div class="filter-container"></div>').appendTo(header);
+                        $('<label style="font-weight:bold;">' + columnNames[index] + '</label>').appendTo(filterContainer);
+
+                        var select = $('<select class="form-control form-control-sm mt-1"><option value="">Todos</option></select>')
+                            .appendTo(filterContainer)
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d) {
+                            let valueText = $("<div>").html(d).text().trim();
+                            if (!select.find('option[value="' + valueText + '"]').length) {
+                                select.append('<option value="' + valueText + '">' + valueText + '</option>');
+                            }
+                        });
+                    } else {
+                        header.text(columnNames[index]);
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

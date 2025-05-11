@@ -325,6 +325,19 @@ class OperadorForm(ModelForm):
             "conf_password": PasswordInput(attrs={"min": 1, "placeholder": "Confirme su contraseña"})
         }
 
+class ProveedorForm(ModelForm):
+    class Meta:
+        model = Proveedor
+        fields = "__all__"
+
+class FacturaForm(ModelForm):
+    class Meta:
+        model = Factura
+        fields = "__all__"
+        widgets = {
+            "fecha_emision": DateInput(attrs={"type": "date"}),
+        }
+
 class VentaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

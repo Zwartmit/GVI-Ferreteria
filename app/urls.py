@@ -6,11 +6,13 @@ from app.views.presentacion.views import *
 from app.views.producto.views import *
 from app.views.administrador.views import *
 from app.views.operador.views import *
+from app.views.proveedor.views import *
 from app.views.venta.views import *
 from app.views.detalle_venta.views import *
 from app.views.reportes.viewsExcel import *
 from app.views.reportes.views import *
 from app.views.verificador.views import *
+from app.views.factura.views import *
 from backups.views import BackupDatabaseView, RestoreDatabaseView, DeleteBackupView, BackupListView
 
 app_name = 'app'
@@ -52,6 +54,15 @@ urlpatterns = [
     path('operador/editar/<int:pk>/', OperadorUpdateView.as_view(), name='operador_editar'),
     path('operador/eliminar/<int:pk>/', OperadorDeleteView.as_view(), name='operador_eliminar'),
     
+    ### CRUD PROVEEDOR ###
+    path('proveedor/listar/', ProveedorListView.as_view(), name='proveedor_lista'),
+    path('proveedor/crear/', ProveedorCreateView.as_view(), name='proveedor_crear'),
+    path('proveedor/editar/<int:pk>/', ProveedorUpdateView.as_view(), name='proveedor_editar'),
+    path('proveedor/eliminar/<int:pk>/', ProveedorDeleteView.as_view(), name='proveedor_eliminar'),
+
+    ### CRUD FACTURA ###
+    path('facturas/crear/', FacturaCreateView.as_view(), name='factura_crear'),
+
     ### CRUD VENTA ###
     path('venta/listar/', VentaListView.as_view(), name='venta_lista'),
     path('venta/crear/', VentaCreateView.as_view(), name='venta_crear'),

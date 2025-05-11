@@ -123,6 +123,7 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
         user.delete()
 
 ########################################################################################################################################
+
 class Operador(models.Model):
     class TipoDocumento(models.TextChoices):
         CC = 'CC', 'Cédula de Ciudadanía'
@@ -158,6 +159,46 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
         user.delete()
 
 ########################################################################################################################################        
+
+class Proveedor(models.Model):
+    nombre = models.CharField(max_length=50, verbose_name="Nombre")
+    telefono = models.PositiveIntegerField(verbose_name="Teléfono")
+    email = models.EmailField(max_length=254, verbose_name="Email")
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Proveedor"
+        verbose_name_plural = "Proveedores"
+        db_table = 'Proveedor'
+
+########################################################################################################################################        
+
+class Factura(models.Model):
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='facturas')
+    archivo = models.FileField(upload_to='facturas_pdfs/', null=True, blank=True)
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_abonado = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_registro = models.DateField(auto_now_add=True)
+
+    @property
+    def estado(self):
+        if self.valor_abonado >= self.valor_total:
+            return "Cancelada"
+        elif self.valor_abonado > 0:
+            return "Abonada parcialmente"
+        return "Pendiente"
+
+    def __str__(self):
+        return f"{self.proveedor.nombre} - {self.estado}"
+
+    class Meta:
+        verbose_name = "Factura"
+        verbose_name_plural = "Facturas"
+        db_table = 'Factura'
+
+########################################################################################################################################
 
 class Venta(models.Model):
     class MedotoPago(models.TextChoices):
