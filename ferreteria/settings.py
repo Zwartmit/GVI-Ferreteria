@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-47_-76&ssi#mxnv9!e#&p^pw3ka79*%f%wl(=ci1)k58q!+927
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ferroelectricosla200.com', 'www.ferroelectricosla200.com']
 
 # Application definition
 
@@ -91,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ferreteria',
         'USER': 'ferroelectricos',
-        'PASSWORD': '90uNIqKsutnpym2e0zX1',
+        'PASSWORD': 'FqHOrIrlT8YNqHvR08gb',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -129,9 +129,15 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'app/static')]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'app/static'),
+    os.path.join(BASE_DIR, 'dashboard/static'),
+    os.path.join(BASE_DIR, 'inicio/static'),
+    os.path.join(BASE_DIR, 'login/static'),
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
