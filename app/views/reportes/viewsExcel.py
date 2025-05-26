@@ -65,7 +65,7 @@ def export_productos_excel(request, fecha_inicio=None, fecha_fin=None):
     for col in range(3, 10):
         ws.cell(row=4, column=col).border = medium_border
 
-    headers = ['ID', 'Producto', 'Cantidad', 'Valor', 'Estado', 'Categoría', 'Marca', 'Presentación']
+    headers = ['ID', 'Producto', 'Cantidad', 'Valor', 'Estado', 'Categoría', 'Presentación']
     for col_num, header in enumerate(headers, 2):
         cell = ws.cell(row=5, column=col_num)
         cell.value = header
@@ -81,7 +81,6 @@ def export_productos_excel(request, fecha_inicio=None, fecha_fin=None):
         ws.cell(row=row_num, column=5, value=producto.valor)
         ws.cell(row=row_num, column=6, value='Activo' if producto.estado else 'Inactivo')
         ws.cell(row=row_num, column=7, value=producto.id_categoria.categoria)
-        ws.cell(row=row_num, column=8, value=producto.id_marca.marca) 
         ws.cell(row=row_num, column=9, value=f"{producto.id_presentacion.presentacion}") 
         
         for col_num in range(2, 10): 

@@ -38,6 +38,7 @@ class ProveedorListView(ListView):
                 f.valor_total - f.valor_abonado for f in proveedor.facturas.all()
                 if f.valor_abonado < f.valor_total
             ])
+            proveedor.tiene_factura_archivo = any(f.archivo for f in proveedor.facturas_list)
 
         if self.request.user.groups.filter(name='Operador').exists():
             context['can_add'] = False

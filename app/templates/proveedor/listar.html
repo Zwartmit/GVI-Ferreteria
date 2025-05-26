@@ -5,8 +5,6 @@
 <tr>
     <th scope="col">ID</th>
     <th scope="col">Nombre</th>
-    <th scope="col">Email</th>
-    <th scope="col">Teléfono</th>
     <th scope="col"># Facturas</th>
     <th scope="col">Deuda Total</th>
     <th scope="col">Opciones</th>
@@ -27,12 +25,18 @@
 <tr>
     <td>{{ proveedor.id }}</td>
     <td>{{ proveedor.nombre }}</td>
-    <td>{{ proveedor.email }}</td>
-    <td>{{ proveedor.telefono }}</td>
     <td>
-        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalFacturas{{ proveedor.id }}">
-            Ver facturas ({{ proveedor.num_facturas }})
-        </button>
+        {% if proveedor.facturas_list %}
+            {% if proveedor.tiene_factura_archivo %}
+                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalFacturas{{ proveedor.id }}">
+                    Ver facturas ({{ proveedor.num_facturas }})
+                </button>
+            {% else %}
+                Sin archivos
+            {% endif %}
+        {% else %}
+            Sin archivos
+        {% endif %}
 
         <div class="modal fade" id="modalFacturas{{ proveedor.id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel{{ proveedor.id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -44,30 +48,42 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        {% if proveedor.facturas_list %}
-                            <ul class="list-group">
-                                {% for factura in proveedor.facturas_list %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {% if factura.archivo %}
-                                            <a href="{{ factura.archivo.url }}" target="_blank">
-                                                {{ factura.archivo.name }}
-                                            </a>
-                                        {% else %}
-                                            Sin archivo adjunto
+                        {% with archivos=proveedor.facturas_list|dictsort:'id' %}
+                            {% if archivos %}
+                                {% with archivos_con_file=archivos|dictsort:'id' %}
+                                    <ul class="list-group">
+                                        {% for factura in proveedor.facturas_list %}
+                                            {% if factura.archivo %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <a href="{{ factura.archivo.url }}" target="_blank">
+                                                        {{ factura.archivo.name }}
+                                                    </a>
+                                                    <span class="badge badge-secondary">{{ factura.estado|capfirst }}</span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if not proveedor.facturas_list|length or not proveedor.tiene_factura_archivo %}
+                                            <li class="list-group-item">No hay archivos cargados</li>
                                         {% endif %}
-                                        <span class="badge badge-secondary">{{ factura.estado|capfirst }}</span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>No hay facturas registradas para este proveedor.</p>
-                        {% endif %}
+                                    </ul>
+                                {% endwith %}
+                            {% else %}
+                                <p>No hay facturas registradas para este proveedor.</p>
+                            {% endif %}
+                        {% endwith %}
                     </div>
                 </div>
             </div>
         </div>
     </td>
-    <td>${{ proveedor.deuda_total }}</td>
+    <td>
+        {% if not proveedor.cancelada %}
+            <input type="checkbox" class="toggle-cancelada" data-id="{{ proveedor.id }}">
+            <span class="deuda-valor" id="deuda-valor-{{ proveedor.id }}">${{ proveedor.deuda_total }}</span>
+        {% else %}
+            <span class="deuda-cancelada" id="deuda-cancelada-{{ proveedor.id }}">Cancelada</span>
+        {% endif %}
+    </td>
     <td>
         <a href="{% url 'app:proveedor_editar' proveedor.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i>
         </a><a href="{% url 'app:proveedor_eliminar' proveedor.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -78,15 +94,48 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+$(document).ready(function() {
+  $('.toggle-cancelada').on('change', function() {
+    var id = $(this).data('id');
+    var checkbox = $(this);
+    if (checkbox.is(':checked')) {
+      $.ajax({
+        url: '/app/proveedor/marcar_cancelada/',
+        method: 'POST',
+        data: {
+          'id': id,
+          'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        success: function(response) {
+          if (response.success) {
+            $('#deuda-valor-' + id).hide();
+            $('#deuda-cancelada-' + id).show();
+            checkbox.hide();
+          } else {
+            checkbox.prop('checked', false);
+            alert('Error al marcar como cancelada');
+          }
+        },
+        error: function() {
+          checkbox.prop('checked', false);
+          alert('Error de red al marcar como cancelada');
+        }
+      });
+    }
+  });
+});
+</script>
+
 <script type="application/javascript">
     $(document).ready(function () {
         var table = $("#tabla").DataTable({
             responsive: true,
             initComplete: function () {
                 var api = this.api();
-                var columnNames = ['ID', 'Nombre', 'Email', 'Teléfono', '# Facturas', 'Deuda Total', 'Opciones'];
+                var columnNames = ['ID', 'Nombre', 'Facturas', 'Deuda Total', 'Opciones'];
                 
-                var excludedIndices = [4, 5, 6];
+                var excludedIndices = [2, 3, 4];
 
                 api.columns().every(function (index) {
                     var column = this;

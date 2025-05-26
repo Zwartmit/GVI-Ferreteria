@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
+from app.views.proveedor.ajax import marcar_cancelada
 from app.views import *
 from app.views.categoria.views import *
-from app.views.marca.views import *
 from app.views.presentacion.views import *
 from app.views.producto.views import *
 from app.views.administrador.views import *
@@ -17,17 +17,12 @@ from backups.views import BackupDatabaseView, RestoreDatabaseView, DeleteBackupV
 
 app_name = 'app'
 urlpatterns = [
+    path('proveedor/marcar_cancelada/', marcar_cancelada, name='proveedor_marcar_cancelada'),
     ### CRUD CATEGORÍA ###
     path('categoria/listar/', CategoriaListView.as_view(), name='categoria_lista'),
     path('categoria/crear/', CategoriaCreateView.as_view(), name='categoria_crear'),
     path('categoria/editar/<int:pk>/', CategoriaUpdateView.as_view(), name='categoria_editar'),
     path('categoria/eliminar/<int:pk>/', CategoriaDeleteView.as_view(), name='categoria_eliminar'),
-
-    ### CRUD MARCA ###
-    path('marca/listar/', MarcaListView.as_view(), name='marca_lista'),
-    path('marca/crear/', MarcaCreateView.as_view(), name='marca_crear'),
-    path('marca/editar/<int:pk>/', MarcaUpdateView.as_view(), name='marca_editar'),
-    path('marca/eliminar/<int:pk>/', MarcaDeleteView.as_view(), name='marca_eliminar'),
 
     ### CRUD PRESENTACIÓN ###
     path('presentacion/listar/', PresentacionListView.as_view(), name='presentacion_lista'),

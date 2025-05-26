@@ -21,20 +21,6 @@ class Categoria(models.Model):
         verbose_name= "categoria"
         verbose_name_plural ='categorias'
         db_table ='Categoria'
-    
-########################################################################################################################################
-    
-class Marca(models.Model):
-    marca = models.CharField(max_length=50, verbose_name="Marca", unique=True)
-    estado = models.BooleanField(default=True, verbose_name="Estado")
-
-    def __str__(self):
-        return f"{self.marca}"
-
-    class Meta:
-        verbose_name= "marca"
-        verbose_name_plural ='marcas'
-        db_table ='Marca'
         
 ########################################################################################################################################
 
@@ -60,7 +46,6 @@ class Producto(models.Model):
     NumVerificador = models.BigIntegerField(verbose_name="NumVerificador", unique=True)
     estado = models.BooleanField(default=True, verbose_name="Estado")
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
-    id_marca = models.ForeignKey(Marca, on_delete=models.PROTECT, verbose_name="Marca")
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
 
@@ -162,9 +147,8 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
 ########################################################################################################################################        
 
 class Proveedor(models.Model):
+    cancelada = models.BooleanField(default=False, verbose_name="Cancelada")
     nombre = models.CharField(max_length=50, verbose_name="Nombre", unique=True)
-    telefono = models.PositiveIntegerField(verbose_name="Teléfono")
-    email = models.EmailField(max_length=254, verbose_name="Email")
 
     def __str__(self):
         return self.nombre

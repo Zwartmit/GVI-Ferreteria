@@ -33,28 +33,6 @@ class CategoriaForm(ModelForm):
             )
         }
 
-class MarcaForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["marca"].widget.attrs["autofocus"] = True
-
-    class Meta:
-        model = Marca
-        fields = "__all__"
-        widgets = {
-            "marca": TextInput(
-                attrs={
-                    "placeholder": "Marca",
-                }
-            ),
-            "estado": Select(
-                choices=[(True, "Activo"), (False, "Inactivo")],
-                attrs={
-                    "placeholder": "Estado de la marca",
-                }
-            )
-        }
-
 class PresentacionForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -82,7 +60,6 @@ class ProductoForm(ModelForm):
         super().__init__(*args, **kwargs)
         
         self.fields["id_categoria"].queryset = Categoria.objects.filter(estado=True)
-        self.fields["id_marca"].queryset = Marca.objects.filter(estado=True)
         self.fields["id_presentacion"].queryset = Presentacion.objects.filter(estado=True)
 
     class Meta:

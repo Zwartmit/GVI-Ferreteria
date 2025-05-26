@@ -32,18 +32,19 @@
 
         let form = this;
         let formData = new FormData(form);
-        let archivo = formData.get('archivo'); // Acceder al archivo subido
-
-        // Verificar si el archivo tiene una extensión válida
-        if (archivo && archivo.name.split('.').pop().toLowerCase() !== 'pdf') {
-            Swal.fire({
-                title: 'Error',
-                text: 'Solo se permiten archivos PDF.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#0D6EFD'
-            });
-            return;
+        let archivo = formData.get('archivo');
+        
+        if (archivo && archivo.name) {
+            if (archivo.name.split('.').pop().toLowerCase() !== 'pdf') {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Solo se permiten archivos PDF.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#0D6EFD'
+                });
+                return;
+            }
         }
 
         fetch(form.action, {

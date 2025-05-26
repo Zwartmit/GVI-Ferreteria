@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from django.db.models import ProtectedError
-from app.models import Producto, Categoria, Marca, Presentacion, Compra, Detalle_compra
+from app.models import Producto, Categoria, Presentacion, Compra, Detalle_compra
 from app.forms import ProductoForm
 
 @method_decorator(never_cache, name='dispatch')
@@ -139,7 +139,7 @@ def importar_factura_view(request):
         try:
             df = pd.read_excel(archivo)
 
-            required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Marca', 'Presentación']
+            required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Presentación']
 
             if not all(col in df.columns for col in required_columns):
                 missing_columns = [col for col in required_columns if col not in df.columns]
@@ -163,7 +163,6 @@ def importar_factura_view(request):
 
             for _, row in df.iterrows():
                 categoria, _ = Categoria.objects.get_or_create(categoria=row['Categoría'])
-                marca, _ = Marca.objects.get_or_create(marca=row['Marca'])
                 presentacion, _ = Presentacion.objects.get_or_create(presentacion=row['Presentación'])
 
                 producto, created = Producto.objects.get_or_create(
@@ -174,7 +173,6 @@ def importar_factura_view(request):
                         'valor': row['Valor'],
                         'estado': True,
                         'id_categoria': categoria,
-                        'id_marca': marca,
                         'id_presentacion': presentacion,
                     }
                 )
