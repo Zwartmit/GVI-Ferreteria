@@ -305,7 +305,7 @@ class OperadorForm(ModelForm):
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
-        fields = '__all__'
+        fields = ('nombre',)
 
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
