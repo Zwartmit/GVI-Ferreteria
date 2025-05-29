@@ -1,12 +1,17 @@
 {% extends 'listar_no.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block columnas %}
 <tr>
     <th scope="col">ID</th>
     <th scope="col">Nombre</th>
-    <th scope="col"># Facturas</th>
+    <th scope="col">Teléfono</th>
+    <th scope="col">Facturas</th>
+    <!-- <th scope="col"># Facturas</th> -->
     <th scope="col">Deuda Total</th>
+    <th scope="col">Plazo</th>
+
     <th scope="col">Opciones</th>
 </tr>
 {% endblock %}
@@ -25,7 +30,8 @@
 <tr>
     <td>{{ proveedor.id }}</td>
     <td>{{ proveedor.nombre }}</td>
-    <td>
+    <td>{{ proveedor.telefono }}</td>
+    <td>    
         {% if proveedor.facturas_list %}
             {% if proveedor.tiene_factura_archivo %}
                 <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalFacturas{{ proveedor.id }}">
@@ -76,14 +82,32 @@
             </div>
         </div>
     </td>
-    <td>
-        {% if not proveedor.cancelada %}
-            <input type="checkbox" class="toggle-cancelada" data-id="{{ proveedor.id }}">
-            <span class="deuda-valor" id="deuda-valor-{{ proveedor.id }}">${{ proveedor.deuda_total }}</span>
+    <!-- <td>{{ proveedor.facturas.count }}</td> -->
+    <td id="deuda-total-{{ proveedor.id }}">
+    ${{ proveedor.deuda_total|floatformat:2 }}
+    {% if not proveedor.cancelada and proveedor.deuda_total > 0 %}
+    <button class="btn btn-success btn-sm ml-2 abonar-btn" data-id="{{ proveedor.id }}" data-deuda="{{ proveedor.deuda_total|floatformat:2 }}">
+        Abonar
+    </button>
+    <div class="abonar-form mt-2" id="abonar-form-{{ proveedor.id }}" style="display:none;">
+        <div class="input-group input-group-sm flex-column align-items-stretch">
+    <input type="number" min="0.01" step="0.01" max="{{ proveedor.deuda_total|floatformat:2 }}" class="form-control abono-input mb-2" id="abono-input-{{ proveedor.id }}" placeholder="Monto a abonar">
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary btn-sm confirmar-abono-btn mb-1" data-id="{{ proveedor.id }}">Confirmar</button>
+        <button class="btn btn-secondary btn-sm cancelar-abono-btn" data-id="{{ proveedor.id }}">Cancelar</button>
+    </div>
+</div>
+    </div>
+    {% endif %}
+</td>
+    <td id="plazo-{{ proveedor.id }}">
+        {% if proveedor.plazo_minimo is not None and not proveedor.cancelada %}
+            {{ proveedor.plazo_minimo }} días
         {% else %}
-            <span class="deuda-cancelada" id="deuda-cancelada-{{ proveedor.id }}">Cancelada</span>
+            N/A
         {% endif %}
     </td>
+
     <td>
         <a href="{% url 'app:proveedor_editar' proveedor.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i>
         </a><a href="{% url 'app:proveedor_eliminar' proveedor.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -93,13 +117,164 @@
 {% endif %}
 {% endblock %}
 
+{% block styles %}
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.estado-contenedor {
+  display: flex;
+  align-items: center;
+}
+
+.estado-pendiente, .estado-cancelado {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.estado-ayuda {
+  font-size: 0.8em;
+  transition: opacity 0.3s;
+}
+
+.switch:hover + .estado-ayuda {
+  display: inline-block !important;
+  opacity: 1;
+}
+</style>
+{% endblock %}
+
 {% block javascript %}
+<script>
+$(document).ready(function() {
+  // Mostrar formulario de abono
+  $('.abonar-btn').click(function() {
+    var id = $(this).data('id');
+    $('#abonar-form-' + id).slideDown();
+    $(this).hide();
+  });
+
+  // Cancelar abono
+  $('.cancelar-abono-btn').click(function() {
+    var id = $(this).data('id');
+    $('#abonar-form-' + id).slideUp();
+    $('.abonar-btn[data-id="' + id + '"]').show();
+    $('#abono-input-' + id).val('');
+  });
+
+  // Confirmar abono
+  $('.confirmar-abono-btn').click(function() {
+    var id = $(this).data('id');
+    var input = $('#abono-input-' + id);
+    var monto = parseFloat(input.val());
+    var deudaMax = parseFloat($('.abonar-btn[data-id="' + id + '"]').data('deuda'));
+    if (isNaN(monto) || monto <= 0) {
+      Swal.fire('Error', 'Ingrese un monto válido', 'error');
+      return;
+    }
+    if (monto > deudaMax) {
+      Swal.fire('Error', 'El monto no puede ser mayor a la deuda', 'error');
+      return;
+    }
+    // AJAX para abonar
+    $.ajax({
+      url: '/app/proveedor/abonar_deuda_total/',
+      method: 'POST',
+      data: {
+        'id': id,
+        'monto': monto,
+        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+      },
+      success: function(response) {
+        if (response.success) {
+          $('#deuda-total-' + id).html('$' + response.nueva_deuda);
+          Swal.fire('Éxito', 'Se abonaron $' + response.abonado + ' a la deuda', 'success');
+          $('#abonar-form-' + id).slideUp();
+          $('.abonar-btn[data-id="' + id + '"]').show();
+          // Actualizar el estado automáticamente
+          if (parseFloat(response.nueva_deuda) === 0) {
+            $('#estado-' + id)
+              .removeClass('bg-warning')
+              .addClass('bg-success')
+              .html('<i class="fas fa-check-circle me-1"></i> Cancelado')
+              .attr('id', 'estado-cancelado-' + id);
+          }
+        } else {
+          Swal.fire('Error', 'No se pudo abonar', 'error');
+        }
+      },
+      error: function() {
+        Swal.fire('Error', 'Error de conexión', 'error');
+      }
+    });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
   $('.toggle-cancelada').on('change', function() {
     var id = $(this).data('id');
     var checkbox = $(this);
+    var contenedor = $('#proveedor-' + id);
+    var estado = $('#estado-' + id);
+    var estadoCancelado = $('#estado-cancelado-' + id);
+    var ayuda = contenedor.find('.estado-ayuda');
+    var deudaTotal = $('#deuda-total-' + id);
+    
     if (checkbox.is(':checked')) {
+      // Mostrar confirmación visual
+      estado.hide();
+      estadoCancelado.show().addClass('bg-secondary').removeClass('bg-success');
+      ayuda.text('Confirmando...').show();
+      
+      // Marcar como cancelado
       $.ajax({
         url: '/app/proveedor/marcar_cancelada/',
         method: 'POST',
@@ -109,21 +284,38 @@ $(document).ready(function() {
         },
         success: function(response) {
           if (response.success) {
-            $('#deuda-valor-' + id).hide();
-            $('#deuda-cancelada-' + id).show();
-            checkbox.hide();
+            estadoCancelado.removeClass('bg-secondary').addClass('bg-success');
+            ayuda.fadeOut(1000);
+            // Actualizar la interfaz
+            $('#plazo-' + id).html('N/A');
+            deudaTotal.html('$0.00');
+            // Ocultar el switch después de la animación
+            setTimeout(function() {
+              contenedor.html('<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Cancelado</span>');
+            }, 1000);
           } else {
-            checkbox.prop('checked', false);
-            alert('Error al marcar como cancelada');
+            var errorMsg = response.message || 'No se pudo actualizar el estado';
+            Swal.fire('Error', errorMsg, 'error');
+            location.reload();
           }
         },
         error: function() {
-          checkbox.prop('checked', false);
-          alert('Error de red al marcar como cancelada');
+          Swal.fire('Error', 'Error de conexión', 'error');
+          location.reload();
         }
       });
     }
   });
+  
+  // Efecto hover en los contenedores
+  $('.estado-proveedor').hover(
+    function() {
+      $(this).find('.estado-ayuda').fadeIn(200);
+    },
+    function() {
+      $(this).find('.estado-ayuda:not(:visible)').fadeOut(200);
+    }
+  );
 });
 </script>
 
@@ -133,9 +325,9 @@ $(document).ready(function() {
             responsive: true,
             initComplete: function () {
                 var api = this.api();
-                var columnNames = ['ID', 'Nombre', 'Facturas', 'Deuda Total', 'Opciones'];
+                var columnNames = ['ID', 'Nombre', 'Teléfono', 'Facturas', 'Deuda Total', 'Plazo', 'Estado', 'Opciones'];
                 
-                var excludedIndices = [2, 3, 4];
+                var excludedIndices = [3, 4, 5, 6, 7];
 
                 api.columns().every(function (index) {
                     var column = this;

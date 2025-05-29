@@ -147,8 +147,15 @@ def eliminar_usuario_relacionado(sender, instance, **kwargs):
 ########################################################################################################################################        
 
 class Proveedor(models.Model):
-    cancelada = models.BooleanField(default=False, verbose_name="Cancelada")
     nombre = models.CharField(max_length=50, verbose_name="Nombre", unique=True)
+    telefono = models.PositiveIntegerField(null=True, blank=True, verbose_name="Teléfono")
+    cancelada = models.BooleanField(default=False, verbose_name="Cancelada")
+
+    @property
+    def plazo_minimo(self):
+        facturas = self.facturas.filter(fecha_vencimiento__isnull=False)
+        plazos = [f.dias_restantes for f in facturas if f.dias_restantes is not None and f.dias_restantes >= 0 and f.estado != 'Cancelada']
+        return min(plazos) if plazos else None
 
     def __str__(self):
         return self.nombre
@@ -166,6 +173,7 @@ class Factura(models.Model):
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     valor_abonado = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_registro = models.DateField(auto_now_add=True)
+    fecha_vencimiento = models.DateField(verbose_name="Fecha de vencimiento", null=True, blank=True)
 
     @property
     def estado(self):
@@ -174,6 +182,22 @@ class Factura(models.Model):
         elif self.valor_abonado > 0:
             return "Abonada parcialmente"
         return "Pendiente"
+        
+    @property
+    def dias_restantes(self):
+        from datetime import date
+        today = date.today()
+        if self.fecha_vencimiento:
+            delta = self.fecha_vencimiento - today
+            return delta.days
+        return None
+
+    def save(self, *args, **kwargs):
+        # Si es una factura nueva o el proveedor está marcado como cancelado
+        if not self.id or (hasattr(self, 'proveedor') and self.proveedor.cancelada):
+            self.proveedor.cancelada = False
+            self.proveedor.save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.proveedor.nombre} - {self.estado}"

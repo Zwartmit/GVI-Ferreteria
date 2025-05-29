@@ -305,7 +305,7 @@ class OperadorForm(ModelForm):
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
-        fields = ('nombre',)
+        fields = ('nombre', 'telefono')
 
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
@@ -314,11 +314,18 @@ class ProveedorForm(forms.ModelForm):
         return nombre
 
 class FacturaForm(ModelForm):
+    def clean_fecha_vencimiento(self):
+        fecha = self.cleaned_data.get('fecha_vencimiento')
+        from datetime import date
+        if fecha and fecha <= date.today():
+            raise forms.ValidationError('La fecha de vencimiento no puede ser anterior a la fecha actual.')
+        return fecha
+
     class Meta:
         model = Factura
         fields = "__all__"
         widgets = {
-            "fecha_emision": DateInput(attrs={"type": "date"}),
+            "fecha_vencimiento": DateInput(attrs={"type": "date"}),
         }
 
 class VentaForm(ModelForm):

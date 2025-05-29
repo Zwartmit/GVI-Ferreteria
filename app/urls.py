@@ -1,5 +1,5 @@
 from django.urls import path, include
-from app.views.proveedor.ajax import marcar_cancelada
+from app.views.proveedor.ajax import marcar_cancelada, abonar_deuda_total
 from app.views import *
 from app.views.categoria.views import *
 from app.views.presentacion.views import *
@@ -18,6 +18,7 @@ from backups.views import BackupDatabaseView, RestoreDatabaseView, DeleteBackupV
 app_name = 'app'
 urlpatterns = [
     path('proveedor/marcar_cancelada/', marcar_cancelada, name='proveedor_marcar_cancelada'),
+    path('proveedor/abonar_deuda_total/', abonar_deuda_total, name='proveedor_abonar_deuda_total'),
     ### CRUD CATEGORÍA ###
     path('categoria/listar/', CategoriaListView.as_view(), name='categoria_lista'),
     path('categoria/crear/', CategoriaCreateView.as_view(), name='categoria_crear'),

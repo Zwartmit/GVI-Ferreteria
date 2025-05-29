@@ -15,18 +15,56 @@
             <div class="form-group">
                 <label for="text">{{ field.label }}:</label>
                 {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
+                {% if field.name == 'fecha_vencimiento' and field.errors %}
+                    <div class="text-danger" style="font-size:0.95em;">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
     </div>
     <div class="card-footer">
         <button class="btn btn-flat" style="background-color: #0D6EFD; color: white;"><i class="fas fa-plus"></i> Guardar</button>
-        <a href="{{ listar_url }}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
+        <a href="{% url 'app:proveedor_lista' %}" class="btn btn-danger btn-flat"><i class="fas fa-times"></i> Cancelar</a>
     </div>
 </form>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // Validación en tiempo real para fecha de vencimiento
+    document.addEventListener('DOMContentLoaded', function() {
+        var fechaInput = document.querySelector('input[name="fecha_vencimiento"]');
+        var btnGuardar = document.querySelector('button[type="submit"], button.btn-flat');
+        if (fechaInput) {
+            var errorDiv = document.createElement('div');
+            errorDiv.className = 'text-danger';
+            errorDiv.style.fontSize = '0.95em';
+            fechaInput.parentNode.appendChild(errorDiv);
+            fechaInput.addEventListener('input', function() {
+                var hoy = new Date();
+                hoy.setHours(0,0,0,0);
+                var valor = fechaInput.value;
+                if (valor) {
+                    var seleccionada = new Date(valor);
+                    if (seleccionada < hoy) {
+                        errorDiv.textContent = 'La fecha de vencimiento no puede ser anterior a la fecha actual.';
+                        btnGuardar.disabled = true;
+                        btnGuardar.classList.add('disabled');
+                    } else {
+                        errorDiv.textContent = '';
+                        btnGuardar.disabled = false;
+                        btnGuardar.classList.remove('disabled');
+                    }
+                } else {
+                    errorDiv.textContent = '';
+                    btnGuardar.disabled = false;
+                    btnGuardar.classList.remove('disabled');
+                }
+            });
+        }
+    });
+
     document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault();
 
