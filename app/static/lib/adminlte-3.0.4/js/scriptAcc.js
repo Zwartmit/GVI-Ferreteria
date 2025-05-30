@@ -246,15 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const price = Number(priceInput.value);
             const maxQuantity = Number(quantityInput.max);
     
-            if (productIds.has(select)) {
-                $(row.querySelector('.product-select')).next().addClass('error');
-                isValid = false;
-                duplicateError = true;
-            } else {
-                $(row.querySelector('.product-select')).next().removeClass('error');
-                productIds.add(select);
-            }
-    
             if (quantity <= 0 || quantity > maxQuantity) {
                 quantityInput.classList.add('error');
                 isValid = false;
@@ -284,15 +275,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const quantity = Number(quantityInput.value);
             const price = Number(priceInput.value);
     
-            if (dishIds.has(select)) {
-                $(row.querySelector('.dish-select')).next().addClass('error');
-                isValid = false;
-                duplicateError = true;
-            } else {
-                $(row.querySelector('.dish-select')).next().removeClass('error');
-                dishIds.add(select);
-            }
-    
             if (price < 0) {
                 priceInput.classList.add('error');
                 isValid = false;
@@ -309,16 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
         subtotal = subtotal.toFixed(2);
         subtotalElement.textContent = `$${subtotal}`;
     
-        if (duplicateError) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'No se pueden guardar productos o platillos duplicados.',
-                icon: 'error',
-            });
-            isValid = false;
-        }
-    
-        return isValid && !duplicateError;
+        return isValid;
     }
     
     
@@ -546,140 +519,10 @@ document.addEventListener('DOMContentLoaded', function () {
             stockElement.style.backgroundColor = '#2b88c9';
             stockElement.style.color = 'white';
         } else {
-        $.ajax({
-            url: '/app/venta/productos_api/',
-            data: { term: barcode },
-            dataType: 'json',
-            success: function(data) {
-                if (data.length === 0) {
-                    // Producto no encontrado
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Código de barras no encontrado en el sistema.',
-                        icon: 'error',
-                    });
-                    return;
-                }
-                
-                const producto = data[0];
-                
-                // Verificar si el producto ya existe en alguna fila
-                let existingRow = null;
-                
-                // Depuración para ver qué filas existen
-                console.log('Buscando producto con ID:', producto.id);
-                
-                document.querySelectorAll('#product-sale-rows tr').forEach(row => {
-                    const select = row.querySelector('.product-select');
-                    const selectValue = $(select).val();
-                    console.log('Fila encontrada, ID seleccionado:', selectValue);
-                    
-                    // Comparar como string para evitar problemas de tipo
-                    if (selectValue && String(selectValue) === String(producto.id)) {
-                        existingRow = row;
-                        console.log('¡Producto encontrado en fila existente!');
-                    }
-                });
-                
-                // Si el producto ya existe, incrementar la cantidad
-                if (existingRow) {
-                    const quantityInput = existingRow.querySelector('.product-quantity');
-                    const currentQuantity = parseInt(quantityInput.value) || 0;
-                    const maxQuantity = parseInt(quantityInput.max) || 0;
-                    console.log('Cantidad actual:', currentQuantity, 'Máximo:', maxQuantity);
-                    
-                    // Verificar que no exceda el stock disponible
-                    if (currentQuantity < maxQuantity) {
-                        quantityInput.value = currentQuantity + 1;
-                        validateInputs(); // Actualizar totales
-                    } else {
-                        Swal.fire({
-                            title: 'Advertencia!',
-                            text: `No se puede agregar más unidades. Stock máximo alcanzado (${maxQuantity}).`,
-                            icon: 'warning',
-                        });
-                    }
-                    return;
-                }
-                
-                // Si el producto no existe, buscar una fila vacía
-                let emptyRow = null;
-                document.querySelectorAll('#product-sale-rows tr').forEach(row => {
-                    // Verificar si el select está vacío o no tiene valor seleccionado
-                    const select = $(row.querySelector('.product-select'));
-                    const selectData = select.select2('data');
-                    
-                    console.log('Revisando fila para agregar producto:', selectData);
-                    
-                    // Una fila está vacía si no tiene datos seleccionados o si los datos no tienen ID
-                    if (!selectData || selectData.length === 0 || !selectData[0].id) {
-                        emptyRow = row;
-                        console.log('Fila vacía encontrada');
-                        return false; // Detener el bucle cuando encontramos la primera fila vacía
-                    }
-                });
-                
-                // Si no hay filas vacías, crear una nueva
-                if (!emptyRow) {
-                    addProductSaleRow();
-                    emptyRow = document.querySelector('#product-sale-rows tr:last-child');
-                }
-                
-                // Seleccionar el producto en la fila
-                const select = $(emptyRow.querySelector('.product-select'));
-                    
-                // Crear la opción y seleccionarla
-                const option = new Option(
-                    `${producto.producto} - ${producto.id_presentacion__presentacion}`, 
-                    producto.id, 
-                    true, 
-                    true
-                );
-                
-                // Agregar datos adicionales a la opción
-                option.valor = producto.valor;
-                option.cantidad = producto.cantidad;
-                
-                // Agregar la opción y activarla
-                select.append(option).trigger('change');
-                
-                // Establecer los valores en la fila
-                const priceInput = emptyRow.querySelector('.product-price');
-                const stockSpan = emptyRow.querySelector('.product-stock');
-                const quantityInput = emptyRow.querySelector('.product-quantity');
-                
-                priceInput.value = producto.valor || 0;
-                stockSpan.textContent = producto.cantidad || 0;
-                quantityInput.max = producto.cantidad || 0;
-                quantityInput.value = 1; // Establecer cantidad a 1 por defecto
-                
-                // Actualizar visualización
-                updateStockColor(stockSpan, producto.cantidad);
-                validateInputs();
-            }
-        });
-    }
-
-    // Agregamos un listener para capturar la entrada del escáner de código de barras
-    document.addEventListener('keydown', function(e) {
-        // Solo procesar si estamos en la página de ventas
-        if (!document.getElementById('product-sale-rows')) return;
-        
-        // Detectar si es una entrada rápida (típica de escáneres)
-        if (e.key !== 'Enter') {
-            clearTimeout(barcodeScanTimer);
-            lastBarcodeScan += e.key;
-            
-            barcodeScanTimer = setTimeout(() => {
-                lastBarcodeScan = ''; // Limpiar si la entrada es muy lenta (probablemente manual)
-            }, BARCODE_SCAN_TIMEOUT);
-        } else if (lastBarcodeScan) {
-            // Si presiona Enter y hay una lectura acumulada, procesar el código de barras
-            processBarcodeScan(lastBarcodeScan);
-            lastBarcodeScan = '';
-            e.preventDefault(); // Prevenir comportamiento por defecto del Enter
+            stockElement.style.backgroundColor = 'transparent';
+            stockElement.style.color = 'black';
         }
-    });
+    }
 
     function addProductSaleRow() {
         const row = document.createElement('tr');
@@ -730,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function () {
             priceInput.value = data.valor || 0;
             stockSpan.textContent = data.cantidad || 0;
             quantityInput.max = data.cantidad || 0;
-            quantityInput.value = 1; // Establecer cantidad a 1 por defecto
+            quantityInput.value = 1; 
 
             $(this).data('select2').$container.find('.select2-selection__placeholder').text(data.text);
 
@@ -798,21 +641,26 @@ document.addEventListener('DOMContentLoaded', function () {
             const price = Number(priceInput.value);
             const maxQuantity = Number(quantityInput.max);
 
-            // Solo validar si hay un producto seleccionado
-            if (select) {
-                if (quantity <= 0 || quantity > maxQuantity) {
-                    quantityInput.classList.add('error');
-                    if (quantity > maxQuantity) {
-                        Swal.fire({
-                            title: 'Advertencia!',
-                            text: `La cantidad ingresada (${quantity}) supera el stock disponible (${maxQuantity}).`,
-                            icon: 'warning',
-                        });
-                    }
-                    isValid = false;
-                } else {
-                    quantityInput.classList.remove('error');
+            // Validar solo si el select es un valor válido y no es '[object Object]'
+            if (select && typeof select === 'string' && select !== '' && select !== '[object Object]') {
+                $(row.querySelector('.product-select')).next().removeClass('error');
+            } else {
+                // Si el campo está vacío o es inválido, quitar error visual
+                $(row.querySelector('.product-select')).next().removeClass('error');
+            }
+
+            if (quantity <= 0 || quantity > maxQuantity) {
+                quantityInput.classList.add('error');
+                if (quantity > maxQuantity) {
+                    Swal.fire({
+                        title: 'Advertencia!',
+                        text: `La cantidad ingresada (${quantity}) supera el stock disponible (${maxQuantity}).`,
+                        icon: 'warning',
+                    });
                 }
+                isValid = false;
+            } else {
+                quantityInput.classList.remove('error');
             }
 
             if (price < 0) {

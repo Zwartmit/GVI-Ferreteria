@@ -39,8 +39,8 @@
                         <div class="datos-factura">
                             <p><b>NIT:</b><br>7334184-6</p>
                             <p><b>Dirección:</b><br>La Paz, Cl. 200 #20-24, Floridablanca, Santander</p>
-                            <p><b>Correo:</b><br>FERROELECTRICOS@gmail.com</p>
-                            <p><b>Teléfono:</b><br>320-966-8241</p>
+                            <p><b>Correo:</b><br>ferroelectricosla200@gmail.com</p>
+                            <p><b>Teléfono:</b><br>312 542 0642 - 312 396 1303</p>
                         </div>
                         <hr>
                         <p><b>ID compra:</b><br> {{ item.venta.id }}</p>
@@ -101,48 +101,248 @@
 {% block javascript %}
 <script type="application/javascript">
     function imprimirFactura(idVenta) {
-        const contenido = document.querySelector(`#modal-${idVenta} .modal-body`).innerHTML;
-
+        // Obtener el contenido de la factura
+        const modalBody = document.querySelector(`#modal-${idVenta} .modal-body`);
+        
+        // Extraer datos relevantes de la estructura HTML actual
+        const allParrafos = modalBody.querySelectorAll('p');
+        let fechaVenta = '';
+        
+        // Buscar el párrafo que contiene la fecha de compra
+        for (let i = 0; i < allParrafos.length; i++) {
+            if (allParrafos[i].textContent.includes('Fecha de compra')) {
+                fechaVenta = allParrafos[i].textContent.trim().replace('Fecha de compra:', '');
+                break;
+            }
+        }
+        
+        // Si no se encuentra, usar un formato de fecha actual como respaldo
+        if (!fechaVenta) {
+            const ahora = new Date();
+            fechaVenta = ahora.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            }) + ' a las ' + ahora.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // Obtener valores de la sección de totales
+        const totalesSection = modalBody.querySelector('.totales_factura');
+        const totalesParrafos = totalesSection.querySelectorAll('p');
+        
+        const totalVenta = totalesParrafos[0] ? totalesParrafos[0].textContent.trim().replace('Total:', '').replace('$', '') : '';
+        const dineroRecibido = totalesParrafos[1] ? totalesParrafos[1].textContent.trim().replace('Dinero Ingresado:', '').replace('$', '') : '';
+        const cambio = totalesParrafos[2] ? totalesParrafos[2].textContent.trim().replace('Cambio:', '').replace('$', '') : '';
+        
+        // Obtener método de pago
+        const metodoPagoElement = modalBody.querySelectorAll('p')[modalBody.querySelectorAll('p').length - 2]; // Penúltimo párrafo
+        const metodoPago = metodoPagoElement ? metodoPagoElement.textContent.trim().replace('Método de Pago:', '') : '';
+        
+        // Obtener los productos
+        const filas = modalBody.querySelectorAll('table tbody tr');
+        const productos = [];
+        
+        filas.forEach(fila => {
+            const celdas = fila.querySelectorAll('td');
+            if (celdas.length >= 3) {
+                productos.push({
+                    nombre: celdas[0].textContent.trim(),
+                    cantidad: celdas[1].textContent.trim(),
+                    subtotal: celdas[2].textContent.trim()
+                });
+            }
+        });
+        
+        // Crear la ventana para impresión
         const nuevaVentana = window.open('', '_blank');
-
+        
         nuevaVentana.document.write(`
             <html>
             <head>
                 <title>Factura #${idVenta}</title>
                 <style>
+                    @page {
+                        margin: 0;
+                        size: 210mm 297mm; /* Tamaño estándar A4 */
+                    }
                     body {
-                        font-family: Arial, sans-serif;
-                        text-align: center;
-                    }
-                    .header-section {
-                        text-align: center;
-                    }
-                    .totales_factura {
-                        margin-top: 20px;
-                    }
-                    table {
+                        font-family: 'Courier New', monospace; /* Fuente típica para tickets térmicos */
                         width: 100%;
-                        border-collapse: collapse;
-                        margin: 20px 0;
+                        height: 100vh;
+                        margin: 0;
+                        padding: 0;
+                        background-color: white;
+                        display: flex;
+                        flex-direction: column;
                     }
-                    th, td {
-                        padding: 10px 20px;
-                        text-align: left;
+                    .ticket-grande {
+                        width: 100%;
+                        height: 100%;
+                        padding: 20mm;
+                        font-size: 28px;
+                        line-height: 1.5;
+                        display: flex;
+                        flex-direction: column;
+                        box-sizing: border-box;
                     }
-                    th {
-                        background-color: #f2f2f2;
+                    .cabecera {
+                        margin-bottom: 15mm;
                     }
-                    .table-bordered th, .table-bordered td {
-                        border: 1px solid #ddd; 
+                    .contenido-principal {
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .pie {
+                        margin-top: 15mm;
+                    }
+                    .info-linea {
+                        white-space: pre-line;
+                        margin: 5px 0;
+                    }
+                    .titulo-linea {
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        font-size: 30px;
+                    }
+                    .productos-header {
+                        margin-top: 20px;
+                        border-top: 1px solid black;
+                        padding-top: 10px;
+                        margin-bottom: 10px;
+                    }
+                    .producto-linea {
+                        margin: 15px 0;
+                    }
+                    .producto-header {
+                        display: flex;
+                        margin-bottom: 10px;
+                        align-items: center;
+                    }
+                    .producto-nombre {
+                        flex-grow: 1;
+                        padding-left: 50px;
+                        margin-left: 15px;
+                    }
+                    .producto-cantidad {
+                        width: 100px;
+                        text-align: center;
+                        border-right: 3px solid black;
+                        padding-right: 30px;
+                        margin-right: 15px;
+                    }
+                    .producto-total {
+                        width: 100%;
+                        text-align: right;
+                        margin-top: 5px;
+                        font-size: 26px;
+                    }
+                    .totales-seccion {
+                        margin-top: 30px;
+                    }
+                    .total-linea {
+                        display: flex;
+                        justify-content: space-between;
+                        margin: 10px 0;
+                        font-weight: bold;
+                        font-size: 30px;
+                    }
+                    .total-valor {
+                        text-align: right;
+                    }
+                    .linea-divisoria {
+                        border-top: 1px solid black;
+                        margin: 15px 0;
+                    }
+                    .footer-info {
+                        margin-top: 20px;
+                        font-size: 26px;
+                        text-align: center;
                     }
                 </style>
             </head>
             <body onload="window.print(); window.close();">
-                <div>${contenido}</div>
+                <div class="ticket-grande">
+                    <!-- Cabecera del ticket -->
+                    <div class="cabecera">
+                        <div class="info-linea titulo-linea">NIT:</div>
+                        <div class="info-linea">7334184-6</div>
+                        <div class="info-linea titulo-linea">Dirección:</div>
+                        <div class="info-linea">La Paz, Cl. 200 #20-24, Floridablanca, Santander</div>
+                        <div class="info-linea titulo-linea">Correo:</div>
+                        <div class="info-linea">ferroelectricosla200@gmail.com</div>
+                        <div class="info-linea titulo-linea">Teléfono:</div>
+                        <div class="info-linea">312 542 0642 - 312 396 1303</div>
+                        <div class="info-linea titulo-linea">ID compra:</div>
+                        <div class="info-linea">${idVenta}</div>
+                        <div class="info-linea titulo-linea">Fecha de compra:</div>
+                        <div class="info-linea" id="fecha-compra">${fechaVenta}</div>
+                    </div>
+                    
+                    <!-- Contenido principal con productos -->
+                    <div class="contenido-principal">
+                        <div class="info-linea titulo-linea productos-header">Productos:</div>
+                        <div class="producto-linea">
+                            <div class="producto-header">
+                                <div class="producto-cantidad"><b>CANT</b></div>
+                                <div class="producto-nombre"><b>PRODUCTO</b></div>
+                            </div>
+                        </div>
+                        
+                        ${productos.map(p => `
+                        <div class="producto-linea">
+                            <div class="producto-header">
+                                <div class="producto-cantidad">${p.cantidad}</div>
+                                <div class="producto-nombre">${p.nombre}</div>
+                            </div>
+                            <div class="producto-total">${p.subtotal}</div>
+                        </div>
+                        `).join('')}
+                        
+                        <div class="linea-divisoria"></div>
+                        
+                        <div class="totales-seccion">
+                            <div class="total-linea">
+                                <div>Total:</div>
+                                <div class="total-valor">${totalVenta}</div>
+                            </div>
+                            
+                            <div class="total-linea">
+                                <div>Dinero Ingresado:</div>
+                                <div class="total-valor">${dineroRecibido}</div>
+                            </div>
+                            
+                            <div class="total-linea">
+                                <div>Cambio:</div>
+                                <div class="total-valor">${cambio}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pie del ticket -->
+                    <div class="pie">
+                        <div class="linea-divisoria"></div>
+                        
+                        <div class="info-linea titulo-linea">Método de Pago:</div>
+                        <div class="info-linea">${metodoPago}</div>
+                        
+                        <div class="info-linea titulo-linea">Tipo de Venta:</div>
+                        <div class="info-linea">Caja</div>
+                        
+                        <div class="footer-info">
+                            ${new Date().toLocaleString('es-ES', {day: '2-digit', month: '2-digit', year: '2-digit'})}, 
+                            ${new Date().toLocaleString('es-ES', {hour: '2-digit', minute:'2-digit'})} 
+                            Factura #${idVenta}
+                        </div>
+                    </div>
+                </div>
             </body>
             </html>
         `);
-
+        
         nuevaVentana.document.close();
     }
 </script>

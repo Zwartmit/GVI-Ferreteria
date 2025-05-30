@@ -1,6 +1,4 @@
 from openpyxl import Workbook
-# Comentamos la importación de Image para evitar la dependencia de Pillow
-# from openpyxl.drawing.image import Image
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from django.http import HttpResponse
@@ -40,18 +38,14 @@ def export_productos_excel(request, fecha_inicio=None, fecha_fin=None):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    # Comentando el uso de imágenes para evitar la dependencia de Pillow
-    # img = Image('app/views/reportes/logo_ferreteria.png') 
-    # img.width = 100  
-    # img.height = 50  
-    # ws.add_image(img, 'E2')
-    ws['E2'] = "GVI FERRETERIA" # Reemplazamos la imagen con texto
+    # En lugar de usar imágenes, usamos texto para el encabezado
+    ws['E2'] = "GVI FERRETERIA"
+    ws['E2'].font = Font(size=16, bold=True)
+    
     ws.merge_cells('B2:I2')  
     ws['B2'].alignment = center_alignment
     ws['B2'].border = medium_border
 
-    ws.merge_cells('B2:I2')
-    ws['B2'].alignment = center_alignment
     ws.merge_cells('B3:I3')
     ws['B3'] = "Reporte de Productos"
     ws['B3'].font = Font(size=14, bold=True)
@@ -84,7 +78,7 @@ def export_productos_excel(request, fecha_inicio=None, fecha_fin=None):
         ws.cell(row=row_num, column=5, value=producto.valor)
         ws.cell(row=row_num, column=6, value='Activo' if producto.estado else 'Inactivo')
         ws.cell(row=row_num, column=7, value=producto.id_categoria.categoria)
-        ws.cell(row=row_num, column=9, value=f"{producto.id_presentacion.presentacion}") 
+        ws.cell(row=row_num, column=8, value=f"{producto.id_presentacion.presentacion}") 
         
         for col_num in range(2, 10): 
             cell = ws.cell(row=row_num, column=col_num)
@@ -122,10 +116,10 @@ def export_administradores_excel(request):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
-    img.width = 100  
-    img.height = 50  
-    ws.add_image(img, 'D2')
+    # En lugar de usar imágenes, usamos texto para el encabezado
+    ws['D2'] = "GVI FERRETERIA"
+    ws['D2'].font = Font(size=16, bold=True)
+    
     ws.merge_cells('B2:G2')
     ws['B2'].alignment = center_alignment
     ws['B2'].border = medium_border
@@ -202,10 +196,10 @@ def export_operadores_excel(request):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
-    img.width = 100  
-    img.height = 50  
-    ws.add_image(img, 'D2')
+    # En lugar de usar imágenes, usamos texto para el encabezado
+    ws['D2'] = "GVI FERRETERIA"
+    ws['D2'].font = Font(size=16, bold=True)
+    
     ws.merge_cells('B2:G2')
     ws['B2'].alignment = center_alignment
     ws['B2'].border = medium_border
@@ -260,61 +254,69 @@ def export_operadores_excel(request):
 @login_required
 @never_cache
 def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
-    ventas = Venta.objects.all()
-
-    if fecha_inicio and fecha_fin:
-        ventas = ventas.filter(fecha_venta__range=[fecha_inicio, fecha_fin])
+    # Importamos datetime para obtener la fecha actual
+    from datetime import datetime, time
+    
+    # Obtenemos la fecha actual
+    hoy = datetime.now().date()
+    
+    # Configuramos el inicio del día (00:00:00) y el final del día (23:59:59)
+    inicio_del_dia = datetime.combine(hoy, time.min)
+    fin_del_dia = datetime.combine(hoy, time.max)
+    
+    # Filtramos solamente las ventas del día actual
+    ventas = Venta.objects.filter(fecha_venta__range=[inicio_del_dia, fin_del_dia])
 
     wb = Workbook()
     ws = wb.active
     ws.title = "Reporte de ventas"
-    
+
     bold_font = Font(bold=True)
     center_alignment = Alignment(horizontal="center", vertical="center")
     green_fill = PatternFill(start_color="6B0606", end_color="6B0606", fill_type="solid")
     white_font = Font(color="FFFFFF")
     medium_border = Border(left=Side(style='medium'), 
-                         right=Side(style='medium'), 
-                         top=Side(style='medium'), 
-                         bottom=Side(style='medium'))
+                           right=Side(style='medium'), 
+                           top=Side(style='medium'), 
+                           bottom=Side(style='medium'))
 
     column_width = 20  
-    for col in range(2, 8):
+    for col in range(2, 8): 
         column_letter = get_column_letter(col)
         ws.column_dimensions[column_letter].width = column_width
 
-    ws.row_dimensions[2].height = 38
+    ws.row_dimensions[2].height = 38 
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
-    img.width = 100  
-    img.height = 50  
-    ws.add_image(img, 'D2')
+    # En lugar de usar imágenes, usamos texto para el encabezado
+    ws['D2'] = "GVI FERRETERIA"
+    ws['D2'].font = Font(size=16, bold=True)
+    
+    ws.merge_cells('B2:G2')
+    ws['B2'].alignment = center_alignment
+    ws['B2'].border = medium_border
+    for col in range(3, 8):
+        ws.cell(row=2, column=col).border = medium_border
 
-    ws.merge_cells('B2:G2')  
-    for row in ws['B2:G2']:
-        for cell in row:
-            cell.alignment = center_alignment
-            cell.border = medium_border
+    ws.merge_cells('B3:G3')
+    ws['B3'] = "Reporte de Ventas del Día"
+    ws['B3'].font = Font(size=14, bold=True)
+    ws['B3'].alignment = center_alignment
+    ws['B3'].border = medium_border
+    for col in range(3, 8):
+        ws.cell(row=3, column=col).border = medium_border
 
-    ws.merge_cells('B3:G3')  
-    ws['B3'] = "Reporte de Ventas"
-    for row in ws['B3:G3']:
-        for cell in row:
-            cell.font = Font(size=14, bold=True)
-            cell.alignment = center_alignment
-            cell.border = medium_border
-
+    ws.merge_cells('B4:G4')
     fecha = datetime.now().strftime("%d/%m/%Y")
-    ws.merge_cells('B4:G4')  
-    ws['B4'].value = f"Fecha: {fecha}"
+    ws['B4'] = f"Fecha: {fecha}"
     ws['B4'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    for row in ws['B4:G4']:
-        for cell in row:
-            cell.border = medium_border
-            
-    headers = ['ID', 'Fecha', 'Total', 'Dinero ingresado', 'Cambio', 'Método de pago']
+    ws['B4'].border = medium_border
+    for col in range(3, 8):
+        ws.cell(row=4, column=col).border = medium_border
+
+    # Cambiamos los encabezados para reflejar los campos reales del modelo
+    headers = ['ID', 'Total Venta', 'Método Pago', 'Dinero Recibido', 'Cambio', 'Fecha']
     for col_num, header in enumerate(headers, 2):
         cell = ws.cell(row=5, column=col_num)
         cell.value = header
@@ -323,14 +325,20 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
         cell.alignment = center_alignment
         cell.border = medium_border
 
-    for row_num, venta in enumerate(ventas, 6):  
+    for row_num, venta in enumerate(ventas, 6):
         ws.cell(row=row_num, column=2, value=venta.id)
-        fecha_venta_naive = venta.fecha_venta.replace(tzinfo=None)
-        ws.cell(row=row_num, column=3, value=fecha_venta_naive)
-        ws.cell(row=row_num, column=4, value=venta.total_venta)
+        ws.cell(row=row_num, column=3, value=venta.total_venta)
+        # Convertimos el código del método de pago a su versión legible
+        if venta.metodo_pago == 'EF':
+            metodo_pago_display = 'Efectivo'
+        elif venta.metodo_pago == 'TF':
+            metodo_pago_display = 'Transferencia'
+        else:
+            metodo_pago_display = venta.metodo_pago
+        ws.cell(row=row_num, column=4, value=metodo_pago_display)
         ws.cell(row=row_num, column=5, value=venta.dinero_recibido)
         ws.cell(row=row_num, column=6, value=venta.cambio)
-        ws.cell(row=row_num, column=7, value=venta.metodo_pago)
+        ws.cell(row=row_num, column=7, value=venta.fecha_venta.strftime("%d/%m/%Y %H:%M") if venta.fecha_venta else "")
 
         for col_num in range(2, 8):
             cell = ws.cell(row=row_num, column=col_num)
@@ -338,6 +346,6 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
             cell.border = medium_border
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Reporte_de_ventas.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=Reporte de ventas.xlsx'
     wb.save(response)
     return response

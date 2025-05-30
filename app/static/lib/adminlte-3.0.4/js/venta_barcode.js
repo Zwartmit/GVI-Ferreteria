@@ -54,46 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const producto = data[0];
                 console.log("Producto encontrado:", producto);
                 
-                // Verificar si el producto ya existe en alguna fila
-                let existingRow = null;
+                // Se ha eliminado la validación de productos repetidos
+                // Ahora se permitirá agregar el mismo producto varias veces
                 
-                document.querySelectorAll('#product-sale-rows tr').forEach(row => {
-                    const select = row.querySelector('.product-select');
-                    if (select) {
-                        const selectData = $(select).select2('data');
-                        console.log("Datos en fila:", selectData);
-                        
-                        if (selectData && selectData.length > 0 && selectData[0].id) {
-                            if (String(selectData[0].id) === String(producto.id)) {
-                                existingRow = row;
-                                console.log("Producto encontrado en fila existente");
-                            }
-                        }
-                    }
-                });
-                
-                // Si el producto ya existe, incrementar la cantidad
-                if (existingRow) {
-                    const quantityInput = existingRow.querySelector('.product-quantity');
-                    const currentQuantity = parseInt(quantityInput.value) || 0;
-                    const maxQuantity = parseInt(quantityInput.max) || 0;
-                    
-                    console.log("Incrementando cantidad. Actual:", currentQuantity, "Max:", maxQuantity);
-                    
-                    // Verificar que no exceda el stock disponible
-                    if (currentQuantity < maxQuantity) {
-                        quantityInput.value = currentQuantity + 1;
-                        validateInputs(); // Actualizar totales
-                        console.log("Cantidad actualizada a:", currentQuantity + 1);
-                    } else {
-                        Swal.fire({
-                            title: 'Advertencia!',
-                            text: `No se puede agregar más unidades. Stock máximo alcanzado (${maxQuantity}).`,
-                            icon: 'warning',
-                        });
-                    }
-                    return;
-                }
+                // Usar precio_venta en lugar de valor si está disponible
+                const precioAMostrar = producto.precio_venta !== undefined && producto.precio_venta !== null ? 
+                    producto.precio_venta : producto.valor;
                 
                 // Si el producto no existe, buscar una fila vacía
                 let emptyRow = null;
@@ -130,17 +96,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Agregar datos adicionales a la opción
                 option.valor = producto.valor;
+                option.precio_venta = producto.precio_venta;
                 option.cantidad = producto.cantidad;
                 
                 // Agregar la opción y activarla
                 select.append(option).trigger('change');
+                
+                // Unificar el estilo de la selección para que se vea igual que los productos seleccionados manualmente
+                const selectContainer = $(select).data('select2').$container;
+                if (selectContainer) {
+                    // Asegurarse de que el contenedor tiene el mismo estilo que los seleccionados manualmente
+                    selectContainer.find('.select2-selection').addClass('select2-selection--manual');
+                }
                 
                 // Establecer los valores en la fila
                 const priceInput = emptyRow.querySelector('.product-price');
                 const stockSpan = emptyRow.querySelector('.product-stock');
                 const quantityInput = emptyRow.querySelector('.product-quantity');
                 
-                priceInput.value = producto.valor || 0;
+                // Siempre usar el precio_venta si está disponible, sino usar valor como respaldo
+                priceInput.value = producto.precio_venta !== undefined && producto.precio_venta !== null ? 
+                    producto.precio_venta : producto.valor;
                 stockSpan.textContent = producto.cantidad || 0;
                 quantityInput.max = producto.cantidad || 0;
                 quantityInput.value = 1; // Establecer cantidad a 1 por defecto
@@ -244,9 +220,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     return {
                         results: data.map(producto => ({
                             id: producto.id,
-                            text:`${producto.producto} - ${producto.id_presentacion__presentacion}`,
+                            text: `${producto.producto} - ${producto.id_presentacion__presentacion}`,
                             valor: producto.valor,
-                            cantidad: producto.cantidad
+                            precio_venta: producto.precio_venta, // Agregar precio_venta
+                            cantidad: producto.cantidad,
+                            producto_nombre: producto.producto  // Guardar el nombre exacto del producto
                         }))
                     };
                 },
@@ -258,13 +236,30 @@ document.addEventListener('DOMContentLoaded', function() {
             const stockSpan = row.querySelector('.product-stock');
             const quantityInput = row.querySelector('.product-quantity');
             
-            priceInput.value = data.valor || 0;
+            // Guardar los datos completos del producto en el elemento select para accederlos después
+            $(this).data('producto_data', data);
+            
+            // Siempre usar el precio_venta si está disponible, sino usar valor como respaldo
+            priceInput.value = data.precio_venta !== undefined && data.precio_venta !== null ? 
+                data.precio_venta : data.valor;
             stockSpan.textContent = data.cantidad || 0;
             quantityInput.max = data.cantidad || 0;
             quantityInput.value = 1; // Establecer cantidad a 1 por defecto
 
-            $(this).data('select2').$container.find('.select2-selection__placeholder').text(data.text);
-
+            // Aplicar el mismo estilo tanto para productos escaneados como seleccionados manualmente
+            const selectContainer = $(this).data('select2').$container;
+            if (selectContainer) {
+                // Actualizar el texto visible
+                selectContainer.find('.select2-selection__placeholder').text(data.text);
+                
+                // Asegurar que todos los productos tengan el mismo estilo visual
+                selectContainer.find('.select2-selection').css({
+                    'background-color': '#fff',
+                    'color': '#333',
+                    'font-weight': 'normal'
+                });
+            }
+            
             updateStockColor(stockSpan, data.cantidad);
             validateInputs();
         });

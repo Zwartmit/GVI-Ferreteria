@@ -42,12 +42,21 @@ class Presentacion(models.Model):
 class Producto(models.Model):
     producto = models.CharField(max_length=50, verbose_name="Producto")
     cantidad = models.PositiveIntegerField(verbose_name="Cantidad")
-    valor = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Valor")
+    valor = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Costo")
+    porcentaje_ganancia = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Porcentaje de ganancia", default=0)
+    precio_venta = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio de venta", null=True, blank=True)
     NumVerificador = models.BigIntegerField(verbose_name="NumVerificador", unique=True)
     estado = models.BooleanField(default=True, verbose_name="Estado")
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
+
+    def save(self, *args, **kwargs):
+        # Calcular el precio de venta basado en el valor y porcentaje de ganancia
+        if self.valor is not None and self.porcentaje_ganancia is not None:
+            # Calcula el precio de venta: valor + (valor * porcentaje / 100)
+            self.precio_venta = self.valor + (self.valor * self.porcentaje_ganancia / 100)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.producto}-{self.id_presentacion.presentacion}({self.id_presentacion})"
@@ -239,7 +248,7 @@ class Detalle_venta(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True)
     
     nombre_producto = models.CharField(max_length=100)
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2)  # Este campo usará el precio_venta cuando se seleccione un producto
     
     cantidad_producto = models.PositiveIntegerField(verbose_name="Cantidad de productos")
     subtotal_venta = models.DecimalField(max_digits=11, decimal_places=2, verbose_name="Subtotal", default="0")

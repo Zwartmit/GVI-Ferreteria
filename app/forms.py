@@ -61,10 +61,14 @@ class ProductoForm(ModelForm):
         
         self.fields["id_categoria"].queryset = Categoria.objects.filter(estado=True)
         self.fields["id_presentacion"].queryset = Presentacion.objects.filter(estado=True)
+        
+        # Configuramos el campo de precio_venta como de solo lectura ya que se calcula automáticamente
+        if 'precio_venta' in self.fields:
+            self.fields['precio_venta'].widget.attrs['readonly'] = True
 
     class Meta:
         model = Producto
-        fields = "__all__"
+        fields = ["producto", "cantidad", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion"]
         widgets = {
             "producto": TextInput(
                 attrs={
@@ -79,6 +83,24 @@ class ProductoForm(ModelForm):
             "valor": NumberInput(
                 attrs={
                     "placeholder": "Valor del producto",
+                    "class": "form-control valor-producto",
+                    "onchange": "calcularPrecioVenta()"
+                }
+            ),
+            "porcentaje_ganancia": NumberInput(
+                attrs={
+                    "placeholder": "Porcentaje de ganancia",
+                    "class": "form-control porcentaje-ganancia",
+                    "onchange": "calcularPrecioVenta()",
+                    "min": "0",
+                    "step": "0.01"
+                }
+            ),
+            "precio_venta": NumberInput(
+                attrs={
+                    "placeholder": "Precio de venta (calculado)",
+                    "class": "form-control precio-venta",
+                    "readonly": "readonly"
                 }
             ),
             'NumVerificador': NumberInput(
@@ -373,3 +395,16 @@ class ReporteForm(forms.Form):
         ('pdf', 'PDF'),
     ]
     formato = forms.ChoiceField(choices=FORMATO_CHOICES, label='Formato del Reporte')
+    
+    TIPO_REPORTE_CHOICES = [
+        ('producto', 'Reporte de Productos'),
+        ('administrador', 'Reporte de Administradores'),
+        ('operador', 'Reporte de Operadores'),
+        ('venta', 'Reporte de Ventas del Día'),
+        ('ganancias_diarias', 'Reporte de Ganancias Diarias'),
+        ('ganancias_mensuales', 'Reporte de Ganancias Mensuales'),
+    ]
+    tipo_reporte = forms.ChoiceField(choices=TIPO_REPORTE_CHOICES, label='Tipo de Reporte')
+    
+    fecha_inicio = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label='Fecha de Inicio')
+    fecha_fin = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label='Fecha de Fin')

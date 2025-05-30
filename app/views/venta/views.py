@@ -52,8 +52,16 @@ def productos_api(request):
     term = request.GET.get('term', '')
     productos = Producto.objects.filter(
         Q(producto__icontains=term) & Q(estado=True)
-    ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion')
-    return JsonResponse(list(productos), safe=False)
+    ).values('id', 'producto', 'valor', 'precio_venta', 'cantidad', 'id_presentacion__presentacion')
+        
+    # Modificar los datos para asegurarnos que el campo valor se actualice con precio_venta
+    productos_list = list(productos)
+    for producto in productos_list:
+        # Si tiene precio_venta, copiar ese valor al campo valor para la interfaz de ventas
+        if producto.get('precio_venta') is not None:
+            producto['valor'] = producto['precio_venta']
+            
+    return JsonResponse(productos_list, safe=False)
 
 ###### CREAR ######
 
@@ -86,20 +94,45 @@ class VentaCreateView(CreateView):
         venta.save()
 
         for detalle in detalles_venta:
+            # Obtener el producto una sola vez por su ID
             producto_instance = Producto.objects.get(pk=detalle['id_producto'])
+            # Actualizar la cantidad de producto
             producto_instance.cantidad -= int(detalle['cantidad_producto'])
             producto_instance.save()
+            
+            # Obtener el nombre del producto que viene del frontend
+            nombre_producto = detalle.get('nombre_producto', '')
+            
+            # Si no hay nombre del producto desde el frontend, usar el de la base de datos
+            if not nombre_producto:
+                nombre_producto = producto_instance.producto
+                
+            # Crear el detalle de venta con el nombre correcto del producto y el precio de venta
+            # Si el producto tiene precio_venta usarlo, sino usar el valor original
+            precio_a_usar = producto_instance.precio_venta if producto_instance.precio_venta is not None else producto_instance.valor
+            
             Detalle_venta.objects.create(
                 id_venta=venta,
                 id_producto=producto_instance,
-                nombre_producto=producto_instance.producto,
-                valor_unitario=producto_instance.valor,
+                nombre_producto=nombre_producto,  # Priorizar el nombre enviado desde el frontend
+                valor_unitario=precio_a_usar,    # Usar precio_venta en lugar de valor
                 cantidad_producto=detalle['cantidad_producto'],
                 subtotal_venta=detalle['subtotal_venta']
             )
 
+        # Verificar si es una solicitud AJAX
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True, 
+                'message': 'Venta generada exitosamente',
+                'id_venta': venta.id,
+                'total': float(venta.total_venta),
+                'cambio': float(venta.cambio)
+            })
         
-        return JsonResponse({'success': True, 'message': 'Venta generada exitosamente'})
+        # Si no es AJAX, redirigir normalmente con un mensaje
+        messages.success(self.request, 'Venta generada exitosamente')
+        return super().form_valid(form)
 
 ###### EDITAR ######
 
@@ -144,5 +177,13 @@ def productos_api(request):
     term = request.GET.get('term', '')
     productos = Producto.objects.filter(
         (Q(producto__icontains=term) | Q(NumVerificador__icontains=term)) & Q(estado=True)
-    ).values('id', 'producto', 'valor', 'cantidad', 'id_presentacion__presentacion')
-    return JsonResponse(list(productos), safe=False)
+    ).values('id', 'producto', 'valor', 'precio_venta', 'cantidad', 'id_presentacion__presentacion')
+    
+    # Modificar los datos para asegurarnos que el campo valor se actualice con precio_venta
+    productos_list = list(productos)
+    for producto in productos_list:
+        # Si tiene precio_venta, copiar ese valor al campo valor para la interfaz de ventas
+        if producto.get('precio_venta') is not None:
+            producto['valor'] = producto['precio_venta']
+    
+    return JsonResponse(productos_list, safe=False)

@@ -9,3 +9,4 @@ openpyxl
 reportlab
 django-browser-reload
 pandas
+Pillow

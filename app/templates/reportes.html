@@ -11,10 +11,13 @@
                 <div class="form-group">
                     <label for="tipo_reporte">Generar reporte de:</label>
                     <select id="tipo_reporte" name="tipo_reporte" class="form-control">
-                        <option value="producto">Productos</option>
+                        <option value="producto">Todos los Productos</option>
+                        <option value="productos_dia">Productos Ingresados por Día</option>
                         <option value="administrador">Administradores</option>
                         <option value="operador">Operadores</option>
-                        <option value="venta">Ventas</option>
+                        <option value="venta">Ventas del Día</option>
+                        <option value="ganancias_diarias">Ganancias Diarias</option>
+                        <option value="ganancias_mensuales">Ganancias Mensuales</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -25,7 +28,34 @@
                     <label for="fecha_fin">Hasta:</label>
                     <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
                 </div>
-                <button type="submit" class="btn_restore fas fa-download"></button>
+                <div class="form-group">
+                    <button type="submit" class="btn_restore fas fa-download"></button>
+                    <button type="button" class="btn btn-secondary" id="limpiar-fechas">Limpiar filtros</button>
+                </div>
+                <div id="mensaje-fechas" style="display:none; color: #ffffff; margin-top: 8px; font-weight: bold;"></div>
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    // Limpiar fechas
+                    document.getElementById('limpiar-fechas').addEventListener('click', function() {
+                      document.getElementById('fecha_inicio').value = '';
+                      document.getElementById('fecha_fin').value = '';
+                      document.getElementById('mensaje-fechas').style.display = 'none';
+                    });
+                    // Validar fechas al enviar formulario
+                    document.querySelector('form').addEventListener('submit', function(e) {
+                      var fechaInicio = document.getElementById('fecha_inicio').value;
+                      var fechaFin = document.getElementById('fecha_fin').value;
+                      var mensaje = document.getElementById('mensaje-fechas');
+                      if ((fechaInicio && !fechaFin) || (!fechaInicio && fechaFin)) {
+                        e.preventDefault();
+                        mensaje.textContent = 'Debe seleccionar ambas fechas (Desde y Hasta) para generar el reporte.';
+                        mensaje.style.display = 'block';
+                      } else {
+                        mensaje.style.display = 'none';
+                      }
+                    });
+                  });
+                </script>
             </form>
         </div>
     </div>

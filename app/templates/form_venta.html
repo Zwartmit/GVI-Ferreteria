@@ -21,19 +21,19 @@
                     <div class="details-section">
                         <div class="company-details">
                             <label for="company-name">Nombre de la Empresa:</label>
-                            <input type="text" id="company-name" value="Ferroeléctricos" readonly>
-        
+                            <input type="text" id="company-name" value="Ferroeléctricos la 200" readonly>
+
                             <label for="company-nit">NIT:</label>
-                            <input type="text" id="company-nit" value="7334184-6"readonly>
-        
+                            <input type="text" id="company-nit" value="7334184-6" readonly>
+
                             <label for="company-address">Dirección:</label>
-                            <input type="text" id="company-address" value="La Paz, Cl. 200 #20-24, Floridablanca, Santander"readonly>
-        
+                            <input type="text" id="company-address" value="La Paz, Cl. 200 #20-24, Floridablanca, Santander" readonly>
+
                             <label for="company-email">Correo:</label>
-                            <input type="email" id="company-email" value="FERROELECTRICOS@gmail.com" readonly>
-        
+                            <input type="email" id="company-email" value="ferroelectricosla200@gmail.com" readonly>
+
                             <label for="company-phone">Teléfono:</label>
-                            <input type="tel" id="company-phone" value="320-966-8241" readonly>
+                            <input type="tel" id="company-phone" value="312 542 0642 - 312 396 1303" readonly>
                         </div>
                         <main id="product-sale">
                             <table class="product-sale-table">
@@ -51,7 +51,7 @@
                                     <!-- Tabla de productos-->
                                 </tbody>
                             </table>
-                            <button onclick="addProductSaleRow()">Agregar Producto</button>
+                            <button type="button" onclick="addProductSaleRow()">Agregar Producto</button>
                             <div class="totals">
                                 <p>Total: <span id="subtotal_sale" style="font-size: 35px; font-weight: bold;">$0</span></p>
                                 <div class="form-group">
@@ -75,47 +75,178 @@
     </div>
     <input type="hidden" id="detalles_venta" name="detalles_venta">
     <div class="card-footer">
-        <button class="btn btn-flat" style="background-color: #0D6EFD; color: white;"><i class="fas fa-plus"></i> Guardar</button>
+        <button type="button" id="btn-guardar-venta" class="btn btn-flat" style="background-color: #0D6EFD; color: white;"><i class="fas fa-plus"></i> Guardar</button>
         <a href="{{ listar_url }}" class="btn btn-danger btn-flat">
             <i class="fas fa-times"></i> Cancelar
         </a>
     </div>
-    </div>
 </form> 
+
 <script>
-    {% if form.errors %}
+{% if form.errors %}
     var errors = '';
     {% for field in form %}
-    {% for error in field.errors %}
-    errors += '{{ error }}';
+        {% for error in field.errors %}
+            errors += '{{ error }}\n';
+        {% endfor %}
     {% endfor %}
-    {% endfor %}
-
     Swal.fire({
         title: 'Error!',
         text: errors,
         icon: 'error',
     });
-    {% endif %}
+{% endif %}
 </script>
+
 <script>
-    function mostrarFechaHora() {
-      const fechaHoraDiv = document.getElementById('fechaHora');
-      const fechaActual = new Date();
-      const opciones = {
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const btnGuardar = document.getElementById('btn-guardar-venta');
+
+    btnGuardar.addEventListener('click', function() {
+        // Recopilar productos
+        const detallesVenta = [];
+        let hayProductos = false;
+        
+        // Depuración: Mostrar todos los productos en la interfaz
+        console.log('Productos en la interfaz:');
+
+        document.querySelectorAll('#product-sale-rows tr').forEach((fila, index) => {
+            const select = fila.querySelector('.product-select');
+            const cantidad = parseFloat(fila.querySelector('.product-quantity').value) || 0;
+            const precio = parseFloat(fila.querySelector('.product-price').value) || 0;
+            const totalElemento = fila.querySelector('.product-total').textContent;
+            const subtotal = parseFloat(totalElemento.replace('$', '')) || 0;
+            
+            // Depuración: Mostrar información detallada de cada fila
+            console.log(`Fila ${index + 1}:`, {
+                'ID del producto': select ? select.value : 'No seleccionado',
+                'Datos del select2': select ? $(select).select2('data') : 'No disponible',
+                'Cantidad': cantidad,
+                'Precio': precio,
+                'Subtotal': subtotal
+            });
+
+            if (select && select.value && cantidad > 0) {
+                hayProductos = true;
+                // Obtener el texto completo (nombre) del producto seleccionado
+                const selectData = $(select).select2('data')[0];
+                let nombreProducto = '';
+                
+                // Asegurar que obtenemos el nombre del producto correctamente
+                if (selectData) {
+                    // Tomar el texto completo del producto desde select2
+                    nombreProducto = selectData.text || '';
+                    
+                    // Imprimir el nombre del producto para depuración
+                    console.log('Nombre del producto a enviar:', nombreProducto);
+                }
+                
+                detallesVenta.push({
+                    id_producto: select.value,
+                    cantidad_producto: cantidad,
+                    subtotal_venta: subtotal,
+                    nombre_producto: nombreProducto  // Incluir el nombre del producto
+                });
+            }
+        });
+
+        if (!hayProductos) {
+            Swal.fire('Error!', 'Debe seleccionar al menos un producto para realizar la venta.', 'error');
+            return;
+        }
+
+        const dineroRecibidoInput = document.getElementById('money_received_sale');
+        const dineroRecibido = parseFloat(dineroRecibidoInput.value);
+
+        if (!dineroRecibido || dineroRecibido <= 0) {
+            Swal.fire('Error!', 'Debe ingresar el dinero recibido.', 'error');
+            return;
+        }
+
+        // VALIDACIÓN: Dinero recibido debe ser mayor o igual al total
+        const totalVenta = parseFloat(document.getElementById('subtotal_sale').textContent.replace('$', '').replace(',', '')) || 0;
+        if (dineroRecibido < totalVenta) {
+            Swal.fire('Error!', 'El dinero recibido es insuficiente para completar la venta.', 'error');
+            return;
+        }
+
+        document.getElementById('detalles_venta').value = JSON.stringify(detallesVenta);
+
+        const formData = new FormData(form);
+        formData.set('detalles_venta', JSON.stringify(detallesVenta));
+        formData.set('money_received', dineroRecibido);
+
+        Swal.fire({
+            title: 'Procesando...',
+            text: 'Guardando la venta',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        $.ajax({
+            url: form.action,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                try {
+                    const data = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (data.success) {
+                        const total = parseFloat(document.getElementById('subtotal_sale').textContent.replace('$', '').replace(',', '')) || 0;
+                        const cambio = dineroRecibido - total;
+
+                        document.getElementById('change_sale').value = cambio.toFixed(2);
+
+                        Swal.fire({
+                            title: '¡Venta Exitosa!',
+                            html: `
+                                <div style="text-align: left;">
+                                    <p><strong>Total de la venta:</strong> $${total.toFixed(2)}</p>
+                                    <p><strong>Dinero recibido:</strong> $${dineroRecibido.toFixed(2)}</p>
+                                    <p><strong>Cambio:</strong> $${cambio.toFixed(2)}</p>
+                                </div>
+                                <p>Venta #${data.id_venta} generada exitosamente</p>
+                            `,
+                            icon: 'success',
+                            confirmButtonText: 'Ver Ventas'
+                        }).then(() => {
+                            window.location.href = "{{ listar_url }}";
+                        });
+                    } else {
+                        Swal.fire('Error!', data.message || 'Ha ocurrido un error al procesar la venta.', 'error');
+                    }
+                } catch (e) {
+                    Swal.fire('¡Venta Procesada!', 'La venta ha sido registrada, pero hubo un error en la respuesta.', 'info');
+                    window.location.href = "{{ listar_url }}";
+                }
+            },
+            error: function() {
+                Swal.fire('Error!', 'Ha ocurrido un error al procesar la venta.', 'error');
+            }
+        });
+    });
+});
+</script>
+
+<script>
+function mostrarFechaHora() {
+    const fechaHoraDiv = document.getElementById('fechaHora');
+    const fechaActual = new Date();
+    const opciones = {
         year: 'numeric', month: '2-digit', day: '2-digit',
         hour: '2-digit', minute: '2-digit', second: '2-digit'
-      };
-      
-      const fechaHoraFormateada = fechaActual.toLocaleDateString('es-ES', opciones).replace(',', '');
-      fechaHoraDiv.textContent = fechaHoraFormateada;
-    }
+    };
+    fechaHoraDiv.textContent = fechaActual.toLocaleDateString('es-ES', opciones).replace(',', '');
+}
+mostrarFechaHora();
+setInterval(mostrarFechaHora, 1000);
+</script>
 
-    mostrarFechaHora();
-
-    setInterval(mostrarFechaHora, 1000);
-  </script>
-  
-  <!-- Script para el escáner de códigos de barras -->
-  <script src="{% static 'lib/adminlte-3.0.4/js/venta_barcode.js' %}"></script>
+<!-- Escáner de códigos de barras -->
+<script src="{% static 'lib/adminlte-3.0.4/js/venta_barcode.js' %}"></script>
 {% endblock %}

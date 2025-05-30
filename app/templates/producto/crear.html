@@ -26,6 +26,39 @@
     </div>
 </form>
 <script>
+    // Función para calcular automáticamente el precio de venta
+    function calcularPrecioVenta() {
+        var valor = parseFloat(document.querySelector('.valor-producto').value) || 0;
+        var porcentaje = parseFloat(document.querySelector('.porcentaje-ganancia').value) || 0;
+        
+        // Calcular precio de venta: valor + (valor * porcentaje / 100)
+        var precioVenta = valor + (valor * porcentaje / 100);
+        
+        // Actualizar el campo visible de precio de venta
+        var precioCampo = document.querySelector('.precio-venta');
+        if (precioCampo) {
+            precioCampo.value = precioVenta.toFixed(2);
+        }
+    }
+    
+    // Agregar listeners para actualizar precio en tiempo real
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicial cálculo
+        calcularPrecioVenta();
+        
+        // Listener para el campo de valor
+        var valorCampo = document.querySelector('.valor-producto');
+        if (valorCampo) {
+            valorCampo.addEventListener('input', calcularPrecioVenta);
+        }
+        
+        // Listener para el campo de porcentaje
+        var porcentajeCampo = document.querySelector('.porcentaje-ganancia');
+        if (porcentajeCampo) {
+            porcentajeCampo.addEventListener('input', calcularPrecioVenta);
+        }
+    });
+    
     {% if form.errors %}
     var errors = '';
     {% for field in form %}
