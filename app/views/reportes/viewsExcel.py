@@ -41,7 +41,7 @@ def export_productos_excel(request, fecha_inicio=None, fecha_fin=None):
     ws.row_dimensions[5].height = 20
 
     # Comentando el uso de imágenes para evitar la dependencia de Pillow
-    # img = Image('app/views/reportes/logo_ferreteria.png') 
+    # img = Image('app/views/reportes/logo2.png') 
     # img.width = 100  
     # img.height = 50  
     # ws.add_image(img, 'E2')
@@ -122,7 +122,7 @@ def export_administradores_excel(request):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
+    img = Image('app/views/reportes/logo2.png') 
     img.width = 100  
     img.height = 50  
     ws.add_image(img, 'D2')
@@ -202,7 +202,7 @@ def export_operadores_excel(request):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
+    img = Image('app/views/reportes/logo2.png') 
     img.width = 100  
     img.height = 50  
     ws.add_image(img, 'D2')
@@ -287,7 +287,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     ws.row_dimensions[3].height = 23  
     ws.row_dimensions[5].height = 20
 
-    img = Image('app/views/reportes/logo_ferreteria.png') 
+    img = Image('app/views/reportes/logo2.png') 
     img.width = 100  
     img.height = 50  
     ws.add_image(img, 'D2')

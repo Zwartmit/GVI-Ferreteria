@@ -347,7 +347,7 @@ nav a {
 .about-image img {
   width: 80%;
   border-radius: 0.5rem;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .about-content h3 {
