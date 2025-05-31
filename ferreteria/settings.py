@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-47_-76&ssi#mxnv9!e#&p^pw3ka79*%f%wl(=ci1)k58q!+927'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -89,9 +89,9 @@ WSGI_APPLICATION = 'ferreteria.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ferreteria_db',
-        'USER': 'root',
-        'PASSWORD': 'admin',
+        'NAME': 'ferreteria',
+        'USER': 'ferroelectricos',
+        'PASSWORD': 'FqHOrIrlT8YNqHvR08gb',
         'HOST': 'localhost',
         'PORT': '3306',
     }
