@@ -326,6 +326,27 @@ document.addEventListener('DOMContentLoaded', function() {
             
             updateStockColor(stockSpan, data.cantidad);
             validateInputs();
+
+            // --- AGREGAR OTRA FILA AUTOMÁTICAMENTE SI TODAS LAS FILAS TIENEN PRODUCTO ---
+            // Si todas las filas tienen producto seleccionado, agregar una nueva fila
+            const filas = document.querySelectorAll('#product-sale-rows tr');
+            let hayFilaVacia = false;
+            filas.forEach(fila => {
+                const select = $(fila).find('.product-select');
+                if (!select.val()) {
+                    hayFilaVacia = true;
+                }
+            });
+            if (!hayFilaVacia) {
+                setTimeout(() => {
+                    const nuevaFila = addProductSaleRow();
+                    // Abrir el select2 de la nueva fila para facilitar el escaneo/manual
+                    const nuevoSelect = nuevaFila.querySelector('.product-select');
+                    if (nuevoSelect) {
+                        $(nuevoSelect).select2('open');
+                    }
+                }, 200);
+            }
         });
 
         productSaleRows.appendChild(row);
@@ -404,9 +425,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // Exponer la función para que pueda ser llamada desde el HTML
     window.addProductSaleRow = addProductSaleRow;
     window.processBarcodeScan = processBarcodeScan;
+    window.clearProductRows = function() {
+        // Eliminar todas las filas
+        while (productSaleRows.firstChild) {
+            productSaleRows.removeChild(productSaleRows.firstChild);
+        }
+        // Agregar una nueva fila vacía y abrir el select2
+        const row = addProductSaleRow();
+        setTimeout(() => {
+            const select = row.querySelector('.product-select');
+            if (select) {
+                $(select).select2('open');
+            }
+        }, 200);
+        // Limpiar los campos de dinero recibido y cambio
+        if (dineroRecibidoInput) {
+            dineroRecibidoInput.value = '';
+        }
+        if (cambioElement) {
+            cambioElement.value = '';
+        }
+        validateInputs();
+    }
     
     // Agregar la primera fila si no hay ninguna
     if (productSaleRows && productSaleRows.children.length === 0) {
-        addProductSaleRow();
+        const row = addProductSaleRow();
+        // Esperar a que select2 esté inicializado y luego abrirlo
+        setTimeout(() => {
+            const select = row.querySelector('.product-select');
+            if (select) {
+                $(select).select2('open');
+            }
+        }, 200);
     }
 });
