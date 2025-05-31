@@ -34,6 +34,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para procesar el código de barras escaneado
     function processBarcodeScan(barcode) {
+        // Buscar si ya existe una fila con el producto (usando select2 correctamente)
+        let filaExistente = null;
+        document.querySelectorAll('#product-sale-rows tr').forEach(row => {
+            const select = row.querySelector('.product-select');
+            const selectVal = select ? $(select).val() : null;
+            if (selectVal && selectVal == barcode) {
+                filaExistente = row;
+            }
+        });
+        if (filaExistente) {
+            // Sumar cantidad y actualizar subtotal (no crear fila nueva)
+            const inputCantidad = filaExistente.querySelector('.product-quantity');
+            let cantidad = parseInt(inputCantidad.value) || 0;
+            cantidad += 1;
+            inputCantidad.value = cantidad;
+            // Recalcula subtotal
+            const precio = parseFloat(filaExistente.querySelector('.product-price').value) || 0;
+            filaExistente.querySelector('.product-total').textContent = '$' + (cantidad * precio).toFixed(2);
+            validateInputs(); // Actualizar totales
+            return; // Termina aquí, nunca agrega fila nueva
+        }
+
+        // Solo si no existe, busca fila vacía o crea nueva
         console.log("Procesando código de barras:", barcode);
         
         $.ajax({
@@ -54,14 +77,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 const producto = data[0];
                 console.log("Producto encontrado:", producto);
                 
-                // Se ha eliminado la validación de productos repetidos
-                // Ahora se permitirá agregar el mismo producto varias veces
-                
-                // Usar precio_venta en lugar de valor si está disponible
-                const precioAMostrar = producto.precio_venta !== undefined && producto.precio_venta !== null ? 
-                    producto.precio_venta : producto.valor;
-                
-                // Si el producto no existe, buscar una fila vacía
+                // Antes de agregar, buscar si ya existe una fila con este producto
+                let filaExistente = null;
+                document.querySelectorAll('#product-sale-rows tr').forEach(row => {
+                    const select = row.querySelector('.product-select');
+                    const selectVal = select ? $(select).val() : null;
+                    if (selectVal && selectVal == producto.id) {
+                        filaExistente = row;
+                    }
+                });
+                if (filaExistente) {
+                    // Sumar cantidad y actualizar subtotal
+                    const inputCantidad = filaExistente.querySelector('.product-quantity');
+                    let cantidad = parseInt(inputCantidad.value) || 0;
+                    cantidad += 1;
+                    inputCantidad.value = cantidad;
+                    const precio = parseFloat(filaExistente.querySelector('.product-price').value) || 0;
+                    filaExistente.querySelector('.product-total').textContent = '$' + (cantidad * precio).toFixed(2);
+                    validateInputs();
+                    return;
+                }
+                // Si no existe, buscar una fila vacía
                 let emptyRow = null;
                 document.querySelectorAll('#product-sale-rows tr').forEach(row => {
                     const select = row.querySelector('.product-select');
@@ -142,6 +178,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Validar inputs y calcular totales
     function validateInputs() {
+        // Validación de productos repetidos
+        let productos = [];
+        let productoRepetido = false;
+        document.querySelectorAll('#product-sale-rows tr').forEach(row => {
+            const select = $(row.querySelector('.product-select')).val();
+            if (select) {
+                if (productos.includes(select)) {
+                    productoRepetido = true;
+                } else {
+                    productos.push(select);
+                }
+            }
+        });
+        if (productoRepetido) {
+            Swal.fire({
+                title: 'Advertencia',
+                text: 'Este producto ya está seleccionado',
+                icon: 'warning',
+            });
+            document.getElementById('btn-guardar-venta').disabled = true;
+        } else {
+            document.getElementById('btn-guardar-venta').disabled = false;
+        }
+
         let isValid = true;
         let subtotal = 0;
 

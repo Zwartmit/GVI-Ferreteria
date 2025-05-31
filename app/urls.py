@@ -65,6 +65,7 @@ urlpatterns = [
     path('venta/editar/<int:pk>/', VentaUpdateView.as_view(), name='venta_editar'),
     path('venta/eliminar/<int:pk>/', VentaDeleteView.as_view(), name='venta_eliminar'),
     path('venta/opciones/', ventas_view, name='venta_opciones'),
+    path('venta/factura/<int:pk>/', factura_venta_view, name='venta_factura'),
 
     ### DETALLE VENTA ###
     path('detalle_venta/listar/', DetalleVentaListView.as_view(), name='detalle_venta_lista'),

@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block contenido %}
+<h2>Factura Venta #{{ venta.id }}</h2>
+<p>Fecha: {{ venta.fecha_venta }}</p>
+<p>Total: ${{ venta.total_venta }}</p>
+<p>Método de pago: {{ venta.metodo_pago }}</p>
+<p>Dinero recibido: ${{ venta.dinero_recibido }}</p>
+<p>Cambio: ${{ venta.cambio }}</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in detalles %}
+        <tr>
+            <td>{{ d.nombre_producto }}</td>
+            <td>{{ d.cantidad_producto }}</td>
+            <td>${{ d.valor_unitario }}</td>
+            <td>${{ d.subtotal_venta }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

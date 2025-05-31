@@ -172,6 +172,18 @@ class VentaDeleteView(DeleteView):
 def ventas_view(request):
     return render(request, 'venta/ventas.html')
 
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+@never_cache
+def factura_venta_view(request, pk):
+    venta = get_object_or_404(Venta, pk=pk)
+    detalles = Detalle_venta.objects.filter(id_venta=venta)
+    return render(request, 'venta/factura.html', {
+        'venta': venta,
+        'detalles': detalles,
+    })
 
 def productos_api(request):
     term = request.GET.get('term', '')
