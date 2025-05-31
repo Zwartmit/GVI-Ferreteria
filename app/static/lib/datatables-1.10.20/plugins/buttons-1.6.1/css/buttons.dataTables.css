@@ -71,7 +71,7 @@ a.dt-button {
   margin-right: 0.333em;
   margin-bottom: 0.333em;
   padding: 0.5em 1em;
-  border: 1px solid #999;
+  border: 1px solid #000;
   border-radius: 2px;
   cursor: pointer;
   font-size: 0.88em;
@@ -102,7 +102,7 @@ a.dt-button {
 button.dt-button.disabled,
 div.dt-button.disabled,
 a.dt-button.disabled {
-  color: #999;
+  color: #000;
   border: 1px solid #d0d0d0;
   cursor: default;
   background-color: #f9f9f9;

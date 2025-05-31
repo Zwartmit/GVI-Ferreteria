@@ -339,7 +339,7 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     for row_num, venta in enumerate(ventas, 6):
         ws.cell(row=row_num, column=2, value=venta.id)
         # Agregar el signo $ sin decimales
-        ws.cell(row=row_num, column=3, value=f"${int(venta.total_venta)}")
+        ws.cell(row=row_num, column=3, value=f"$ {int(venta.total_venta):,}")
         # Convertimos el código del método de pago a su versión legible
         if venta.metodo_pago == 'EF':
             metodo_pago_display = 'Efectivo'
@@ -348,8 +348,8 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
         else:
             metodo_pago_display = venta.metodo_pago
         ws.cell(row=row_num, column=4, value=metodo_pago_display)
-        ws.cell(row=row_num, column=5, value=f"${int(venta.dinero_recibido)}")
-        ws.cell(row=row_num, column=6, value=f"${int(venta.cambio)}")
+        ws.cell(row=row_num, column=5, value=f"$ {int(venta.dinero_recibido):,}")
+        ws.cell(row=row_num, column=6, value=f"$ {int(venta.cambio):,}")
         ws.cell(row=row_num, column=7, value=venta.fecha_venta.strftime("%d/%m/%Y %H:%M") if venta.fecha_venta else "")
 
         for col_num in range(2, 8):

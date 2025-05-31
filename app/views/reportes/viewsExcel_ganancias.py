@@ -103,10 +103,10 @@ def export_ganancias_diarias_excel(request):
         datos_venta = [
             venta.id,
             venta.fecha_venta.strftime("%d/%m/%Y %H:%M") if venta.fecha_venta else "",
-            float(venta.total_venta),
+            f"$ {int(venta.total_venta):,}",
             venta.get_metodo_pago_display() if hasattr(venta, 'get_metodo_pago_display') else venta.metodo_pago,
-            float(venta.dinero_recibido),
-            float(venta.cambio)
+            f"$ {int(venta.dinero_recibido):,}",
+            f"$ {int(venta.cambio):,}"
         ]
         for col_num, dato in enumerate(datos_venta, 2):
             cell = ws.cell(row=row_num, column=col_num)
@@ -145,11 +145,11 @@ def export_ganancias_diarias_excel(request):
             datos_prod = [
                 nombre_producto,
                 cantidad,
-                costo_unitario,
-                precio_venta,
-                costo,
-                subtotal,
-                ganancia
+                f"$ {int(costo_unitario):,}",
+                f"$ {int(precio_venta):,}",
+                f"$ {int(costo):,}",
+                f"$ {int(subtotal):,}",
+                f"$ {int(ganancia):,}"
             ]
             for col_num, dato in enumerate(datos_prod, 2):
                 cell = ws.cell(row=row_num, column=col_num)
@@ -163,9 +163,9 @@ def export_ganancias_diarias_excel(request):
     # Agregamos el resumen total
     ws.cell(row=row_num + 1, column=2, value="TOTALES:")
     ws.cell(row=row_num + 1, column=2).font = bold_font
-    ws.cell(row=row_num + 1, column=6, value=costo_total)
-    ws.cell(row=row_num + 1, column=7, value=venta_total)
-    ws.cell(row=row_num + 1, column=8, value=ganancia_total)
+    ws.cell(row=row_num + 1, column=6, value=f"$ {int(costo_total):,}")
+    ws.cell(row=row_num + 1, column=7, value=f"$ {int(venta_total):,}")
+    ws.cell(row=row_num + 1, column=8, value=f"$ {int(ganancia_total):,}")
 
     for col_num in [2, 6, 7, 8]:
         cell = ws.cell(row=row_num + 1, column=col_num)
@@ -323,10 +323,10 @@ def export_ganancias_mensuales_excel(request):
         datos_venta = [
             venta.id,
             venta.fecha_venta.strftime("%d/%m/%Y %H:%M") if venta.fecha_venta else "",
-            float(venta.total_venta),
+            f"$ {int(venta.total_venta):,}",
             venta.get_metodo_pago_display() if hasattr(venta, 'get_metodo_pago_display') else venta.metodo_pago,
-            float(venta.dinero_recibido),
-            float(venta.cambio)
+            f"$ {int(venta.dinero_recibido):,}",
+            f"$ {int(venta.cambio):,}"
         ]
         for col_num, dato in enumerate(datos_venta, 2):
             cell = ws.cell(row=row_num, column=col_num)
@@ -365,11 +365,11 @@ def export_ganancias_mensuales_excel(request):
             datos_prod = [
                 nombre_producto,
                 cantidad,
-                costo_unitario,
-                precio_venta,
-                costo,
-                subtotal,
-                ganancia
+                f"$ {int(costo_unitario):,}",
+                f"$ {int(precio_venta):,}",
+                f"$ {int(costo):,}",
+                f"$ {int(subtotal):,}",
+                f"$ {int(ganancia):,}"
             ]
             for col_num, dato in enumerate(datos_prod, 2):
                 cell = ws.cell(row=row_num, column=col_num)
@@ -383,9 +383,9 @@ def export_ganancias_mensuales_excel(request):
     # Agregamos el resumen total
     ws.cell(row=row_num + 1, column=2, value="TOTALES:")
     ws.cell(row=row_num + 1, column=2).font = bold_font
-    ws.cell(row=row_num + 1, column=6, value=costo_total)
-    ws.cell(row=row_num + 1, column=7, value=venta_total)
-    ws.cell(row=row_num + 1, column=8, value=ganancia_total)
+    ws.cell(row=row_num + 1, column=6, value=f"$ {int(costo_total):,}")
+    ws.cell(row=row_num + 1, column=7, value=f"$ {int(venta_total):,}")
+    ws.cell(row=row_num + 1, column=8, value=f"$ {int(ganancia_total):,}")
 
     for col_num in [2, 6, 7, 8]:
         cell = ws.cell(row=row_num + 1, column=col_num)
