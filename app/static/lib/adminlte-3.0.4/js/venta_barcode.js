@@ -99,8 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.precio_venta = producto.precio_venta;
                 option.cantidad = producto.cantidad;
                 
-                // Agregar la opción y activarla
+                // Limpiar el select antes de agregar la nueva opción
+                select.empty();
                 select.append(option).trigger('change');
+                // Asegurar que el valor del input sea el id correcto
+                select.val(producto.id).trigger('change');
+                select[0].value = producto.id;
                 
                 // Unificar el estilo de la selección para que se vea igual que los productos seleccionados manualmente
                 const selectContainer = $(select).data('select2').$container;

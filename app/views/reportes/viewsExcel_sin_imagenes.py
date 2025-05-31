@@ -264,8 +264,19 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
     inicio_del_dia = datetime.combine(hoy, time.min)
     fin_del_dia = datetime.combine(hoy, time.max)
     
-    # Filtramos solamente las ventas del día actual
-    ventas = Venta.objects.filter(fecha_venta__range=[inicio_del_dia, fin_del_dia])
+    # Filtrar por fechas si se proporcionan, si no por el día actual
+    if fecha_inicio and fecha_fin:
+        # Si las fechas vienen como string, conviértelas a datetime
+        if isinstance(fecha_inicio, str):
+            fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+        if isinstance(fecha_fin, str):
+            fecha_fin = datetime.strptime(fecha_fin, "%Y-%m-%d")
+        # Asegura que el rango incluya todo el día final
+        fecha_inicio = datetime.combine(fecha_inicio, time.min)
+        fecha_fin = datetime.combine(fecha_fin, time.max)
+        ventas = Venta.objects.filter(fecha_venta__range=[fecha_inicio, fecha_fin])
+    else:
+        ventas = Venta.objects.filter(fecha_venta__range=[inicio_del_dia, fin_del_dia])
 
     wb = Workbook()
     ws = wb.active
@@ -327,7 +338,8 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
 
     for row_num, venta in enumerate(ventas, 6):
         ws.cell(row=row_num, column=2, value=venta.id)
-        ws.cell(row=row_num, column=3, value=venta.total_venta)
+        # Agregar el signo $ sin decimales
+        ws.cell(row=row_num, column=3, value=f"${int(venta.total_venta)}")
         # Convertimos el código del método de pago a su versión legible
         if venta.metodo_pago == 'EF':
             metodo_pago_display = 'Efectivo'
@@ -336,8 +348,8 @@ def export_ventas_excel(request, fecha_inicio=None, fecha_fin=None):
         else:
             metodo_pago_display = venta.metodo_pago
         ws.cell(row=row_num, column=4, value=metodo_pago_display)
-        ws.cell(row=row_num, column=5, value=venta.dinero_recibido)
-        ws.cell(row=row_num, column=6, value=venta.cambio)
+        ws.cell(row=row_num, column=5, value=f"${int(venta.dinero_recibido)}")
+        ws.cell(row=row_num, column=6, value=f"${int(venta.cambio)}")
         ws.cell(row=row_num, column=7, value=venta.fecha_venta.strftime("%d/%m/%Y %H:%M") if venta.fecha_venta else "")
 
         for col_num in range(2, 8):
