@@ -653,8 +653,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 quantityInput.classList.add('error');
                 if (quantity > maxQuantity) {
                     Swal.fire({
-                        title: 'Advertencia!',
-                        text: `La cantidad ingresada (${quantity}) supera el stock disponible (${maxQuantity}).`,
+                        title: 'Stock insuficiente',
+                        text: `No hay stock disponible de este producto.`,
                         icon: 'warning',
                     });
                 }

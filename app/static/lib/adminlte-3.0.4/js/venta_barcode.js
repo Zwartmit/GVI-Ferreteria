@@ -97,15 +97,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     validateInputs();
                     return;
                 }
-                // Si no existe, buscar una fila vacía
+                // Si no existe, buscar una fila vacía (sin producto seleccionado en select2)
                 let emptyRow = null;
                 document.querySelectorAll('#product-sale-rows tr').forEach(row => {
                     const select = row.querySelector('.product-select');
                     if (select) {
-                        const selectData = $(select).select2('data');
-                        if (!selectData || selectData.length === 0 || !selectData[0].id) {
+                        // Considera vacía si el select2 está vacío o null
+                        const value = $(select).val();
+                        if (!value || value === "" || value.length === 0) {
                             emptyRow = row;
-                            console.log("Fila vacía encontrada");
+                            console.log("Fila vacía encontrada para escaneo");
                             return false; // Detener el bucle
                         }
                     }
@@ -113,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Si no hay filas vacías, crear una nueva
                 if (!emptyRow) {
-                    console.log("No hay filas vacías, creando una nueva");
+                    console.log("No hay filas vacías, creando una nueva para escaneo");
                     addProductSaleRow();
                     emptyRow = document.querySelector('#product-sale-rows tr:last-child');
                 }
@@ -160,6 +161,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 stockSpan.textContent = producto.cantidad || 0;
                 quantityInput.max = producto.cantidad || 0;
                 quantityInput.value = 1; // Establecer cantidad a 1 por defecto
+                
+                // Alarma si no hay stock disponible
+                if (!producto.cantidad || producto.cantidad == 0) {
+                    Swal.fire({
+                        title: 'Sin stock',
+                        text: 'No hay stock disponible de este producto.',
+                        icon: 'warning',
+                    });
+                }
                 
                 // Actualizar visualización
                 updateStockColor(stockSpan, producto.cantidad);
@@ -309,6 +319,15 @@ document.addEventListener('DOMContentLoaded', function() {
             stockSpan.textContent = data.cantidad || 0;
             quantityInput.max = data.cantidad || 0;
             quantityInput.value = 1; // Establecer cantidad a 1 por defecto
+
+            // Alarma si no hay stock disponible
+            if (!data.cantidad || data.cantidad == 0) {
+                Swal.fire({
+                    title: 'Sin stock',
+                    text: 'No hay stock disponible de este producto.',
+                    icon: 'warning',
+                });
+            }
 
             // Aplicar el mismo estilo tanto para productos escaneados como seleccionados manualmente
             const selectContainer = $(this).data('select2').$container;
