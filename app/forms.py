@@ -68,7 +68,7 @@ class ProductoForm(ModelForm):
 
     class Meta:
         model = Producto
-        fields = ["producto", "cantidad", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion"]
+        fields = ["producto", "cantidad", "stock_minimo", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion"]
         widgets = {
             "producto": TextInput(
                 attrs={
@@ -78,6 +78,12 @@ class ProductoForm(ModelForm):
             "cantidad": NumberInput(
                 attrs={
                     "placeholder": "Cantidad a registrar",
+                }
+            ),
+            "stock_minimo": NumberInput(
+                attrs={
+                    "placeholder": "Stock mínimo para reabastecimiento",
+                    "min": "1"
                 }
             ),
             "valor": NumberInput(

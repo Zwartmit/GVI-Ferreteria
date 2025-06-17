@@ -43,6 +43,7 @@ class ProductoListView(ListView):
         context['entidad'] = 'Listado de productos'
         context['listar_url'] = reverse_lazy('app:producto_lista')
         context['crear_url'] = reverse_lazy('app:producto_crear')
+        context['productos_reabastecer'] = Producto.productos_por_reabastecer()
         return context
 
 ###### CREAR ######
