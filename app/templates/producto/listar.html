@@ -69,6 +69,7 @@
     <th scope="col">Estado</th>
     <th scope="col">Categoría</th>
     <th scope="col">Presentación</th>
+    <th scope="col">Proveedor</th>
     <th scope="col">Opciones</th>
 </tr>
 {% endblock %}
@@ -93,6 +94,7 @@
         <td>{{ p.estado | yesno:"Activo,Inactivo" }}</td>
         <td>{{ p.id_categoria.categoria }}</td>
         <td>{{ p.id_presentacion.presentacion }}</td>
+        <td>{{ p.proveedor.nombre|default:"Sin proveedor" }}</td>
         <td>
             <a href="{% url 'app:producto_editar' p.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit"></i>
             </a><a href="{% url 'app:producto_eliminar' p.id %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
@@ -122,7 +124,7 @@
             responsive: true,
             initComplete: function () {
                 var api = this.api();
-                var columnNames = ['id', 'Producto', 'Cantidad', 'Stock Mínimo', 'Costo', 'Precio de venta', 'NumVerificador', 'Estado', 'Categoría', 'Presentación', 'Opciones'];
+                var columnNames = ['id', 'Producto', 'Cantidad', 'Stock Mínimo', 'Costo', 'Precio de venta', 'NumVerificador', 'Estado', 'Categoría', 'Presentación', 'Proveedor', 'Opciones'];
                 var excludedColumnIndex = columnNames.indexOf('Opciones'); 
                 api.columns().every(function (index) {
                     var column = this;

@@ -50,6 +50,7 @@ class Producto(models.Model):
     estado = models.BooleanField(default=True, verbose_name="Estado")
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
+    proveedor = models.ForeignKey('Proveedor', on_delete=models.SET_NULL, verbose_name="Proveedor", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
 
     def save(self, *args, **kwargs):

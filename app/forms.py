@@ -68,7 +68,7 @@ class ProductoForm(ModelForm):
 
     class Meta:
         model = Producto
-        fields = ["producto", "cantidad", "stock_minimo", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion"]
+        fields = ["producto", "cantidad", "stock_minimo", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion", "proveedor"]
         widgets = {
             "producto": TextInput(
                 attrs={
@@ -119,6 +119,12 @@ class ProductoForm(ModelForm):
                 choices=[(True, "Activo"), (False, "Inactivo")],
                 attrs={
                     "placeholder": "Estado del producto",
+                }
+            ),
+            "proveedor": Select(
+                attrs={
+                    "placeholder": "Seleccionar proveedor (opcional)",
+                    "class": "form-control"
                 }
             )
         }
