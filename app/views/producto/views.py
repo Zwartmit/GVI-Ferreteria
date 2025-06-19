@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from django.db.models import ProtectedError
-from app.models import Producto, Categoria, Presentacion, Compra, Detalle_compra
+from app.models import Proveedor, Producto, Categoria, Presentacion, Compra, Detalle_compra
 from app.forms import ProductoForm
 
 @method_decorator(never_cache, name='dispatch')
@@ -43,6 +43,7 @@ class ProductoListView(ListView):
         context['entidad'] = 'Listado de productos'
         context['listar_url'] = reverse_lazy('app:producto_lista')
         context['crear_url'] = reverse_lazy('app:producto_crear')
+        context['productos_reabastecer'] = Producto.productos_por_reabastecer()
         return context
 
 ###### CREAR ######
@@ -139,7 +140,7 @@ def importar_factura_view(request):
         try:
             df = pd.read_excel(archivo)
 
-            required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Presentación']
+            required_columns = ['Producto', 'Cantidad', 'Valor', 'NumVerificador', 'Categoría', 'Presentación', 'Proveedor']
 
             if not all(col in df.columns for col in required_columns):
                 missing_columns = [col for col in required_columns if col not in df.columns]
@@ -159,9 +160,15 @@ def importar_factura_view(request):
                     )
                     return redirect('app:producto_lista')
 
-            compra = Compra.objects.create(proveedor="Proveedor Desconocido", estado=True)
+            # Usar el proveedor de la primera fila para la compra
+            primer_proveedor_nombre = df.iloc[0]['Proveedor']
+            proveedor_compra, _ = Proveedor.objects.get_or_create(nombre=primer_proveedor_nombre)
+            compra = Compra.objects.create(proveedor=proveedor_compra, estado=True)
 
             for _, row in df.iterrows():
+                # Registrar automáticamente el proveedor
+                proveedor_obj, _ = Proveedor.objects.get_or_create(nombre=row['Proveedor'])
+
                 categoria, _ = Categoria.objects.get_or_create(categoria=row['Categoría'])
                 presentacion, _ = Presentacion.objects.get_or_create(presentacion=row['Presentación'])
 
@@ -174,12 +181,14 @@ def importar_factura_view(request):
                         'estado': True,
                         'id_categoria': categoria,
                         'id_presentacion': presentacion,
+                        'proveedor': proveedor_obj,
                     }
                 )
 
                 if not created:
                     producto.cantidad += row['Cantidad']
                     producto.valor = row['Valor']
+                    producto.proveedor = proveedor_obj
                     producto.save()
 
                 Detalle_compra.objects.create(

@@ -62,13 +62,12 @@ class ProductoForm(ModelForm):
         self.fields["id_categoria"].queryset = Categoria.objects.filter(estado=True)
         self.fields["id_presentacion"].queryset = Presentacion.objects.filter(estado=True)
         
-        # Configuramos el campo de precio_venta como de solo lectura ya que se calcula automáticamente
-        if 'precio_venta' in self.fields:
-            self.fields['precio_venta'].widget.attrs['readonly'] = True
+        # Campo precio_venta ahora es editable
+        # Se puede modificar manualmente o calcular automáticamente
 
     class Meta:
         model = Producto
-        fields = ["producto", "cantidad", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion"]
+        fields = ["producto", "cantidad", "stock_minimo", "valor", "porcentaje_ganancia", "precio_venta", "NumVerificador", "estado", "id_categoria", "id_presentacion", "proveedor"]
         widgets = {
             "producto": TextInput(
                 attrs={
@@ -78,6 +77,12 @@ class ProductoForm(ModelForm):
             "cantidad": NumberInput(
                 attrs={
                     "placeholder": "Cantidad a registrar",
+                }
+            ),
+            "stock_minimo": NumberInput(
+                attrs={
+                    "placeholder": "Stock mínimo para reabastecimiento",
+                    "min": "1"
                 }
             ),
             "valor": NumberInput(
@@ -98,9 +103,10 @@ class ProductoForm(ModelForm):
             ),
             "precio_venta": NumberInput(
                 attrs={
-                    "placeholder": "Precio de venta (calculado)",
+                    "placeholder": "Precio de venta",
                     "class": "form-control precio-venta",
-                    "readonly": "readonly"
+                    "min": "0",
+                    "step": "0.01"
                 }
             ),
             'NumVerificador': NumberInput(
@@ -113,6 +119,12 @@ class ProductoForm(ModelForm):
                 choices=[(True, "Activo"), (False, "Inactivo")],
                 attrs={
                     "placeholder": "Estado del producto",
+                }
+            ),
+            "proveedor": Select(
+                attrs={
+                    "placeholder": "Seleccionar proveedor (opcional)",
+                    "class": "form-control"
                 }
             )
         }

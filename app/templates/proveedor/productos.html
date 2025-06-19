@@ -1,0 +1,154 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+{% endblock %}
+
+{% block contenido %}
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-truck"></i>
+            {{titulo}}
+        </h3>
+    </div>
+    <div class="card-body">
+        <!-- Selector de Proveedores -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="proveedorSelect" class="form-label"><strong>Seleccionar Proveedor:</strong></label>
+                <select id="proveedorSelect" class="form-control" onchange="cargarProductos()">
+                    <option value="">-- Seleccione un proveedor --</option>
+                    {% for proveedor in proveedores %}
+                        <option value="{{ proveedor.id }}" 
+                            {% if proveedor_seleccionado and proveedor.id == proveedor_seleccionado.id %}selected{% endif %}>
+                            {{ proveedor.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <a href="{% url 'app:proveedor_lista' %}" class="btn btn-secondary mt-4">
+                    <i class="fas fa-arrow-left"></i> Volver al listado de proveedores
+                </a>
+            </div>
+        </div>
+
+        <!-- Información del Proveedor Seleccionado -->
+        {% if proveedor_seleccionado %}
+        <div class="alert alert-info">
+            <h5><i class="fas fa-info-circle"></i> Proveedor Seleccionado: {{ proveedor_seleccionado.nombre }}</h5>
+            <p><strong>Teléfono:</strong> {{ proveedor_seleccionado.telefono|default:"No especificado" }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Tabla de Productos -->
+        {% if productos %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="card-title">
+                    <i class="fas fa-boxes"></i>
+                    Productos de {{ proveedor_seleccionado.nombre }} ({{ productos|length }} productos)
+                </h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="tablaProductos" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Stock Mínimo</th>
+                            <th scope="col">Costo</th>
+                            <th scope="col">Precio de Venta</th>
+                            <th scope="col">NumVerificador</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Presentación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr {% if producto.necesita_reabastecimiento %}class="table-warning"{% endif %}>
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.producto }}</td>
+                            <td>
+                                {% if producto.necesita_reabastecimiento %}
+                                    <span class="badge badge-danger">{{ producto.cantidad }}</span>
+                                {% else %}
+                                    {{ producto.cantidad }}
+                                {% endif %}
+                            </td>
+                            <td>{{ producto.stock_minimo }}</td>
+                            <td>${{ producto.valor|floatformat:2 }}</td>
+                            <td>${{ producto.precio_venta|floatformat:2 }}</td>
+                            <td>{{ producto.NumVerificador }}</td>
+                            <td>{{ producto.estado | yesno:"Activo,Inactivo" }}</td>
+                            <td>{{ producto.id_categoria.categoria }}</td>
+                            <td>{{ producto.id_presentacion.presentacion }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% elif proveedor_seleccionado %}
+        <div class="alert alert-warning mt-3">
+            <i class="fas fa-exclamation-triangle"></i>
+            No hay productos registrados para el proveedor <strong>{{ proveedor_seleccionado.nombre }}</strong>.
+        </div>
+        {% else %}
+        <div class="alert alert-secondary mt-3">
+            <i class="fas fa-info-circle"></i>
+            Seleccione un proveedor para ver sus productos.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script type="application/javascript">
+    function cargarProductos() {
+        const proveedorId = document.getElementById('proveedorSelect').value;
+        if (proveedorId) {
+            window.location.href = `{% url 'app:proveedor_productos' %}?proveedor_id=${proveedorId}`;
+        } else {
+            window.location.href = `{% url 'app:proveedor_productos' %}`;
+        }
+    }
+
+    $(document).ready(function () {
+        {% if productos %}
+        $("#tablaProductos").DataTable({
+            responsive: true,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

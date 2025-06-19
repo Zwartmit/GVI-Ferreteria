@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.db.models import ProtectedError
-from app.models import Proveedor
+from app.models import Proveedor, Producto
 from app.forms import ProveedorForm
 from django.db.models import Sum
 
@@ -123,3 +123,33 @@ class ProveedorDeleteView(DeleteView):
             return JsonResponse({'success': True, 'message': 'Proveedor eliminado con éxito.'})
         except ProtectedError:
             return JsonResponse({'success': False, 'message': 'No se puede eliminar el proveedor.'})
+
+@method_decorator(login_required, name='dispatch')
+class ProveedorProductosView(ListView):
+    model = Proveedor
+    template_name = 'proveedor/productos.html'
+    context_object_name = 'proveedores'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'Proveedores y sus Productos'
+        context['entidad'] = 'Proveedores y Productos'
+        context['listar_url'] = reverse_lazy('app:proveedor_lista')
+        context['has_permission'] = self.request.user.has_perm('app.view_proveedor')
+        
+        # Obtener el proveedor seleccionado si existe
+        proveedor_id = self.request.GET.get('proveedor_id')
+        if proveedor_id:
+            try:
+                proveedor_seleccionado = Proveedor.objects.get(id=proveedor_id)
+                productos = Producto.objects.filter(proveedor=proveedor_seleccionado)
+                context['proveedor_seleccionado'] = proveedor_seleccionado
+                context['productos'] = productos
+            except Proveedor.DoesNotExist:
+                context['proveedor_seleccionado'] = None
+                context['productos'] = []
+        else:
+            context['proveedor_seleccionado'] = None
+            context['productos'] = []
+            
+        return context

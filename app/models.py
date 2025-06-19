@@ -42,6 +42,7 @@ class Presentacion(models.Model):
 class Producto(models.Model):
     producto = models.CharField(max_length=50, verbose_name="Producto")
     cantidad = models.PositiveIntegerField(verbose_name="Cantidad")
+    stock_minimo = models.PositiveIntegerField(verbose_name="Stock mínimo", default=3)
     valor = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Costo")
     porcentaje_ganancia = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Porcentaje de ganancia", default=0)
     precio_venta = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio de venta", null=True, blank=True)
@@ -49,6 +50,7 @@ class Producto(models.Model):
     estado = models.BooleanField(default=True, verbose_name="Estado")
     id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, verbose_name="Categoría")
     id_presentacion = models.ForeignKey(Presentacion, on_delete=models.PROTECT, verbose_name="Presentación")
+    proveedor = models.ForeignKey('Proveedor', on_delete=models.SET_NULL, verbose_name="Proveedor", null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
 
     def save(self, *args, **kwargs):
@@ -57,6 +59,16 @@ class Producto(models.Model):
             # Calcula el precio de venta: valor + (valor * porcentaje / 100)
             self.precio_venta = self.valor + (self.valor * self.porcentaje_ganancia / 100)
         super().save(*args, **kwargs)
+
+    @property
+    def necesita_reabastecimiento(self):
+        """Retorna True si el producto necesita reabastecimiento"""
+        return self.cantidad <= self.stock_minimo
+
+    @classmethod
+    def productos_por_reabastecer(cls):
+        """Retorna todos los productos que necesitan reabastecimiento"""
+        return cls.objects.filter(cantidad__lte=models.F('stock_minimo'), estado=True)
 
     def __str__(self):
         return f"{self.producto}-{self.id_presentacion.presentacion}({self.id_presentacion})"
@@ -265,7 +277,7 @@ class Detalle_venta(models.Model):
 ########################################################################################################################################
 
 class Compra(models.Model):
-    proveedor = models.CharField(max_length=100, verbose_name="Proveedor")
+    proveedor = models.ForeignKey('Proveedor', on_delete=models.SET_NULL, verbose_name="Proveedor", null=True, blank=True)
     fecha_compra = models.DateTimeField(default=datetime.now, verbose_name="Fecha de la compra")
     estado = models.BooleanField(default=True, verbose_name="Estado")
 

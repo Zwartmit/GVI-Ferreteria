@@ -52,6 +52,7 @@ urlpatterns = [
     
     ### CRUD PROVEEDOR ###
     path('proveedor/listar/', ProveedorListView.as_view(), name='proveedor_lista'),
+    path('proveedor/productos/', ProveedorProductosView.as_view(), name='proveedor_productos'),
     path('proveedor/crear/', ProveedorCreateView.as_view(), name='proveedor_crear'),
     path('proveedor/editar/<int:pk>/', ProveedorUpdateView.as_view(), name='proveedor_editar'),
     path('proveedor/eliminar/<int:pk>/', ProveedorDeleteView.as_view(), name='proveedor_eliminar'),
