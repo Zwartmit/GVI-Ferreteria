@@ -231,6 +231,7 @@ class Factura(models.Model):
 ########################################################################################################################################
 
 class Venta(models.Model):
+    id_cliente = models.ForeignKey('Cliente', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Cliente")
     class MedotoPago(models.TextChoices):
         EF = 'EF', 'Efectivo'
         TF = 'TF', 'Transferencia'
@@ -307,6 +308,26 @@ class Detalle_compra(models.Model):
         db_table = "Detalle_compra"
 
 ########################################################################################################################################
+
+class Cliente(models.Model):
+    class TipoDocumento(models.TextChoices):
+        NIT = 'NIT', 'NIT'
+        CC = 'CC', 'Cédula'
+
+    nombre = models.CharField(max_length=100, verbose_name="Nombre")
+    tipo_documento = models.CharField(max_length=3, choices=TipoDocumento.choices, default=TipoDocumento.CC, verbose_name="Tipo de documento")
+    numero_documento = models.CharField(max_length=20, unique=True, verbose_name="Número de documento")
+    telefono = models.CharField(max_length=20, verbose_name="Teléfono")
+    direccion = models.CharField(max_length=255, verbose_name="Dirección")
+    correo = models.EmailField(max_length=100, verbose_name="Correo")
+
+    def __str__(self):
+        return f"{self.nombre} ({self.tipo_documento} {self.numero_documento})"
+
+    class Meta:
+        verbose_name = "cliente"
+        verbose_name_plural = "clientes"
+        db_table = "Cliente"
 
 class Verificador(models.Model):
     codigo = models.CharField(max_length=10, unique=True)

@@ -9,6 +9,7 @@ from app.views.operador.views import *
 from app.views.proveedor.views import *
 from app.views.venta.views import *
 from app.views.detalle_venta.views import *
+from app.views.cliente.views import *
 from app.views.reportes.viewsExcel import *
 from app.views.reportes.views import *
 from app.views.verificador.views import *
@@ -71,6 +72,12 @@ urlpatterns = [
     ### DETALLE VENTA ###
     path('detalle_venta/listar/', DetalleVentaListView.as_view(), name='detalle_venta_lista'),
     path('detalleventa/eliminar/<int:pk>/', DetalleVentaDeleteView.as_view(), name='detalle_venta_eliminar'),
+
+    ### CRUD CLIENTE ###
+    path('cliente/listar/', ClienteListView.as_view(), name='cliente_lista'),
+    path('cliente/crear/', ClienteCreateView.as_view(), name='cliente_crear'),
+    path('cliente/editar/<int:pk>/', ClienteUpdateView.as_view(), name='cliente_editar'),
+    path('cliente/eliminar/<int:pk>/', ClienteDeleteView.as_view(), name='cliente_eliminar'),
 
     ### COPIA DE SEGURIDAD DE BASE DE DATOS ###
     path('gestionar_backups/', BackupDatabaseView.as_view(), name='gestionar_backups'),

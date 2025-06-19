@@ -34,7 +34,8 @@
             <div class="tab-pane fade show active" id="todos" role="tabpanel" aria-labelledby="todos-tab">
                 <div class="mt-3">
     <div class="card-body">
-        <table class="table" id="tabla" style="width: 100%">
+        <div style="overflow-x: auto;">
+    <table class="table" id="tabla" style="width: 100%">
             <thead>
                 {% block columnas %}
 <tr>
@@ -162,7 +163,6 @@
     $(document).ready(function () {
         // DataTable para todos los productos
         $("#tabla").DataTable({
-            responsive: true,
             initComplete: function () {
                 var api = this.api();
                 var columnNames = ['id', 'Producto', 'Cantidad', 'Costo', 'Precio de venta', 'NumVerificador', 'Estado', 'Categoría', 'Presentación', 'Proveedor', 'Opciones'];

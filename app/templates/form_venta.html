@@ -69,6 +69,10 @@
                         <label for="{{ form.metodo_pago.id_for_label }}">{{ form.metodo_pago.label }}:</label>
                         {{ form.metodo_pago|add_class:'form-control'|attr:'autocomplete:off' }}
                     </div>
+                    <div class="form-group">
+                        <label for="{{ form.id_cliente.id_for_label }}">{{ form.id_cliente.label }}:</label>
+                        {{ form.id_cliente|add_class:'form-control'|attr:'autocomplete:off' }}
+                    </div>
                 </header>
             </div>
         </div>
@@ -153,6 +157,14 @@ function imprimirFactura(idVenta) {
     }
     if (!tipoVenta) {
         tipoVenta = 'Caja';
+    }
+    // Obtener cliente
+    let cliente = '';
+    for (let i = 0; i < allParrafos.length; i++) {
+        if (allParrafos[i].textContent.includes('Cliente')) {
+            cliente = allParrafos[i].textContent.trim().replace('Cliente:', '').trim();
+            break;
+        }
     }
     // Obtener los productos
     const filas = modalBody.querySelectorAll('table tbody tr');
@@ -341,6 +353,8 @@ function imprimirFactura(idVenta) {
                     <div class="info-linea">${metodoPago}</div>
                     <div class="info-linea titulo-linea">Tipo de Venta:</div>
                     <div class="info-linea">${tipoVenta}</div>
+                    <div class="info-linea titulo-linea">Cliente:</div>
+                    <div class="info-linea">${cliente}</div>
                     <div class="footer-info">
                         ${new Date().toLocaleString('es-ES', {day: '2-digit', month: '2-digit', year: '2-digit'})}, 
                         ${new Date().toLocaleString('es-ES', {hour: '2-digit', minute:'2-digit'})} 
@@ -384,7 +398,8 @@ function mostrarModalExito(id_venta, ventaData) {
                 <p><b>Cambio:</b> $${ventaData.cambio}</p>
             </div>
             <p><b>Método de Pago:</b> ${ventaData.metodo_pago}</p>
-            <p><b>Tipo de Venta:</b> ${ventaData.tipo_venta || 'Caja'}</p>
+            <p><b>Tipo de Venta:</b> ${'Caja'}</p>
+            <p><b>Cliente:</b> ${ventaData.cliente}</p>
         </div>
         <div class="modal-footer">
             <a href='{{ listar_url }}' class='btn btn-primary'>Ver ventas</a>
@@ -555,6 +570,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+                        // Obtener el nombre del cliente seleccionado
+                        let clienteNombre = '';
+                        const clienteSelect = document.getElementById('id_id_cliente');
+                        if (clienteSelect) {
+                            clienteNombre = clienteSelect.options[clienteSelect.selectedIndex].text;
+                        }
                         const ventaData = {
                             fecha_venta: fechaVenta,
                             detalles: detalles,
@@ -562,7 +583,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             dinero_recibido: dineroRecibido.toFixed(2),
                             cambio: cambio.toFixed(2),
                             metodo_pago: metodoPago,
-                            tipo_venta: tipoVenta
+                            tipo_venta: tipoVenta,
+                            cliente: clienteNombre
                         };
 
                         mostrarModalExito(data.id_venta, ventaData);

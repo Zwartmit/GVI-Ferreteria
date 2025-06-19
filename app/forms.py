@@ -363,9 +363,6 @@ class FacturaForm(ModelForm):
         }
 
 class VentaForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = Venta
         fields = "__all__"
@@ -379,11 +376,6 @@ class VentaForm(ModelForm):
         }
 
 class DetalleVentaForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["cantidad_producto"].widget.attrs["autofocus"] = True
-        self.fields['id_producto'].queryset = Producto.objects.all()
-
     class Meta:
         model = Detalle_venta
         fields = "__all__"
@@ -399,6 +391,23 @@ class DetalleVentaForm(ModelForm):
                     "class": "product-select"
                 }
             ),
+        }
+
+class ClienteForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["nombre"].widget.attrs["autofocus"] = True
+
+    class Meta:
+        model = Cliente
+        fields = "__all__"
+        widgets = {
+            "nombre": TextInput(attrs={"placeholder": "Nombre del cliente"}),
+            "tipo_documento": Select(attrs={"placeholder": "Tipo de documento"}),
+            "numero_documento": NumberInput(attrs={"min": 8, "placeholder": "Número de documento"}),
+            "telefono": NumberInput(attrs={"min": 1, "placeholder": "Teléfono"}),
+            "direccion": TextInput(attrs={"placeholder": "Dirección"}),
+            "correo": EmailInput(attrs={"placeholder": "Correo electrónico"}),
         }
         
 class ReporteForm(forms.Form):

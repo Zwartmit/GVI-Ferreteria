@@ -87,6 +87,7 @@
                         <hr>
                         <p><b>Método de Pago:</b><br> {{ item.venta.metodo_pago }}</p>
                         <p><b>Tipo de Venta:</b><br> {{ item.venta.tipo_venta }}</p>
+                        <p><b>Cliente:</b><br> {{ item.venta.id_cliente|default:'N/A' }}</p>
                     </div>
                     <div class="modal-footer">
                         <button id="generarPDF" onclick="imprimirFactura({{ item.venta.id }})">Imprimir PDF</button>
