@@ -26,8 +26,14 @@
     </div>
 </form>
 <script>
+    // Variable para controlar si el precio fue editado manualmente
+    var precioEditadoManualmente = false;
+    
     // Función para calcular automáticamente el precio de venta
     function calcularPrecioVenta() {
+        // Solo calcular automáticamente si no ha sido editado manualmente
+        if (precioEditadoManualmente) return;
+        
         var valor = parseFloat(document.querySelector('.valor-producto').value) || 0;
         var porcentaje = parseFloat(document.querySelector('.porcentaje-ganancia').value) || 0;
         
@@ -56,6 +62,14 @@
         var porcentajeCampo = document.querySelector('.porcentaje-ganancia');
         if (porcentajeCampo) {
             porcentajeCampo.addEventListener('input', calcularPrecioVenta);
+        }
+        
+        // Listener para detectar edición manual del precio de venta
+        var precioCampo = document.querySelector('.precio-venta');
+        if (precioCampo) {
+            precioCampo.addEventListener('input', function() {
+                precioEditadoManualmente = true;
+            });
         }
     });
     
